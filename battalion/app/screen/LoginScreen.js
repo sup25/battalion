@@ -44,7 +44,7 @@ export default function LoginScreen({ navigation }) {
   };
 
   return (
-    <Screen style={styles.container} behavior="height">
+    <Screen style={[styles.container, { padding: 20 }]} behavior="height">
       <View style={styles.logoConatiner}>
         <Login />
         <Text style={styles.title}>Login</Text>
