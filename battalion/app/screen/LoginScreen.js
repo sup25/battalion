@@ -1,6 +1,6 @@
 import colors from "../config/colors";
 import CarButton from "../component/CarButton";
-import Login from "../assets/Logo";
+import TextLogo from "../assets/TextLogo";
 import React, { useState } from "react";
 import {
   View,
@@ -30,6 +30,8 @@ export default function LoginScreen({ navigation }) {
           setLoginErrorMessage(
             "User not found. Please check your email or password."
           );
+        } else if (error.code === "auth/user-not-found") {
+          setLoginErrorMessage("User does not exist.");
         } else {
           setLoginErrorMessage("Login failed. Please try again.");
         }
@@ -46,10 +48,10 @@ export default function LoginScreen({ navigation }) {
   return (
     <Screen style={[styles.container, { padding: 20 }]} behavior="height">
       <View style={styles.logoConatiner}>
-        <Login />
+        <TextLogo />
         <Text style={styles.title}>Login</Text>
       </View>
-      <View style={styles.textContainer}>
+      <View style={styles.textS}>
         <TextInput
           style={[styles.input, { fontSize: 18 }]}
           placeholder="Email"
@@ -67,10 +69,24 @@ export default function LoginScreen({ navigation }) {
           value={password}
           secureTextEntry
         />
-        <CarButton title="Login" onPress={handleLogin} />
         {loginErrorMessage ? (
           <Text style={styles.errorText}>{loginErrorMessage}</Text>
         ) : null}
+      </View>
+      <View style={styles.ButtonContainer}>
+        <CarButton title="Login" onPress={handleLogin} />
+        <View style={styles.footerText}>
+          <Text style={styles.footerNormalText}>
+            Don't have an account?{" "}
+            <Text
+              onPress={() => navigation.navigate("Register")}
+              style={styles.footerLinkText}
+            >
+              Sign Up
+            </Text>
+          </Text>
+        </View>
+
         <TouchableOpacity onPress={handleForgotPassword}>
           <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
         </TouchableOpacity>
@@ -85,7 +101,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 20,
   },
   errorText: {
     color: colors.primary,
@@ -95,7 +110,25 @@ const styles = StyleSheet.create({
   forgotPasswordText: {
     color: colors.white,
     fontSize: 24,
-    fontWeight: 800,
+    fontWeight: 500,
+    marginTop: 15,
+    alignSelf: "flex-start",
+  },
+  footerText: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 15,
+  },
+  footerNormalText: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: 400,
+  },
+  footerLinkText: {
+    color: colors.primary,
+    fontSize: 14,
+    fontWeight: 400,
   },
   input: {
     height: 50,
@@ -104,7 +137,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 15,
     width: "100%",
-    borderRadius: 25,
+    borderRadius: 5,
     color: colors.white,
   },
   logoConatiner: {
@@ -112,16 +145,21 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-  textContainer: {
+  ButtonContainer: {
     flex: 2,
     width: "100%",
     alignItems: "center",
     marginTop: 20,
+    justifyContent: "flex-end",
+    paddingBottom: 50,
+  },
+  textS: {
+    width: "100%",
   },
   title: {
-    textTransform: "uppercase",
     fontSize: 24,
-    fontWeight: "800",
+    fontWeight: "500",
     color: colors.white,
+    marginTop: 18,
   },
 });

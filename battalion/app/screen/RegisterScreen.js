@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet } from "react-native";
 import colors from "../config/colors";
-
-import Logo from "../assets/Logo";
+import TextLogo from "../assets/TextLogo";
 import Screen from "../component/Screen";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../authentication/Firebase";
 import CarButton from "../component/CarButton";
 
-export default function LoginScreen() {
+export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmpassword, setConfirmPassword] = useState("");
   const [registerErrorMessage, setRegisterErrorMessage] = useState("");
   const [registerSuccessMessage, setRegisterSuccessMessage] = useState("");
 
@@ -34,6 +34,7 @@ export default function LoginScreen() {
             setName("");
             setEmail("");
             setPassword("");
+            setConfirmPassword("");
 
             setTimeout(() => {
               setRegisterErrorMessage("");
@@ -70,10 +71,10 @@ export default function LoginScreen() {
   };
 
   return (
-    <Screen style={styles.container} behavior="height">
+    <Screen style={[styles.container, { padding: 20 }]} behavior="height">
       <View style={styles.logoContainer}>
-        <Logo />
-        <Text style={styles.title}>Register</Text>
+        <TextLogo />
+        <Text style={styles.title}>Create your Account</Text>
       </View>
       <View style={styles.textContainer}>
         <TextInput
@@ -103,13 +104,34 @@ export default function LoginScreen() {
           value={password}
           secureTextEntry
         />
+        <TextInput
+          style={[styles.input, { fontSize: 18 }]}
+          placeholderTextColor="white"
+          placeholder="Confirm Password"
+          onChangeText={(text) => setConfirmPassword(text)}
+          value={confirmpassword}
+          secureTextEntry
+        />
         {registerErrorMessage ? (
           <Text style={styles.errorText}>{registerErrorMessage}</Text>
         ) : null}
         {registerSuccessMessage ? (
           <Text style={styles.successText}>{registerSuccessMessage}</Text>
         ) : null}
+      </View>
+      <View style={{ paddingBottom: 50 }}>
         <CarButton title="Register" onPress={handleRegister} />
+        <View style={styles.footerText}>
+          <Text style={styles.footerNormalText}>
+            Already have an account?{" "}
+            <Text
+              onPress={() => navigation.navigate("Login")}
+              style={styles.footerLinkText}
+            >
+              Login
+            </Text>
+          </Text>
+        </View>
       </View>
     </Screen>
   );
@@ -121,13 +143,28 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingHorizontal: 20,
     width: "100%",
   },
   errorText: {
     color: colors.primary,
     marginBottom: 10,
     fontSize: 24,
+  },
+  footerText: {
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginTop: 15,
+  },
+  footerNormalText: {
+    color: colors.white,
+    fontSize: 14,
+    fontWeight: 400,
+  },
+  footerLinkText: {
+    color: colors.primary,
+    fontSize: 14,
+    fontWeight: 400,
   },
   input: {
     height: 50,
@@ -136,13 +173,14 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 15,
     width: "100%",
-    borderRadius: 25,
+    borderRadius: 5,
     color: colors.white,
   },
   logoContainer: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+    marginTop: 66,
   },
   successText: {
     color: "green",
@@ -156,9 +194,9 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   title: {
-    textTransform: "uppercase",
     fontSize: 24,
-    fontWeight: "800",
+    fontWeight: 500,
     color: colors.white,
+    marginTop: 18,
   },
 });
