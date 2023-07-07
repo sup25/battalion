@@ -5,13 +5,14 @@ import TextLogo from "../assets/TextLogo";
 import Screen from "../component/Screen";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../authentication/Firebase";
-import CarButton from "../component/CarButton";
+import CarLinkButton from "../component/CarLinkButton";
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmPassword] = useState("");
+  const [passwordMatchError, setPasswordMatchError] = useState(false);
   const [registerErrorMessage, setRegisterErrorMessage] = useState("");
   const [registerSuccessMessage, setRegisterSuccessMessage] = useState("");
 
@@ -23,7 +24,15 @@ export default function RegisterScreen({ navigation }) {
       }, 3000);
       return;
     }
-
+    if (password !== confirmpassword) {
+      setPasswordMatchError(true);
+      setTimeout(() => {
+        setPasswordMatchError(false);
+      }, 3000);
+      return;
+    } else {
+      setPasswordMatchError(false);
+    }
     createUserWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
@@ -64,6 +73,7 @@ export default function RegisterScreen({ navigation }) {
           setRegisterErrorMessage(error.message);
         }
         console.log(error);
+
         setTimeout(() => {
           setRegisterErrorMessage("");
         }, 3000);
@@ -71,14 +81,14 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
-    <Screen style={[styles.container, { padding: 20 }]} behavior="height">
+    <Screen style={styles.container} behavior="height">
       <View style={styles.logoContainer}>
         <TextLogo />
         <Text style={styles.title}>Create your Account</Text>
       </View>
-      <View style={styles.textContainer}>
+      <View style={styles.inputTextContainer}>
         <TextInput
-          style={[styles.input, { fontSize: 18 }]}
+          style={styles.input}
           placeholderTextColor="white"
           placeholder="Name"
           onChangeText={(text) => setName(text)}
@@ -118,54 +128,43 @@ export default function RegisterScreen({ navigation }) {
         {registerSuccessMessage ? (
           <Text style={styles.successText}>{registerSuccessMessage}</Text>
         ) : null}
+        {passwordMatchError ? (
+          <Text style={styles.errorText}>Password doesnot match</Text>
+        ) : null}
       </View>
-      <View style={{ paddingBottom: 50 }}>
-        <CarButton title="Register" onPress={handleRegister} />
-        <View style={styles.footerText}>
-          <Text style={styles.footerNormalText}>
-            Already have an account?{" "}
-            <Text
-              onPress={() => navigation.navigate("Login")}
-              style={styles.footerLinkText}
-            >
-              Login
-            </Text>
-          </Text>
-        </View>
+      <View style={styles.btnLink}>
+        <CarLinkButton
+          navigation={navigation}
+          onPress={handleRegister}
+          title="Continue"
+          mainDesc="Already Have an account? "
+          desc="Login"
+          width={277}
+          loginRoute="Login"
+        />
       </View>
     </Screen>
   );
 }
 
 const styles = StyleSheet.create({
+  btnLink: {
+    paddingBottom: 50,
+  },
   container: {
     backgroundColor: colors.black,
     flex: 1,
-    justifyContent: "center",
+    justifyContent: "flex-end",
     alignItems: "center",
     width: "100%",
+    paddingHorizontal: 20,
   },
   errorText: {
     color: colors.primary,
     marginBottom: 10,
     fontSize: 24,
   },
-  footerText: {
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 15,
-  },
-  footerNormalText: {
-    color: colors.white,
-    fontSize: 14,
-    fontWeight: 400,
-  },
-  footerLinkText: {
-    color: colors.primary,
-    fontSize: 14,
-    fontWeight: 400,
-  },
+
   input: {
     height: 50,
     borderColor: "gray",
@@ -175,24 +174,25 @@ const styles = StyleSheet.create({
     width: "100%",
     borderRadius: 5,
     color: colors.white,
+    fontSize: 18,
+  },
+  inputTextContainer: {
+    width: "100%",
+    alignItems: "center",
+    marginBottom: 130,
   },
   logoContainer: {
-    flex: 1,
+    top: 66,
+    position: "absolute",
     justifyContent: "center",
     alignItems: "center",
-    marginTop: 66,
   },
   successText: {
     color: "green",
     marginBottom: 10,
     fontSize: 24,
   },
-  textContainer: {
-    flex: 2,
-    width: "100%",
-    alignItems: "center",
-    marginTop: 20,
-  },
+
   title: {
     fontSize: 24,
     fontWeight: 500,

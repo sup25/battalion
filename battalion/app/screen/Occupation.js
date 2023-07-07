@@ -1,10 +1,10 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, TextInput } from "react-native";
 import React from "react";
-import CarButton from "../component/CarButton";
+import CarLinkButton from "../component/CarLinkButton";
 import Screen from "../component/Screen";
 import colors from "../config/colors";
 import TextLogo from "../assets/TextLogo";
-import { TextInput } from "react-native";
+
 const Occupation = ({ navigation }) => {
   const Category = [
     { id: 1, occupation: "Electrician" },
@@ -25,59 +25,58 @@ const Occupation = ({ navigation }) => {
   ];
 
   return (
-    <Screen style={styles.container}>
-      <View style={styles.logoTextContainer}>
-        <TextLogo />
-        <Text style={styles.textHeading}>What's your Occupation?</Text>
-      </View>
-      <View style={styles.categoryContainer}>
-        {Category.map((cat) => {
-          return (
-            <View key={cat.id} style={styles.categoryItem}>
-              <Text style={styles.category}>{cat.occupation}</Text>
-            </View>
-          );
-        })}
-      </View>
-      <View style={styles.occupationContainer}>
-        <Text style={styles.otherText}>
-          Other
+    <>
+      <Screen style={styles.container}>
+        <View style={styles.logoTextContainer}>
+          <TextLogo />
+          <Text style={styles.textHeading}>What's your Occupation?</Text>
+        </View>
+        <View style={styles.categoryContainer}>
+          {Category.map((cat) => {
+            return (
+              <View key={cat.id} style={styles.categoryItem}>
+                <Text style={styles.category}>{cat.occupation}</Text>
+              </View>
+            );
+          })}
+        </View>
+        <View style={styles.occupationContainer}>
+          <Text style={styles.otherText}>Other</Text>
           <TextInput
             style={styles.input}
             placeholder="Write here"
             placeholderTextColor="#989898"
           />
-        </Text>
-      </View>
-      <View style={styles.txtBtnContainer}>
-        <CarButton title="Continue" />
-        <View style={styles.footerText}>
-          <Text style={styles.footerNormalText}>
-            Already have an account?{" "}
-            <Text
-              onPress={() => navigation.navigate("Login")}
-              style={styles.footerLinkText}
-            >
-              Login
-            </Text>
-          </Text>
         </View>
-      </View>
-    </Screen>
+        <View style={styles.btnLink}>
+          <CarLinkButton
+            navigation={navigation}
+            title="Continue"
+            mainDesc="Already Have an account? "
+            desc="Login"
+            width={277}
+            loginRoute="Login"
+          />
+        </View>
+      </Screen>
+    </>
   );
 };
 
 export default Occupation;
 
 const styles = StyleSheet.create({
+  btnLink: {
+    alignItems: "center",
+  },
   category: {
     color: colors.white,
     backgroundColor: "#2D2D2D",
-    height: 37,
+    height: 47,
     width: "100%",
     padding: 10,
     borderRadius: 20,
-    fontSize: 20,
+    fontSize: 18,
     fontWeight: "400",
     display: "flex",
     alignItems: "center",
@@ -99,24 +98,8 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.black,
   },
-  footerText: {
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 15,
-  },
-  footerNormalText: {
-    color: colors.white,
-    fontSize: 14,
-    fontWeight: 400,
-  },
-  footerLinkText: {
-    color: colors.primary,
-    fontSize: 14,
-    fontWeight: 400,
-  },
+
   input: {
-    width: "100%",
     height: 37,
     borderRadius: 20,
     marginLeft: 8,
@@ -127,7 +110,6 @@ const styles = StyleSheet.create({
   logoTextContainer: {
     width: "100%",
     alignItems: "center",
-    marginTop: 66,
   },
   occupationContainer: {
     display: "flex",
@@ -140,11 +122,11 @@ const styles = StyleSheet.create({
   },
   otherText: {
     display: "flex",
+    width: 100,
     backgroundColor: "#2D2D2D",
     color: colors.white,
     height: 37,
     borderRadius: 20,
-    width: "100%",
     alignItems: "center",
     fontSize: 20,
     fontWeight: "400",

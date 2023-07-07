@@ -1,20 +1,45 @@
-import React from "react";
-import { StyleSheet, TouchableOpacity, Text } from "react-native";
+import React, { useState } from "react";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  Text,
+  ActivityIndicator,
+} from "react-native";
 import colors from "../config/colors";
 
 function CarButton({ title, onPress, color = "primary", width, textColor }) {
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handlePress = () => {
+    setIsLoading(true);
+    onPress();
+
+    // Simulating a loading delay, you can replace this with your asynchronous code
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 2000);
+  };
+
   return (
     <TouchableOpacity
-      style={[styles.button, { backgroundColor: colors[color], width }]}
-      onPress={onPress}
+      style={[
+        styles.button,
+        { backgroundColor: isLoading ? colors.medium : colors[color], width },
+      ]}
+      onPress={handlePress}
+      disabled={isLoading} // Disable the button while loading
     >
-      <Text style={[styles.text, { color: textColor }]}>{title}</Text>
+      {isLoading ? (
+        <ActivityIndicator color={colors.primary} /> // Show the loading indicator
+      ) : (
+        <Text style={[styles.text, { color: textColor }]}>{title}</Text>
+      )}
     </TouchableOpacity>
   );
 }
+
 const styles = StyleSheet.create({
   button: {
-    backgroundColor: colors.primary,
     borderRadius: 5,
     justifyContent: "center",
     alignItems: "center",
@@ -30,4 +55,5 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
 });
+
 export default CarButton;

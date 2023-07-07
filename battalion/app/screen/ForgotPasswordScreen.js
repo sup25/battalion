@@ -6,6 +6,7 @@ import { auth } from "../authentication/Firebase";
 import colors from "../config/colors";
 import TextLogo from "../assets/TextLogo";
 import Screen from "../component/Screen";
+import CarLinkButton from "../component/CarLinkButton";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -33,7 +34,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
   };
 
   return (
-    <Screen style={[styles.container, { padding: 20 }]} behavior="height">
+    <Screen style={styles.container} behavior="height">
       {emailSent ? (
         <>
           <Text style={styles.emailSentText}>
@@ -58,19 +59,16 @@ const ForgotPasswordScreen = ({ navigation }) => {
             />
             {errormsg ? <Text style={styles.errorText}>{errormsg}</Text> : null}
           </View>
-          <View style={styles.btnContainer}>
-            <CarButton title="Reset Password" onPress={handleResetPassword} />
-            <View style={styles.footerText}>
-              <Text style={styles.footerNormalText}>
-                Already have an account?{" "}
-                <Text
-                  onPress={() => navigation.navigate("Login")}
-                  style={styles.footerLinkText}
-                >
-                  Login
-                </Text>
-              </Text>
-            </View>
+          <View>
+            <CarLinkButton
+              navigation={navigation}
+              onPress={handleResetPassword}
+              title="Submit"
+              mainDesc="Already Have an account? "
+              desc="Login"
+              width={277}
+              loginRoute="Login"
+            />
           </View>
         </>
       )}
@@ -85,7 +83,7 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: "center",
     backgroundColor: colors.black,
-    padding: 20,
+    paddingHorizontal: 20,
     justifyContent: "flex-start",
   },
   emailSentText: {
@@ -98,22 +96,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     fontSize: 24,
   },
-  footerText: {
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 15,
-  },
-  footerNormalText: {
-    color: colors.white,
-    fontSize: 14,
-    fontWeight: 400,
-  },
-  footerLinkText: {
-    color: colors.primary,
-    fontSize: 14,
-    fontWeight: 400,
-  },
+
   input: {
     backgroundColor: "white",
     paddingHorizontal: 15,

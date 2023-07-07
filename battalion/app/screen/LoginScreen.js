@@ -1,15 +1,16 @@
 import colors from "../config/colors";
-import CarButton from "../component/CarButton";
+import CarLinkButton from "../component/CarLinkButton";
 import TextLogo from "../assets/TextLogo";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Image,
 } from "react-native";
-import Screen from "../component/Screen";
+
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../authentication/Firebase";
 
@@ -41,17 +42,24 @@ export default function LoginScreen({ navigation }) {
         }, 3000);
       });
   };
+
   const handleForgotPassword = () => {
     navigation.navigate("ForgotPass");
   };
 
   return (
-    <Screen style={[styles.container, { padding: 20 }]} behavior="height">
+    <View style={styles.container}>
+      <Text style={styles.watermarkText}>Battalion</Text>
+      <Image
+        style={styles.productImage}
+        source={require("../assets/product.png")}
+      />
       <View style={styles.logoConatiner}>
         <TextLogo />
-        <Text style={styles.title}>Login</Text>
+        <Text style={styles.title}>Welcome Back</Text>
       </View>
-      <View style={styles.textS}>
+
+      <View style={styles.inputTextContainer}>
         <TextInput
           style={[styles.input, { fontSize: 18 }]}
           placeholder="Email"
@@ -69,38 +77,41 @@ export default function LoginScreen({ navigation }) {
           value={password}
           secureTextEntry
         />
+        <TouchableOpacity
+          style={{ alignSelf: "flex-start", paddingLeft: 20 }}
+          onPress={handleForgotPassword}
+        >
+          <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
+        </TouchableOpacity>
         {loginErrorMessage ? (
           <Text style={styles.errorText}>{loginErrorMessage}</Text>
         ) : null}
       </View>
-      <View style={styles.ButtonContainer}>
-        <CarButton title="Login" onPress={handleLogin} />
-        <View style={styles.footerText}>
-          <Text style={styles.footerNormalText}>
-            Don't have an account?{" "}
-            <Text
-              onPress={() => navigation.navigate("Register")}
-              style={styles.footerLinkText}
-            >
-              Sign Up
-            </Text>
-          </Text>
-        </View>
-
-        <TouchableOpacity onPress={handleForgotPassword}>
-          <Text style={styles.forgotPasswordText}>Forgot Password?</Text>
-        </TouchableOpacity>
+      <View style={styles.btnLink}>
+        <CarLinkButton
+          navigation={navigation}
+          onPress={handleLogin}
+          title="Sign in"
+          mainDesc="Dont have an account? "
+          desc="Create new"
+          width={277}
+          registerRoute="Register"
+          textColor="white"
+        />
       </View>
-    </Screen>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
+  btnLink: {
+    paddingBottom: 80,
+    alignItems: "center",
+  },
+
   container: {
     backgroundColor: colors.black,
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
   },
   errorText: {
     color: colors.primary,
@@ -108,58 +119,58 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   forgotPasswordText: {
-    color: colors.white,
-    fontSize: 24,
-    fontWeight: 500,
-    marginTop: 15,
-    alignSelf: "flex-start",
+    color: "#727272",
+    fontSize: 16,
+    fontWeight: "500",
+    marginTop: 4,
+    marginBottom: 4,
   },
-  footerText: {
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-    marginTop: 15,
-  },
-  footerNormalText: {
-    color: colors.white,
-    fontSize: 14,
-    fontWeight: 400,
-  },
-  footerLinkText: {
-    color: colors.primary,
-    fontSize: 14,
-    fontWeight: 400,
-  },
+
   input: {
     height: 50,
-    borderColor: "gray",
+    borderColor: colors.secondary,
     borderWidth: 1,
     marginBottom: 10,
     padding: 15,
-    width: "100%",
+    width: 283,
     borderRadius: 5,
     color: colors.white,
   },
-  logoConatiner: {
-    flex: 1,
+  LinkButtonContainer: {
+    bottom: 50,
+    width: "100%",
+    alignItems: "center",
     justifyContent: "center",
-    alignItems: "center",
   },
-  ButtonContainer: {
-    flex: 2,
-    width: "100%",
+  logoConatiner: {
     alignItems: "center",
-    marginTop: 20,
-    justifyContent: "flex-end",
-    paddingBottom: 50,
+    top: -70,
   },
-  textS: {
-    width: "100%",
+  productImage: {
+    height: 360,
+    width: 355,
+    marginTop: -117,
+  },
+
+  inputTextContainer: {
+    paddingHorizontal: 20,
+    alignItems: "center",
+    marginTop: -50,
   },
   title: {
     fontSize: 24,
     fontWeight: "500",
     color: colors.white,
-    marginTop: 18,
+    marginTop: 9,
+  },
+  watermarkText: {
+    textTransform: "uppercase",
+    fontSize: 80,
+    fontWeight: 900,
+    color: colors.white,
+    textAlign: "center",
+    opacity: 0.5,
+    width: "100%",
+    marginTop: 62,
   },
 });
