@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, TextInput, StyleSheet } from "react-native";
+import { View, Text, TextInput, StyleSheet, StatusBar } from "react-native";
 import colors from "../config/colors";
 import TextLogo from "../assets/TextLogo";
 import Screen from "../component/Screen";
@@ -81,7 +81,7 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
-    <Screen style={styles.container} behavior="height">
+    <View style={styles.container}>
       <View style={styles.logoContainer}>
         <TextLogo />
         <Text style={styles.title}>Create your Account</Text>
@@ -143,21 +143,24 @@ export default function RegisterScreen({ navigation }) {
           loginRoute="Login"
         />
       </View>
-    </Screen>
+      <StatusBar translucent backgroundColor="transparent" />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   btnLink: {
-    paddingBottom: 50,
+    bottom: 50,
+    alignItems: "center",
+    position: "absolute",
   },
   container: {
     backgroundColor: colors.black,
-    flex: 1,
     justifyContent: "flex-end",
     alignItems: "center",
     width: "100%",
     paddingHorizontal: 20,
+    flex: 1,
   },
   errorText: {
     color: colors.primary,
@@ -179,7 +182,8 @@ const styles = StyleSheet.create({
   inputTextContainer: {
     width: "100%",
     alignItems: "center",
-    marginBottom: 130,
+    bottom: 296,
+    position: "absolute",
   },
   logoContainer: {
     top: 66,

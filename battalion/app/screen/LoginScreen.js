@@ -58,7 +58,6 @@ export default function LoginScreen({ navigation }) {
         <TextLogo />
         <Text style={styles.title}>Welcome Back</Text>
       </View>
-
       <View style={styles.inputTextContainer}>
         <TextInput
           style={[styles.input, { fontSize: 18 }]}
@@ -105,14 +104,15 @@ export default function LoginScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   btnLink: {
-    paddingBottom: 80,
     alignItems: "center",
+    bottom: 150,
   },
-
   container: {
     backgroundColor: colors.black,
     flex: 1,
+    justifyContent: "flex-start",
   },
+
   errorText: {
     color: colors.primary,
     marginBottom: 10,
@@ -136,26 +136,21 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     color: colors.white,
   },
-  LinkButtonContainer: {
-    bottom: 50,
-    width: "100%",
-    alignItems: "center",
-    justifyContent: "center",
-  },
+
   logoConatiner: {
     alignItems: "center",
-    top: -70,
+    bottom: 170,
   },
   productImage: {
     height: 360,
     width: 355,
-    marginTop: -117,
+    bottom: 100,
   },
 
   inputTextContainer: {
     paddingHorizontal: 20,
     alignItems: "center",
-    marginTop: -50,
+    bottom: 150,
   },
   title: {
     fontSize: 24,
