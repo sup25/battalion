@@ -51,6 +51,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
             </View>
             <TextInput
               placeholder="Email"
+              placeholderTextColor="#656565"
               value={email}
               onChangeText={(text) => setEmail(text)}
               style={styles.input}
@@ -59,7 +60,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
             />
             {errormsg ? <Text style={styles.errorText}>{errormsg}</Text> : null}
           </View>
-          <View>
+          <View style={styles.btnContainer}>
             <CarLinkButton
               navigation={navigation}
               onPress={handleResetPassword}
@@ -68,6 +69,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
               desc="Login"
               width={277}
               loginRoute="Login"
+              textColor="white"
             />
           </View>
         </>
@@ -79,12 +81,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
 export default ForgotPasswordScreen;
 
 const styles = StyleSheet.create({
+  btnContainer: {
+    alignItems: "center",
+    marginTop: 287,
+  },
   container: {
     flex: 1,
-    alignItems: "center",
     backgroundColor: colors.black,
     paddingHorizontal: 20,
-    justifyContent: "flex-start",
   },
   emailSentText: {
     fontSize: 20,
@@ -94,32 +98,26 @@ const styles = StyleSheet.create({
   errorText: {
     color: colors.primary,
     marginBottom: 10,
-    fontSize: 24,
+    fontSize: 14,
   },
 
   input: {
-    backgroundColor: "white",
+    borderColor: colors.secondary,
+    fontSize: 18,
+    borderWidth: 1,
     paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
     marginTop: 38,
-    width: "100%",
+    width: 283,
     marginVertical: 20,
     height: 50,
   },
   logoContainer: {
     justifyContent: "flex-start",
     alignItems: "center",
-    flex: 1,
   },
-  btnContainer: {
-    display: "flex",
-    flex: 2,
-    justifyContent: "flex-end",
-    width: "100%",
-    alignItems: "center",
-    paddingBottom: 100,
-  },
+
   textLogo: {
     width: "100%",
     alignItems: "center",

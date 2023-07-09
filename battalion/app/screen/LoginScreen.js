@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
   errorText: {
     color: colors.primary,
     marginBottom: 10,
-    fontSize: 24,
+    fontSize: 14,
   },
   forgotPasswordText: {
     color: "#727272",

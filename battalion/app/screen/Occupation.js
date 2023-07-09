@@ -56,6 +56,7 @@ const Occupation = ({ navigation }) => {
             desc="Login"
             width={277}
             loginRoute="Login"
+            textColor="white"
           />
         </View>
       </Screen>
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
   input: {
     height: 37,
     borderRadius: 20,
-    marginLeft: 8,
+    width: 273,
     paddingLeft: 15,
     backgroundColor: colors.white,
     fontSize: 20,
@@ -116,13 +117,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
-    marginTop: 54,
-    paddingLeft: 20,
-    paddingRight: 20,
+    marginTop: 34,
+    marginBottom: 20,
+    paddingHorizontal: 20,
   },
   otherText: {
     display: "flex",
-    width: 100,
+
     backgroundColor: "#2D2D2D",
     color: colors.white,
     height: 37,
@@ -131,6 +132,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "400",
     paddingLeft: 15,
+    marginLeft: -20,
   },
 
   textHeading: {

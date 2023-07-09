@@ -89,7 +89,7 @@ export default function RegisterScreen({ navigation }) {
       <View style={styles.inputTextContainer}>
         <TextInput
           style={styles.input}
-          placeholderTextColor="white"
+          placeholderTextColor="#656565"
           placeholder="Name"
           onChangeText={(text) => setName(text)}
           value={name}
@@ -98,25 +98,25 @@ export default function RegisterScreen({ navigation }) {
           autoCorrect={false}
         />
         <TextInput
-          style={[styles.input, { fontSize: 18 }]}
+          style={styles.input}
           placeholder="Email"
-          placeholderTextColor="white"
+          placeholderTextColor="#656565"
           onChangeText={(text) => setEmail(text)}
           value={email}
           keyboardType="email-address"
           autoCapitalize="none"
         />
         <TextInput
-          style={[styles.input, { fontSize: 18 }]}
-          placeholderTextColor="white"
+          style={styles.input}
+          placeholderTextColor="#656565"
           placeholder="Password"
           onChangeText={(text) => setPassword(text)}
           value={password}
           secureTextEntry
         />
         <TextInput
-          style={[styles.input, { fontSize: 18 }]}
-          placeholderTextColor="white"
+          style={styles.input}
+          placeholderTextColor="#656565"
           placeholder="Confirm Password"
           onChangeText={(text) => setConfirmPassword(text)}
           value={confirmpassword}
@@ -141,6 +141,7 @@ export default function RegisterScreen({ navigation }) {
           desc="Login"
           width={277}
           loginRoute="Login"
+          textColor="white"
         />
       </View>
       <StatusBar translucent backgroundColor="transparent" />
@@ -150,31 +151,28 @@ export default function RegisterScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   btnLink: {
-    bottom: 50,
     alignItems: "center",
-    position: "absolute",
+    marginTop: 139,
   },
   container: {
     backgroundColor: colors.black,
-    justifyContent: "flex-end",
-    alignItems: "center",
-    width: "100%",
-    paddingHorizontal: 20,
     flex: 1,
+    paddingHorizontal: 20,
   },
   errorText: {
     color: colors.primary,
     marginBottom: 10,
-    fontSize: 24,
+    fontSize: 14,
   },
 
   input: {
     height: 50,
-    borderColor: "gray",
+    borderColor: colors.secondary,
     borderWidth: 1,
     marginBottom: 10,
     padding: 15,
-    width: "100%",
+    width: 283,
+    /* width: "100%", */
     borderRadius: 5,
     color: colors.white,
     fontSize: 18,
@@ -182,19 +180,18 @@ const styles = StyleSheet.create({
   inputTextContainer: {
     width: "100%",
     alignItems: "center",
-    bottom: 296,
-    position: "absolute",
+    justifyContent: "center",
+    marginTop: 36,
   },
   logoContainer: {
-    top: 66,
-    position: "absolute",
+    marginTop: 66,
     justifyContent: "center",
     alignItems: "center",
   },
   successText: {
     color: "green",
     marginBottom: 10,
-    fontSize: 24,
+    fontSize: 14,
   },
 
   title: {
