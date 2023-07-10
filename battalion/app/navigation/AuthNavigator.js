@@ -5,8 +5,8 @@ import LoginScreen from "../screen/LoginScreen";
 import RegisterScreen from "../screen/RegisterScreen";
 const Stack = createNativeStackNavigator();
 
-import HomeScreen from "../screen/HomeScreen";
 import ForgotPasswordScreen from "../screen/ForgotPasswordScreen";
+import WelcomeScreen from "../screen/WelcomeScreen";
 
 const AuthNavigator = () => {
   return (
@@ -28,7 +28,7 @@ const AuthNavigator = () => {
       />
       <Stack.Screen
         name="Home"
-        component={HomeScreen}
+        component={WelcomeScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

@@ -27,10 +27,8 @@ export default VerifyPhoneOne;
 
 const styles = StyleSheet.create({
   btn: {
-    flex: 2,
     paddingHorizontal: 20,
-    justifyContent: "flex-end",
-    marginBottom: 50,
+    marginTop: 300,
     alignItems: "center",
   },
   container: {

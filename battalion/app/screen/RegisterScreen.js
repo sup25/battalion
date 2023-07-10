@@ -94,7 +94,7 @@ export default function RegisterScreen({ navigation }) {
           onChangeText={(text) => setName(text)}
           value={name}
           keyboardType="email-address"
-          autoCapitalization="none"
+          autoCapitalize="none"
           autoCorrect={false}
         />
         <TextInput

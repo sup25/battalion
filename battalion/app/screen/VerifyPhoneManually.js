@@ -22,10 +22,9 @@ export default VerifyPhoneManually;
 
 const styles = StyleSheet.create({
   btn: {
-    flex: 2,
     paddingHorizontal: 20,
-    justifyContent: "flex-end",
-    marginBottom: 50,
+
+    marginTop: 337,
     alignItems: "center",
   },
   container: {

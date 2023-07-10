@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     flexWrap: "wrap",
-    paddingLeft: 20,
+    paddingLeft: 18,
     paddingRight: 20,
     marginTop: 46,
   },
@@ -106,7 +106,8 @@ const styles = StyleSheet.create({
     width: 273,
     paddingLeft: 15,
     backgroundColor: colors.white,
-    fontSize: 20,
+    fontSize: 18,
+    right: 260,
   },
   logoTextContainer: {
     width: "100%",
@@ -122,17 +123,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   otherText: {
-    display: "flex",
-
     backgroundColor: "#2D2D2D",
     color: colors.white,
     height: 37,
     borderRadius: 20,
     alignItems: "center",
-    fontSize: 20,
+
+    fontSize: 18,
     fontWeight: "400",
     paddingLeft: 15,
-    marginLeft: -20,
+    width: "100%",
   },
 
   textHeading: {

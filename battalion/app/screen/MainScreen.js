@@ -51,14 +51,15 @@ export default function MainScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   background: {
     flex: 1,
     alignItems: "center",
     justifyContent: "flex-end",
   },
+  container: {
+    flex: 1,
+  },
+
   headingTextContainer: {
     position: "absolute",
     top: 160,
