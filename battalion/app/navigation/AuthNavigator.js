@@ -7,6 +7,8 @@ const Stack = createNativeStackNavigator();
 
 import ForgotPasswordScreen from "../screen/ForgotPasswordScreen";
 import WelcomeScreen from "../screen/WelcomeScreen";
+import InserCode from "../screen/InsertCode";
+import VerifyPhoneOne from "../screen/VerifyPhoneOne";
 
 const AuthNavigator = () => {
   return (
@@ -24,6 +26,16 @@ const AuthNavigator = () => {
       <Stack.Screen
         name="Register"
         component={RegisterScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="phoneverify"
+        component={VerifyPhoneOne}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="ConfirmCode"
+        component={InserCode}
         options={{ headerShown: false }}
       />
       <Stack.Screen

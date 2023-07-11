@@ -23,8 +23,8 @@ const TabNavigator = () => (
       name="Profile"
       component={ProfileScreen}
       options={{
-        tabBarIcon: ({ color, size }) => (
-          <MaterialCommunityIcons name="account" color={color} size={size} />
+        tabBarIcon: ({ color, size,backgroundColor }) => (
+          <MaterialCommunityIcons name="account" color={color} size={size} backgroundColor={backgroundColor} />
         ),
         headerShown: false,
       }}

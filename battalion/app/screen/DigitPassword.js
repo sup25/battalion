@@ -3,27 +3,21 @@ import React from "react";
 import colors from "../config/colors";
 import CarButton from "../component/CarButton";
 
-const InserCode = () => {
+const DigitPassword = () => {
   return (
     <View style={styles.container}>
       <View style={styles.containerSmall}>
-        <Text style={styles.txtFirst}>Insert Code</Text>
+        <Text style={styles.txtFirst}>4 digit password</Text>
         <Text style={styles.txtSecond}>
-          Enter the security code we sent to 00 0000 0000
+          Input the password to unlock the box in the digital display, you can
+          change this password later in the settings.
         </Text>
         <View style={styles.txtInputContainer}>
           <TextInput style={styles.txtInput} />
           <TextInput style={styles.txtInput} />
           <TextInput style={styles.txtInput} />
           <TextInput style={styles.txtInput} />
-          <TextInput style={styles.txtInput} />
         </View>
-        <CarButton
-          title="resend code"
-          width={277}
-          textColor={colors.black}
-          color="white"
-        />
       </View>
       <View style={styles.btn}>
         <CarButton title="confirm" width={277} textColor={colors.white} />
@@ -32,11 +26,11 @@ const InserCode = () => {
   );
 };
 
-export default InserCode;
+export default DigitPassword;
 
 const styles = StyleSheet.create({
   btn: {
-    marginTop: 247,
+    marginTop: 277,
     alignItems: "center",
   },
   container: {
@@ -44,7 +38,6 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
   },
   containerSmall: {
-    width: "100%",
     marginTop: 76,
     alignItems: "center",
   },
@@ -60,14 +53,12 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 24,
   },
-
   txtInputContainer: {
-    width: "100%",
     display: "flex",
     flexDirection: "row",
-    alignItems: "center",
     paddingHorizontal: 20,
-    marginBottom: 27,
+    marginTop: 33,
+    alignSelf: "center",
   },
   txtFirst: {
     color: colors.white,
@@ -83,6 +74,6 @@ const styles = StyleSheet.create({
     fontWeight: 400,
     textAlign: "center",
     marginTop: 8,
-    maxWidth: 200,
+    maxWidth: 250,
   },
 });

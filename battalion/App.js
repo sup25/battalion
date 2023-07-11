@@ -6,6 +6,12 @@ import Splash from "./app/screen/splash";
 import VerifyPhoneManually from "./app/screen/VerifyPhoneManually";
 import VerifyPhoneOne from "./app/screen/VerifyPhoneOne";
 import InserCode from "./app/screen/InsertCode";
+import ScanScreen from "./app/screen/ScanScreen";
+import AfterScanScreen from "./app/screen/AfterScanScreen";
+import FoundDevices from "./app/screen/FoundDevices";
+import ConnectionScreen from "./app/screen/ConnectionScreen";
+import ConnectionRejectScreen from "./app/screen/ConnectionRejectScreen";
+import DigitPassword from "./app/screen/DigitPassword";
 
 export default function App() {
   const [isSplashVisible, setIsSplashVisible] = useState(true);
