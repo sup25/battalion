@@ -13,14 +13,21 @@ import ConnectionScreen from "./app/screen/ConnectionScreen";
 import ConnectionRejectScreen from "./app/screen/ConnectionRejectScreen";
 import DigitPassword from "./app/screen/DigitPassword";
 
+import AppNavigator from "./app/navigation/AppNavigator";
+import { auth } from "./app/authentication/Firebase";
 export default function App() {
   const [isSplashVisible, setIsSplashVisible] = useState(true);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   useEffect(() => {
-    // Simulating an API call or any other initialization logic
-    setTimeout(() => {
-      setIsSplashVisible(false);
-    }, 3000); // Replace this with your actual loading logic
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      setIsLoggedIn(!!user);
+      setTimeout(() => {
+        setIsSplashVisible(false);
+      }, 2000); // Delay of 2000 milliseconds (2 seconds)
+    });
+
+    return () => unsubscribe();
   }, []);
 
   if (isSplashVisible) {
@@ -29,7 +36,7 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <AuthNavigator />
+      {isLoggedIn ? <AppNavigator /> : <AuthNavigator />}
     </NavigationContainer>
   );
 }

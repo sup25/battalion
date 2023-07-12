@@ -1,7 +1,7 @@
 import colors from "../config/colors";
 import CarLinkButton from "../component/CarLinkButton";
 import TextLogo from "../assets/TextLogo";
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,

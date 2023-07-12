@@ -99,9 +99,6 @@ const WelcomeScreen = ({ navigation }) => {
           />
         </View>
       </View>
-      <View style={{ backgroundColor: "red", width: "100%", height: "100%" }}>
-        <Text>TabNavigator</Text>
-      </View>
     </View>
   );
 };
@@ -292,5 +289,6 @@ const styles = StyleSheet.create({
   wrapper: {
     backgroundColor: colors.black,
     paddingHorizontal: 20,
+    height: "100%",
   },
 });

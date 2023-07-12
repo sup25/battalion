@@ -37,10 +37,16 @@ const ForgotPasswordScreen = ({ navigation }) => {
     <Screen style={styles.container} behavior="height">
       {emailSent ? (
         <>
-          <Text style={styles.emailSentText}>
-            Password reset email has been sent.
-          </Text>
-          <CarButton title=" Back To home" onPress={handleBackto} />
+          <View style={{ alignItems: "center", marginTop: 200 }}>
+            <Text style={styles.emailSentText}>
+              Password reset email has been sent.
+            </Text>
+            <CarButton
+              title=" Back To home"
+              onPress={handleBackto}
+              width={277}
+            />
+          </View>
         </>
       ) : (
         <>
@@ -112,6 +118,7 @@ const styles = StyleSheet.create({
     width: 283,
     marginVertical: 20,
     height: 50,
+    color: "#656565",
   },
   logoContainer: {
     justifyContent: "flex-start",
