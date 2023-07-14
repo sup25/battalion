@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
@@ -16,4 +17,12 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 
-export { app, auth };
+onAuthStateChanged(auth, async (user) => {
+  if (user) {
+    await AsyncStorage.setItem("user", JSON.stringify(user));
+  } else {
+    await AsyncStorage.removeItem("user");
+  }
+});
+
+export { auth };

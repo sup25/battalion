@@ -4,13 +4,16 @@ import { auth } from "../authentication/Firebase";
 import CarButton from "../component/CarButton";
 import colors from "../config/colors";
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = () => {
   const handleLogout = () => {
     auth
       .signOut()
-      .then(console.log("succesfully logged out"))
+      .then(() => {
+        console.log("Successfully logged out");
+      })
       .catch((error) => console.log(error));
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.logoutContainer}>

@@ -3,7 +3,6 @@ import {
   StyleSheet,
   Text,
   TextInput,
-  TouchableOpacity,
   View,
   StatusBar,
   Image,
@@ -18,18 +17,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 const WelcomeScreen = ({ navigation }) => {
   const userEmail = auth.currentUser?.email;
   const userName = userEmail ? userEmail.split("@")[0] : "";
-
-  /*  const [successMsg, setSuccessMsg] = useState("");
-  const [errorMsg, setErrorMsg] = useState(""); */
-
-  const handleSignOut = () => {
-    auth
-      .signOut()
-      .then(() => {
-        navigation.replace("Login");
-      })
-      .catch((error) => console.log(error));
-  };
 
   return (
     <View style={styles.container}>

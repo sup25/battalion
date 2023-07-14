@@ -46,15 +46,3 @@ const AppNavigator = () => (
 );
 
 export default AppNavigator;
-{
-  /* <Tab.Screen
-name="Home"
-component={WelcomeScreen}
-options={{
-  tabBarIcon: ({ color, size }) => (
-    <MaterialCommunityIcons name="home" color={color} size={size} />
-  ),
-  headerShown: false,
-}}
-/> */
-}

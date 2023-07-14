@@ -3,13 +3,12 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import MainScreen from "../screen/MainScreen";
 import LoginScreen from "../screen/LoginScreen";
 import RegisterScreen from "../screen/RegisterScreen";
-const Stack = createNativeStackNavigator();
 
 import ForgotPasswordScreen from "../screen/ForgotPasswordScreen";
 import WelcomeScreen from "../screen/WelcomeScreen";
 import InserCode from "../screen/InsertCode";
 import VerifyPhoneOne from "../screen/VerifyPhoneOne";
-
+const Stack = createNativeStackNavigator();
 const AuthNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="Main">

@@ -1,42 +1,56 @@
 import React, { useState, useEffect } from "react";
 import { NavigationContainer } from "@react-navigation/native";
 import AuthNavigator from "./app/navigation/AuthNavigator";
-import Occupation from "./app/screen/Occupation";
-import Splash from "./app/screen/splash";
-import VerifyPhoneManually from "./app/screen/VerifyPhoneManually";
-import VerifyPhoneOne from "./app/screen/VerifyPhoneOne";
-import InserCode from "./app/screen/InsertCode";
-import ScanScreen from "./app/screen/ScanScreen";
-import AfterScanScreen from "./app/screen/AfterScanScreen";
-import FoundDevices from "./app/screen/FoundDevices";
-import ConnectionScreen from "./app/screen/ConnectionScreen";
-import ConnectionRejectScreen from "./app/screen/ConnectionRejectScreen";
-import DigitPassword from "./app/screen/DigitPassword";
-
 import AppNavigator from "./app/navigation/AppNavigator";
+import Splash from "./app/screen/Splash";
 import { auth } from "./app/authentication/Firebase";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import DeviceSetting from "./app/screen/DeviceSetting";
+
 export default function App() {
   const [isSplashVisible, setIsSplashVisible] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [user, setUser] = useState(null);
 
   useEffect(() => {
+    const checkUserAuthentication = async () => {
+      const storedUser = await AsyncStorage.getItem("user");
+
+      if (storedUser) {
+        setUser(JSON.parse(storedUser));
+      }
+
+      setIsLoading(false);
+    };
+
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      setIsLoggedIn(!!user);
-      setTimeout(() => {
-        setIsSplashVisible(false);
-      }, 2000); // Delay of 2000 milliseconds (2 seconds)
+      if (user) {
+        AsyncStorage.setItem("user", JSON.stringify(user));
+      } else {
+        AsyncStorage.removeItem("user");
+      }
+
+      setUser(user);
+      setIsLoading(false);
     });
+
+    setTimeout(() => {
+      setIsSplashVisible(false);
+    }, 3000);
+
+    checkUserAuthentication();
 
     return () => unsubscribe();
   }, []);
 
-  if (isSplashVisible) {
+  if (isSplashVisible || isLoading) {
     return <Splash />;
   }
 
   return (
     <NavigationContainer>
-      {isLoggedIn ? <AppNavigator /> : <AuthNavigator />}
+      {user ? <AppNavigator /> : <AuthNavigator />}
+      {/*   <DeviceSetting /> */}
     </NavigationContainer>
   );
 }
