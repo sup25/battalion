@@ -2,6 +2,7 @@ import colors from "../config/colors";
 import CarLinkButton from "../component/CarLinkButton";
 import TextLogo from "../assets/TextLogo";
 import React, { useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   View,
   Text,
@@ -13,17 +14,28 @@ import {
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../authentication/Firebase";
+import { useContext } from "react";
+import { CredentialContext } from "../context/Credintial";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginErrorMessage, setLoginErrorMessage] = useState("");
+  const { setUser } = useContext(CredentialContext);
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log("Logged in with:", user.email);
+
+        // Store user credentials in AsyncStorage
+        AsyncStorage.setItem(
+          "userCredentials",
+          JSON.stringify(userCredentials)
+        );
+
+        setUser({ token: user.email }); // Set the user token
         navigation.navigate("Home");
       })
       .catch((error) => {
@@ -91,7 +103,7 @@ export default function LoginScreen({ navigation }) {
           navigation={navigation}
           onPress={handleLogin}
           title="Sign in"
-          mainDesc="Dont have an account? "
+          mainDesc="Don't have an account? "
           desc="Create new"
           width={277}
           registerRoute="Register"
@@ -112,7 +124,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "flex-start",
   },
-
   errorText: {
     color: colors.primary,
     marginBottom: 10,
@@ -125,7 +136,6 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 4,
   },
-
   input: {
     height: 50,
     borderColor: colors.secondary,
@@ -136,7 +146,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     color: colors.white,
   },
-
   logoConatiner: {
     alignItems: "center",
     bottom: 170,
@@ -146,7 +155,6 @@ const styles = StyleSheet.create({
     width: 355,
     bottom: 100,
   },
-
   inputTextContainer: {
     paddingHorizontal: 20,
     alignItems: "center",
@@ -161,7 +169,7 @@ const styles = StyleSheet.create({
   watermarkText: {
     textTransform: "uppercase",
     fontSize: 80,
-    fontWeight: 900,
+    fontWeight: "900",
     color: colors.white,
     textAlign: "center",
     opacity: 0.5,
