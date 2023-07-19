@@ -7,7 +7,7 @@ import WelcomeScreen from "../screen/WelcomeScreen";
 
 const Tab = createBottomTabNavigator();
 
-const AppNavigator = () => (
+const LoggedInNavigator = () => (
   <Tab.Navigator
     screenOptions={() => ({
       headerShown: false,
@@ -45,4 +45,4 @@ const AppNavigator = () => (
   </Tab.Navigator>
 );
 
-export default AppNavigator;
+export default LoggedInNavigator;

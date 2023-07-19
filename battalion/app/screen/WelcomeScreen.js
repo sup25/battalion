@@ -9,13 +9,14 @@ import {
   ImageBackground,
 } from "react-native";
 
-import { auth } from "../authentication/Firebase";
+import { useAuth } from "../navigation/AuthNavigator";
 
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const WelcomeScreen = ({ navigation }) => {
-  const userEmail = auth.currentUser?.email;
+const WelcomeScreen = () => {
+  const { currentUser } = useAuth();
+  const userEmail = currentUser?.email;
   const userName = userEmail ? userEmail.split("@")[0] : "";
 
   return (

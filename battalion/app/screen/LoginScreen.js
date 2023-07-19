@@ -2,7 +2,7 @@ import colors from "../config/colors";
 import CarLinkButton from "../component/CarLinkButton";
 import TextLogo from "../assets/TextLogo";
 import React, { useState } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
 import {
   View,
   Text,
@@ -14,14 +14,11 @@ import {
 
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../authentication/Firebase";
-import { useContext } from "react";
-import { CredentialContext } from "../context/Credintial";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginErrorMessage, setLoginErrorMessage] = useState("");
-  const { setUser } = useContext(CredentialContext);
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
@@ -29,13 +26,6 @@ export default function LoginScreen({ navigation }) {
         const user = userCredentials.user;
         console.log("Logged in with:", user.email);
 
-        // Store user credentials in AsyncStorage
-        AsyncStorage.setItem(
-          "userCredentials",
-          JSON.stringify(userCredentials)
-        );
-
-        setUser({ token: user.email }); // Set the user token
         navigation.navigate("Home");
       })
       .catch((error) => {
