@@ -1,9 +1,10 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import colors from "../config/colors";
 import CarButton from "../component/CarButton";
+import { useAuth } from "../navigation/AuthNavigator";
 
-const VerifyPhoneOne = () => {
+const VerifyPhoneOne = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.containerSmall}>

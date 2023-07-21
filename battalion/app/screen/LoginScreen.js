@@ -1,7 +1,7 @@
 import colors from "../config/colors";
 import CarLinkButton from "../component/CarLinkButton";
 import TextLogo from "../assets/TextLogo";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   View,
@@ -12,21 +12,42 @@ import {
   Image,
 } from "react-native";
 
-import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../authentication/Firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { useAuth } from "../navigation/AuthNavigator";
 
 export default function LoginScreen({ navigation }) {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginErrorMessage, setLoginErrorMessage] = useState("");
+  const { currentUser } = useAuth();
+
+  /*  useEffect(() => {
+    // If a user is already logged in and email is verified, navigate to the "Phoneverify" screen
+    if (currentUser && currentUser.emailVerified) {
+      navigation.navigate("Phoneverify");
+    }
+  }, [currentUser, navigation]); */
 
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
         const user = userCredentials.user;
         console.log("Logged in with:", user.email);
-
-        navigation.navigate("Home");
+        console.log(
+          "User credentials:",
+          user.updateProfile({ phoneNumber: "+123456789" })
+        );
+        if (currentUser && currentUser.phoneNumber) {
+          // If the phone is  verified, navigate to another screen
+          console.log("Phonenumber is verified. Redirecting to Home.");
+        } else {
+          // Navigate to the "Phoneverify" screen if phone is not verified
+          navigation.navigate("Phoneverify");
+          console.log(
+            "Phonenumber is not verified. Redirecting to phone verify."
+          );
+        }
       })
       .catch((error) => {
         if (error.code === "auth/wrong-password") {

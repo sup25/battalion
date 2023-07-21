@@ -9,7 +9,7 @@ import WelcomeScreen from "../screen/WelcomeScreen";
 import InserCode from "../screen/InsertCode";
 import VerifyPhoneOne from "../screen/VerifyPhoneOne";
 const Stack = createNativeStackNavigator();
-const AuthNavigator = () => {
+const LoggedOutNavigator = () => {
   return (
     <Stack.Navigator initialRouteName="Main">
       <Stack.Screen
@@ -28,7 +28,7 @@ const AuthNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="phoneverify"
+        name="Phoneverify"
         component={VerifyPhoneOne}
         options={{ headerShown: false }}
       />
@@ -51,4 +51,4 @@ const AuthNavigator = () => {
   );
 };
 
-export default AuthNavigator;
+export default LoggedOutNavigator;

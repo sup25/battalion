@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, RecaptchaVerifier } from "firebase/auth";
 
 // Your web app's Firebase configuration
 const firebaseConfig = {

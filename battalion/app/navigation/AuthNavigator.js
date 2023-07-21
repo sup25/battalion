@@ -92,13 +92,11 @@ export const AuthNavigator = () => {
     logout();
   };
 
-  return (
-    <>
-      {currentUser ? (
-        <LoggedInNavigator />
-      ) : (
-        <LoggedOutNavigator onLogout={handleLogout} />
-      )}
-    </>
-  );
+  if (currentUser && currentUser.phoneNumber) {
+    // Render the LoggedInNavigator if the user is logged in and phone number is verified
+    return <LoggedInNavigator />;
+  } else {
+    // Render the LoggedOutNavigator if the user is not logged in or phone number is not verified
+    return <LoggedOutNavigator onLogout={handleLogout} />;
+  }
 };
