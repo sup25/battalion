@@ -32,11 +32,11 @@ export default function LoginScreen({ navigation }) {
   const handleLogin = () => {
     signInWithEmailAndPassword(auth, email, password)
       .then((userCredentials) => {
-        const user = userCredentials.user;
+       
         console.log("Logged in with:", user.email);
         console.log(
           "User credentials:",
-          user.updateProfile({ phoneNumber: "+123456789" })
+          currentUser.updateProfile({ phoneNumber: "+123456789" })
         );
         if (currentUser && currentUser.phoneNumber) {
           // If the phone is  verified, navigate to another screen

@@ -1,8 +1,12 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useRef, useEffect } from "react";
+import { FirebaseRecaptchaVerifier } from "expo-firebase-recaptcha";
+import { auth } from "../authentication/Firebase";
+
 import colors from "../config/colors";
 import CarButton from "../component/CarButton";
 import { useAuth } from "../navigation/AuthNavigator";
+import { PhoneAuthProvider } from "firebase/auth";
 
 const VerifyPhoneOne = ({ navigation }) => {
   return (
