@@ -1,8 +1,4 @@
-import colors from "../config/colors";
-import CarLinkButton from "../component/CarLinkButton";
-import TextLogo from "../assets/TextLogo";
-import React, { useState, useEffect } from "react";
-
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -11,59 +7,58 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-
 import { auth } from "../authentication/Firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useAuth } from "../navigation/AuthNavigator";
+import colors from "../config/colors";
+import CarLinkButton from "../component/CarLinkButton";
+import TextLogo from "../assets/TextLogo";
 
-export default function LoginScreen({ navigation }) {
+const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginErrorMessage, setLoginErrorMessage] = useState("");
   const { currentUser } = useAuth();
 
-  /*  useEffect(() => {
-    // If a user is already logged in and email is verified, navigate to the "Phoneverify" screen
-    if (currentUser && currentUser.emailVerified) {
-      navigation.navigate("Phoneverify");
-    }
-  }, [currentUser, navigation]); */
+  const handleLogin = async () => {
+    try {
+      const userCredentials = await signInWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-  const handleLogin = () => {
-    signInWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-       
-        console.log("Logged in with:", user.email);
+      console.log("Logged in with:", userCredentials.user.email);
+
+      if (currentUser && currentUser.phoneNumber) {
+        // If the phone is verified, update the user's profile with the email (if not already set)
+        const currentEmail = currentUser?.email || "";
+        if (currentEmail !== email) {
+          await updateProfile(auth.currentUser, { email: email });
+        }
+        console.log("Email and phone number match. Logging in.");
+      } else {
+        // Navigate to the "Phoneverify" screen if phone is not verified
+        navigation.navigate("Phoneverify");
         console.log(
-          "User credentials:",
-          currentUser.updateProfile({ phoneNumber: "+123456789" })
+          "Phonenumber is not verified. Redirecting to phone verify."
         );
-        if (currentUser && currentUser.phoneNumber) {
-          // If the phone is  verified, navigate to another screen
-          console.log("Phonenumber is verified. Redirecting to Home.");
-        } else {
-          // Navigate to the "Phoneverify" screen if phone is not verified
-          navigation.navigate("Phoneverify");
-          console.log(
-            "Phonenumber is not verified. Redirecting to phone verify."
-          );
-        }
-      })
-      .catch((error) => {
-        if (error.code === "auth/wrong-password") {
-          setLoginErrorMessage(
-            "User not found. Please check your email or password."
-          );
-        } else if (error.code === "auth/user-not-found") {
-          setLoginErrorMessage("User does not exist.");
-        } else {
-          setLoginErrorMessage("Login failed. Please try again.");
-        }
-        console.log(error);
-        setTimeout(() => {
-          setLoginErrorMessage("");
-        }, 3000);
-      });
+      }
+    } catch (error) {
+      if (error.code === "auth/wrong-password") {
+        setLoginErrorMessage(
+          "User not found. Please check your email or password."
+        );
+      } else if (error.code === "auth/user-not-found") {
+        setLoginErrorMessage("User does not exist.");
+      } else {
+        setLoginErrorMessage("Login failed. Please try again.");
+      }
+      console.log(error);
+      setTimeout(() => {
+        setLoginErrorMessage("");
+      }, 3000);
+    }
   };
 
   const handleForgotPassword = () => {
@@ -123,7 +118,7 @@ export default function LoginScreen({ navigation }) {
       </View>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   btnLink: {
@@ -188,3 +183,5 @@ const styles = StyleSheet.create({
     marginTop: 62,
   },
 });
+
+export default LoginScreen;

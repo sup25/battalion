@@ -6,6 +6,7 @@ import Screen from "../component/Screen";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../authentication/Firebase";
 import CarLinkButton from "../component/CarLinkButton";
+import { useAuth } from "../navigation/AuthNavigator";
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
@@ -16,14 +17,17 @@ export default function RegisterScreen({ navigation }) {
   const [registerErrorMessage, setRegisterErrorMessage] = useState("");
   const [registerSuccessMessage, setRegisterSuccessMessage] = useState("");
 
-  const handleRegister = () => {
-    if (name.trim() === "") {
-      setRegisterErrorMessage("Please enter your name");
+  const { currentUser } = useAuth();
+
+  const handleRegister = async () => {
+    if (name.trim() === "" || email.trim() === "" || password.trim() === "") {
+      setRegisterErrorMessage("Please fill all the fields");
       setTimeout(() => {
         setRegisterErrorMessage("");
       }, 3000);
       return;
     }
+
     if (password !== confirmpassword) {
       setPasswordMatchError(true);
       setTimeout(() => {
@@ -33,51 +37,56 @@ export default function RegisterScreen({ navigation }) {
     } else {
       setPasswordMatchError(false);
     }
-    createUserWithEmailAndPassword(auth, email, password)
-      .then((userCredentials) => {
-        const user = userCredentials.user;
-        updateProfile(user, { displayName: name })
-          .then(() => {
-            console.log("Registered with:", user.email);
-            setRegisterSuccessMessage("Successfully registered");
-            setName("");
-            setEmail("");
-            setPassword("");
-            setConfirmPassword("");
 
-            setTimeout(() => {
-              setRegisterErrorMessage("");
-            }, 3000);
+    try {
+      const userCredentials = await createUserWithEmailAndPassword(
+        auth,
+        email,
+        password
+      );
 
-            setTimeout(() => {
-              setRegisterSuccessMessage("");
-            }, 3000);
-          })
-          .catch((error) => {
-            console.log(error);
-            setRegisterErrorMessage(error.message);
-            setTimeout(() => {
-              setRegisterErrorMessage("");
-            }, 3000);
-          });
-      })
-      .catch((error) => {
-        if (error.code === "auth/email-already-in-use") {
-          setRegisterErrorMessage("User already exists.");
-        } else if (
-          error.code === "auth/invalid-email" ||
-          "auth/missing-password"
-        ) {
-          setRegisterErrorMessage("Please fill all the fields");
-        } else {
-          setRegisterErrorMessage(error.message);
-        }
-        console.log(error);
+      const user = userCredentials.user;
 
-        setTimeout(() => {
-          setRegisterErrorMessage("");
-        }, 3000);
-      });
+      await updateProfile(user, { displayName: name });
+
+      console.log("Registered with:", user.email);
+      setRegisterSuccessMessage("Successfully registered");
+      setName("");
+      setEmail("");
+      setPassword("");
+      setConfirmPassword("");
+
+      setTimeout(() => {
+        setRegisterSuccessMessage("");
+      }, 3000);
+
+      // If the phone is verified, navigate to another screen
+      if (currentUser && currentUser.phoneNumber) {
+        console.log("Phonenumber is verified.");
+      } else {
+        // Navigate to the "Phoneverify" screen if phone is not verified
+        navigation.navigate("Phoneverify");
+        console.log(
+          "Phonenumber is not verified. Redirecting to phone verify."
+        );
+      }
+    } catch (error) {
+      if (error.code === "auth/email-already-in-use") {
+        setRegisterErrorMessage("User already exists.");
+      } else if (
+        error.code === "auth/invalid-email" ||
+        error.code === "auth/missing-password"
+      ) {
+        setRegisterErrorMessage("Please fill all the fields");
+      } else {
+        setRegisterErrorMessage(error.message);
+      }
+      console.log(error);
+
+      setTimeout(() => {
+        setRegisterErrorMessage("");
+      }, 3000);
+    }
   };
 
   return (
