@@ -9,6 +9,7 @@ const ProfileScreen = ({ navigation }) => {
   const { logout, currentUser } = useAuth();
   const userEmail = currentUser?.email;
   const userName = userEmail ? userEmail.split("@")[0] : "";
+  const phoneNumber = currentUser?.phoneNumber;
 
   const handleLogout = () => {
     logout();
@@ -58,6 +59,7 @@ const ProfileScreen = ({ navigation }) => {
               style={styles.inputs}
               placeholder="+10000"
               placeholderTextColor="white"
+              value={phoneNumber}
             />
             <MaterialCommunityIcons
               name="pencil"

@@ -1,35 +1,38 @@
-import { getDatabase, ref, set, child, get } from "firebase/database";
+import {
+  getFirestore,
+  collection,
+  doc,
+  setDoc,
+  getDoc,
+} from "firebase/firestore";
 
-const db = getDatabase();
+const db = getFirestore();
 
-const writeUserData = (barcode, model, user) => {
-  const stackRef = ref(db, "Users/" + user);
+const writeUserData = async (data) => {
+  const { id, product_code, model, serial_number, specs, user } = data;
+  const userRef = doc(db, "Models", user);
 
-  // Check if barcode exists before updating data
-  get(child(stackRef, "barcode"))
-    .then((snapshot) => {
-      const existingBarcode = snapshot.val();
+  try {
+    const userDoc = await getDoc(userRef);
 
-      if (existingBarcode) {
-        console.log("Barcode already exists. Cannot update other data.");
-        return;
-      }
+    if (userDoc.exists()) {
+      console.log("Barcode already exists. Cannot update other data.");
+      return;
+    }
 
-      set(stackRef, {
-        barcode: barcode,
-        model: model,
-        user: user,
-      })
-        .then(() => {
-          console.log("Data saved successfully");
-        })
-        .catch((error) => {
-          console.log("Error saving data:", error);
-        });
-    })
-    .catch((error) => {
-      console.log("Error checking barcode:", error);
+    await setDoc(userRef, {
+      id: id,
+      product_code: product_code,
+      model: model,
+      serial_number: serial_number,
+      specs: specs,
+      user: user,
     });
+
+    console.log("Data saved successfully");
+  } catch (error) {
+    console.log("Error saving data:", error);
+  }
 };
 
 export default writeUserData;

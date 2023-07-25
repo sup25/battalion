@@ -8,17 +8,32 @@ import {
   Image,
 } from "react-native";
 import { auth } from "../authentication/Firebase";
-import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  updateProfile,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { useAuth } from "../navigation/AuthNavigator";
 import colors from "../config/colors";
 import CarLinkButton from "../component/CarLinkButton";
 import TextLogo from "../assets/TextLogo";
+import { useRoute } from "@react-navigation/native";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginErrorMessage, setLoginErrorMessage] = useState("");
   const { currentUser } = useAuth();
+  const route = useRoute();
+
+  useEffect(() => {
+    // Use the 'route' prop to access the parameters passed from the 'VerifyPhoneOne' screen
+    const { phoneNumber } = route.params || {};
+    if (phoneNumber) {
+      // If the phone number is available, update the 'email' state with the phone number
+      setEmail(phoneNumber);
+    }
+  }, [route]);
 
   const handleLogin = async () => {
     try {
@@ -29,14 +44,16 @@ const LoginScreen = ({ navigation }) => {
       );
 
       console.log("Logged in with:", userCredentials.user.email);
+      console.log("Phone number:", userCredentials.user.phoneNumber);
 
-      if (currentUser && currentUser.phoneNumber) {
+      if (userCredentials.user.phoneNumber) {
         // If the phone is verified, update the user's profile with the email (if not already set)
-        const currentEmail = currentUser?.email || "";
+        const currentEmail = userCredentials.user.email || "";
         if (currentEmail !== email) {
           await updateProfile(auth.currentUser, { email: email });
         }
-        console.log("Email and phone number match. Logging in.");
+        console.log("Email and phone number match.");
+        navigation.navigate("Home");
       } else {
         // Navigate to the "Phoneverify" screen if phone is not verified
         navigation.navigate("Phoneverify");

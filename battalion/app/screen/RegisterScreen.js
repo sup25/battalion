@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, StatusBar } from "react-native";
 import colors from "../config/colors";
 import TextLogo from "../assets/TextLogo";
-import Screen from "../component/Screen";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../authentication/Firebase";
 import CarLinkButton from "../component/CarLinkButton";
@@ -47,7 +46,9 @@ export default function RegisterScreen({ navigation }) {
 
       const user = userCredentials.user;
 
-      await updateProfile(user, { displayName: name });
+      await updateProfile(user, {
+        displayName: name,
+      });
 
       console.log("Registered with:", user.email);
       setRegisterSuccessMessage("Successfully registered");

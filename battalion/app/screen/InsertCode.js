@@ -4,7 +4,7 @@ import colors from "../config/colors";
 import CarButton from "../component/CarButton";
 import { PhoneAuthProvider } from "firebase/auth";
 import { auth } from "../authentication/Firebase";
-import { signInWithCredential, updateProfile } from "firebase/auth";
+import { linkWithCredential, updateProfile } from "firebase/auth";
 import { useRoute } from "@react-navigation/native";
 import { useAuth } from "../navigation/AuthNavigator";
 
@@ -39,7 +39,7 @@ const InsertCode = ({ navigation }) => {
     try {
       const code = verificationCode.join(""); // Join the digits to get the complete 6-digit code
       const credential = PhoneAuthProvider.credential(verificationId, code);
-      await signInWithCredential(auth, credential);
+      await linkWithCredential(currentUser, credential);
 
       // Update the user's profile with the phone number
       await updateProfile(auth.currentUser, {
@@ -47,7 +47,9 @@ const InsertCode = ({ navigation }) => {
         phoneNumber: currentUser?.phoneNumber || "", // Keep the existing phone number as it is already verified
       });
 
-      setInfo("Success: Phone authentication successful");
+      const message = "Success: Phone authentication successful";
+      setInfo(message);
+      console.log("Message", message);
     } catch (error) {
       setInfo(`Error: ${error.message}`);
     }
