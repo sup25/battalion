@@ -8,7 +8,7 @@
  * //in case of without timing
  * handleClearErrorMessage(setErrorMessage) //will not fire setTimeout
  */
-const handleClearErrorMessage = (setState, time = false) => {
+const handleClearMessage = (setState, time = false) => {
   if (time) {
     setTimeout(() => {
       setState("");
@@ -19,4 +19,4 @@ const handleClearErrorMessage = (setState, time = false) => {
   return;
 };
 
-export default handleClearErrorMessage;
+export default handleClearMessage;

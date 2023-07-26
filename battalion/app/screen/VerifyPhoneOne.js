@@ -9,6 +9,7 @@ import { PhoneAuthProvider } from "firebase/auth";
 
 const VerifyPhoneOne = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
+  const [countryCode, setCountryCode] = useState("+1");
 
   const recaptchaVerifier = useRef(null);
   const [info, setInfo] = useState("");
@@ -24,9 +25,10 @@ const VerifyPhoneOne = ({ navigation }) => {
   };
   const handleSendVerificationCode = async () => {
     try {
+      const fullPhoneNumber = countryCode + phoneNumber;
       const phoneProvider = new PhoneAuthProvider(auth);
       const verificationId = await phoneProvider.verifyPhoneNumber(
-        phoneNumber,
+        fullPhoneNumber,
         recaptchaVerifier.current
       );
       const message = "Success: Verification code has been sent to your phone";
@@ -35,7 +37,7 @@ const VerifyPhoneOne = ({ navigation }) => {
 
       navigation.navigate("ConfirmCode", {
         verificationId,
-        phoneNumber: phoneNumber,
+        phoneNumber: fullPhoneNumber,
       });
     } catch (error) {
       setInfo(`Error: ${error.message}`);
@@ -53,7 +55,11 @@ const VerifyPhoneOne = ({ navigation }) => {
           We’ll send you a code to keep your account secure
         </Text>
         <View style={styles.txtInputContainer}>
-          <TextInput style={styles.txtInputPhoneNumber} defaultValue="+1" />
+          <TextInput
+            style={styles.txtInputPhoneNumber}
+            defaultValue={countryCode}
+            onChangeText={(code) => setCountryCode(code)}
+          />
           <TextInput
             style={styles.txtInput}
             autoCompleteType="tel"

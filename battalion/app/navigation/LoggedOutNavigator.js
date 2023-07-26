@@ -8,6 +8,7 @@ import ForgotPasswordScreen from "../screen/ForgotPasswordScreen";
 import WelcomeScreen from "../screen/WelcomeScreen";
 import InserCode from "../screen/InsertCode";
 import VerifyPhoneOne from "../screen/VerifyPhoneOne";
+import ProfileScreen from "../screen/ProfileScreen";
 const Stack = createNativeStackNavigator();
 const LoggedOutNavigator = () => {
   return (
@@ -40,6 +41,11 @@ const LoggedOutNavigator = () => {
       <Stack.Screen
         name="Home"
         component={WelcomeScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Profile"
+        component={ProfileScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

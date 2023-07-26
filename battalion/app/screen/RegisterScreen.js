@@ -6,6 +6,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../authentication/Firebase";
 import CarLinkButton from "../component/CarLinkButton";
 import { useAuth } from "../navigation/AuthNavigator";
+import handleClearMessage from "../utils/HandleClearErrorMessage";
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
@@ -21,17 +22,12 @@ export default function RegisterScreen({ navigation }) {
   const handleRegister = async () => {
     if (name.trim() === "" || email.trim() === "" || password.trim() === "") {
       setRegisterErrorMessage("Please fill all the fields");
-      setTimeout(() => {
-        setRegisterErrorMessage("");
-      }, 3000);
+      handleClearMessage(setRegisterErrorMessage, 3000);
       return;
     }
 
     if (password !== confirmpassword) {
-      setPasswordMatchError(true);
-      setTimeout(() => {
-        setPasswordMatchError(false);
-      }, 3000);
+      handleClearMessage(setPasswordMatchError, 3000);
       return;
     } else {
       setPasswordMatchError(false);
@@ -57,9 +53,7 @@ export default function RegisterScreen({ navigation }) {
       setPassword("");
       setConfirmPassword("");
 
-      setTimeout(() => {
-        setRegisterSuccessMessage("");
-      }, 3000);
+      handleClearMessage(setRegisterSuccessMessage, 3000);
 
       // If the phone is verified, navigate to another screen
       if (currentUser && currentUser.phoneNumber) {
@@ -84,9 +78,7 @@ export default function RegisterScreen({ navigation }) {
       }
       console.log(error);
 
-      setTimeout(() => {
-        setRegisterErrorMessage("");
-      }, 3000);
+      handleClearMessage(setRegisterErrorMessage, 3000);
     }
   };
 

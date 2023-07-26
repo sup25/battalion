@@ -1,16 +1,9 @@
-import {
-  getFirestore,
-  collection,
-  doc,
-  setDoc,
-  getDoc,
-} from "firebase/firestore";
-
-const db = getFirestore();
+import { collection, doc, setDoc, getDoc } from "firebase/firestore";
+import { db } from "./Firebase";
 
 const writeUserData = async (data) => {
   const { id, product_code, model, serial_number, specs, user } = data;
-  const userRef = doc(db, "Models", user);
+  const userRef = doc(collection(db, "Models"), user);
 
   try {
     const userDoc = await getDoc(userRef);
