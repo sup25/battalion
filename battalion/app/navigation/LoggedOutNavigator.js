@@ -9,6 +9,7 @@ import WelcomeScreen from "../screen/WelcomeScreen";
 import InserCode from "../screen/InsertCode";
 import VerifyPhoneOne from "../screen/VerifyPhoneOne";
 import ProfileScreen from "../screen/ProfileScreen";
+import VerifyPhoneManually from "../screen/VerifyPhoneManually";
 const Stack = createNativeStackNavigator();
 const LoggedOutNavigator = () => {
   return (
@@ -23,6 +24,7 @@ const LoggedOutNavigator = () => {
         component={LoginScreen}
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
         name="Register"
         component={RegisterScreen}
@@ -36,6 +38,11 @@ const LoggedOutNavigator = () => {
       <Stack.Screen
         name="ConfirmCode"
         component={InserCode}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="Manually"
+        component={VerifyPhoneManually}
         options={{ headerShown: false }}
       />
       <Stack.Screen

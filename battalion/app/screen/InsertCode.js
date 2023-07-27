@@ -1,10 +1,13 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState, useEffect, useRef } from "react";
+import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  PhoneAuthProvider,
+  linkWithCredential,
+  updateProfile,
+} from "firebase/auth";
+import { auth } from "../authentication/Firebase";
 import colors from "../config/colors";
 import CarButton from "../component/CarButton";
-import { PhoneAuthProvider } from "firebase/auth";
-import { auth } from "../authentication/Firebase";
-import { linkWithCredential, updateProfile } from "firebase/auth";
 import { useRoute } from "@react-navigation/native";
 import { useAuth } from "../navigation/AuthNavigator";
 
@@ -50,6 +53,7 @@ const InsertCode = ({ navigation }) => {
       const message = "Success: Phone authentication successful";
       setInfo(message);
       console.log("Message", message);
+      navigation.navigate("Home");
     } catch (error) {
       setInfo(`Error: ${error.message}`);
     }
@@ -157,7 +161,7 @@ const styles = StyleSheet.create({
   txtFirst: {
     color: colors.white,
     fontSize: 24,
-    fontWeight: 500,
+    fontWeight: "500",
     textAlign: "center",
     maxWidth: 181,
     alignItems: "center",
@@ -165,7 +169,7 @@ const styles = StyleSheet.create({
   txtSecond: {
     color: "#8F8F8F",
     fontSize: 16,
-    fontWeight: 400,
+    fontWeight: "400",
     textAlign: "center",
     marginTop: 8,
     maxWidth: 200,

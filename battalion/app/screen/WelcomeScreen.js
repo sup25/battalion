@@ -14,7 +14,7 @@ import { useAuth } from "../navigation/AuthNavigator";
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-const WelcomeScreen = () => {
+const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
   const userEmail = currentUser?.email;
   const userName = userEmail ? userEmail.split("@")[0] : "";
@@ -31,7 +31,14 @@ const WelcomeScreen = () => {
         </View>
         <View style={styles.deviceContainer}>
           <Text style={styles.connDevice}>Devices Connected</Text>
-          <Text style={styles.addDevice}>Add Device +</Text>
+          <Text
+            style={styles.addDevice}
+            onPress={() => {
+              navigation.navigate("Manually");
+            }}
+          >
+            Add Device +
+          </Text>
         </View>
         <View style={styles.battalionId}>
           <TextInput

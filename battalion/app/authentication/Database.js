@@ -2,29 +2,44 @@ import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 
 const writeUserData = async (data) => {
-  const { id, product_code, model, serial_number, specs, user } = data;
-  const userRef = doc(collection(db, "Models"), user);
+  const { combinedSerialNum } = data;
 
   try {
-    const userDoc = await getDoc(userRef);
+    // Validate the owner field
+    if (!data.owner) {
+      throw new Error("Owner field is required.");
+    }
 
-    if (userDoc.exists()) {
-      console.log("Barcode already exists. Cannot update other data.");
+    // Extract the four parts from the combinedSerialNum
+    const modelNum = combinedSerialNum.substring(0, 4);
+    const prodDate = combinedSerialNum.substring(4, 8);
+    const serialNum = combinedSerialNum.substring(8, 12);
+    const remaining = combinedSerialNum.substring(0, 12);
+
+    // Format the prodDate as "DD/MM" (e.g., "23/07")
+    const formattedProdDate = prodDate.replace(/(\d{2})(\d{2})/, "$1/$2");
+
+    // Create the document reference using combinedSerialNum
+    const deviceRef = doc(collection(db, "devices"), combinedSerialNum);
+    const deviceDoc = await getDoc(deviceRef);
+
+    if (deviceDoc.exists()) {
+      console.log("Device data already exists. Cannot update.");
       return;
     }
 
-    await setDoc(userRef, {
-      id: id,
-      product_code: product_code,
-      model: model,
-      serial_number: serial_number,
-      specs: specs,
-      user: user,
+    await setDoc(deviceRef, {
+      modelNum,
+      prodDate: formattedProdDate,
+      serialNum,
+      combinedSerialNum: remaining,
+      owner: data.owner,
+      users: data.users,
     });
 
-    console.log("Data saved successfully");
+    console.log("Device data saved successfully");
   } catch (error) {
-    console.log("Error saving data:", error);
+    console.log("Error saving device data:", error.message);
   }
 };
 
