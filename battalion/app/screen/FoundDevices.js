@@ -8,7 +8,7 @@ import {
   View,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CarButton from "../component/CarButton";
+import CarthagosButton from "../component/CarthagosButton";
 import colors from "../config/colors";
 
 const FoundDevices = ({ navigation }) => {
@@ -73,7 +73,7 @@ const FoundDevices = ({ navigation }) => {
         </View>
 
         <View style={styles.btn}>
-          <CarButton title="confirm" textColor="white" width={277} />
+          <CarthagosButton title="confirm" textColor="white" width={277} />
         </View>
       </ImageBackground>
     </View>

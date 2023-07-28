@@ -5,9 +5,10 @@ import {
   linkWithCredential,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "../authentication/Firebase";
+
+import { auth } from "../config/Firebase";
 import colors from "../config/colors";
-import CarButton from "../component/CarButton";
+import CarthagosButton from "../component/CarthagosButton";
 import { useRoute } from "@react-navigation/native";
 import { useAuth } from "../navigation/AuthNavigator";
 
@@ -53,7 +54,7 @@ const InsertCode = ({ navigation }) => {
       const message = "Success: Phone authentication successful";
       setInfo(message);
       console.log("Message", message);
-      navigation.navigate("Home");
+      navigation.navigate("MainTabs");
     } catch (error) {
       setInfo(`Error: ${error.message}`);
     }
@@ -98,7 +99,7 @@ const InsertCode = ({ navigation }) => {
           ))}
         </View>
         <Text style={styles.info}>{info}</Text>
-        <CarButton
+        <CarthagosButton
           title="resend code"
           width={277}
           textColor={colors.black}
@@ -106,7 +107,7 @@ const InsertCode = ({ navigation }) => {
         />
       </View>
       <View style={styles.btn}>
-        <CarButton
+        <CarthagosButton
           title="confirm"
           width={277}
           textColor={colors.white}

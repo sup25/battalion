@@ -1,17 +1,19 @@
 import React, { useEffect, useState, createContext, useContext } from "react";
 import { View, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useNavigation } from "@react-navigation/native";
-import { auth } from "../authentication/Firebase";
-import LoggedOutNavigator from "./LoggedOutNavigator";
-import LoggedInNavigator from "./LoggedInNavigator";
+import { NavigationContainer, useNavigation } from "@react-navigation/native";
+import { auth } from "../config/Firebase";
+import PublicRoute from "./PublicRoute";
+import PrivateRoute from "./PrivateRoute";
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [currentUser, setCurrentUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
+
   const navigation = useNavigation();
+
   const userHandler = (user) => {
     user ? setCurrentUser(user) : setCurrentUser(null);
     setIsLoading(false); // Set loading state to false once user state is determined
@@ -24,8 +26,8 @@ export const AuthProvider = ({ children }) => {
       await AsyncStorage.removeItem("currentUser");
       console.log("Successfully logged out");
 
-      // Navigate to LoggedOutNavigator
-      navigation.navigate("LoggedOutNavigator");
+      // Use the passed navigation instance for navigation
+      navigation.navigate("publicRoute");
     } catch (error) {
       console.log("Error logging out:", error);
     }
@@ -55,7 +57,7 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(false);
       } catch (error) {
         console.log("Error retrieving user authentication state:", error);
-        setIsLoading(false); // Set loading state to false even in case of an error
+        setIsLoading(false);
       }
     };
 
@@ -85,18 +87,24 @@ export const useAuth = () => {
   return useContext(AuthContext);
 };
 
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
+const Stack = createNativeStackNavigator();
 export const AuthNavigator = () => {
-  const { currentUser, logout } = useAuth();
-
-  const handleLogout = () => {
-    logout();
-  };
-
-  if (currentUser && currentUser.phoneNumber) {
-    // Render the LoggedInNavigator if the user is logged in and phone number is verified
-    return <LoggedInNavigator />;
-  } else {
-    // Render the LoggedOutNavigator if the user is not logged in or phone number is not verified
-    return <LoggedOutNavigator onLogout={handleLogout} />;
-  }
+  return (
+    <AuthProvider>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="privateRoute"
+          options={{ gestureEnabled: false, headerShown: false }}
+          component={PrivateRoute}
+        />
+        <Stack.Screen
+          name="publicRoute"
+          options={{ gestureEnabled: false, headerShown: false }}
+          component={PublicRoute}
+        />
+      </Stack.Navigator>
+    </AuthProvider>
+  );
 };

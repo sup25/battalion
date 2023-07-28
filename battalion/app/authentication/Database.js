@@ -1,5 +1,5 @@
 import { collection, doc, setDoc, getDoc } from "firebase/firestore";
-import { db } from "./Firebase";
+import { db } from "../config/Firebase";
 
 const writeUserData = async (data) => {
   const { combinedSerialNum } = data;

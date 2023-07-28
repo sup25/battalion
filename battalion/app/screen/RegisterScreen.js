@@ -3,8 +3,8 @@ import { View, Text, TextInput, StyleSheet, StatusBar } from "react-native";
 import colors from "../config/colors";
 import TextLogo from "../assets/TextLogo";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "../authentication/Firebase";
-import CarLinkButton from "../component/CarLinkButton";
+import { auth } from "../config/Firebase";
+import CarthagosLinkButton from "../component/CarthagosLinkButton";
 import { useAuth } from "../navigation/AuthNavigator";
 import handleClearMessage from "../utils/HandleClearErrorMessage";
 
@@ -135,7 +135,7 @@ export default function RegisterScreen({ navigation }) {
         ) : null}
       </View>
       <View style={styles.btnLink}>
-        <CarLinkButton
+        <CarthagosLinkButton
           navigation={navigation}
           onPress={handleRegister}
           title="Continue"

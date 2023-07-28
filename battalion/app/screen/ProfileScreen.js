@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import { useAuth } from "../navigation/AuthNavigator";
-import CarButton from "../component/CarButton";
+import CarthagosButton from "../component/CarthagosButton";
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
@@ -82,7 +82,7 @@ const ProfileScreen = ({ navigation }) => {
           />
           <Text style={styles.nodeviceTxt}>No devices connected</Text>
         </View>
-        <CarButton
+        <CarthagosButton
           title="Logout"
           textColor="white"
           width={277}

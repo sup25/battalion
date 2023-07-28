@@ -7,7 +7,13 @@ import {
 } from "react-native";
 import colors from "../config/colors";
 
-function CarButton({ title, onPress, color = "primary", width, textColor }) {
+function CarthagosButton({
+  title,
+  onPress,
+  color = "primary",
+  width,
+  textColor,
+}) {
   const [isLoading, setIsLoading] = useState(false);
 
   const handlePress = () => {
@@ -56,4 +62,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CarButton;
+export default CarthagosButton;

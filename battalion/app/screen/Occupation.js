@@ -1,6 +1,6 @@
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import React from "react";
-import CarLinkButton from "../component/CarLinkButton";
+import CarthagosLinkButton from "../component/CarthagosLinkButton";
 import Screen from "../component/Screen";
 import colors from "../config/colors";
 import TextLogo from "../assets/TextLogo";
@@ -49,7 +49,7 @@ const Occupation = ({ navigation }) => {
           />
         </View>
         <View style={styles.btnLink}>
-          <CarLinkButton
+          <CarthagosLinkButton
             navigation={navigation}
             title="Continue"
             mainDesc="Already Have an account? "

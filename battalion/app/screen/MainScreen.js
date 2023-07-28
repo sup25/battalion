@@ -8,7 +8,7 @@ import {
 } from "react-native";
 
 import colors from "../config/colors";
-import CarButton from "../component/CarButton";
+import CarthagosButton from "../component/CarthagosButton";
 
 export default function MainScreen({ navigation }) {
   return (
@@ -31,14 +31,14 @@ export default function MainScreen({ navigation }) {
           </Text>
         </View>
         <View style={styles.buttonsContainer}>
-          <CarButton
+          <CarthagosButton
             title="new member"
             color="white"
             width={168}
             onPress={() => navigation.navigate("Register")}
             textColor="black"
           />
-          <CarButton
+          <CarthagosButton
             textColor="white"
             title="sign in"
             onPress={() => navigation.navigate("Login")}

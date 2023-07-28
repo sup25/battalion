@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, ImageBackground, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CarButton from "../component/CarButton";
+import CarthagosButton from "../component/CarthagosButton";
 import colors from "../config/colors";
 
 const ConnectionScreen = ({ navigation }) => {
@@ -16,7 +16,7 @@ const ConnectionScreen = ({ navigation }) => {
           <MaterialCommunityIcons name="check-circle" color="white" size={60} />
         </View>
         <View style={styles.btn}>
-          <CarButton title="continue" textColor="white" width={277} />
+          <CarthagosButton title="continue" textColor="white" width={277} />
         </View>
       </ImageBackground>
     </View>

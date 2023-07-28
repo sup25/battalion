@@ -1,9 +1,9 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import colors from "../config/colors";
-import CarButton from "./CarButton";
+import CarthagosButton from "./CarthagosButton";
 
-function CarLinkButton({
+function CarthagosLinkButton({
   navigation,
   mainDesc,
   desc,
@@ -27,7 +27,7 @@ function CarLinkButton({
 
   return (
     <View>
-      <CarButton
+      <CarthagosButton
         title={title}
         onPress={onPress}
         width={width}
@@ -66,4 +66,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default CarLinkButton;
+export default CarthagosLinkButton;

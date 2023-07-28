@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import CarButton from "../component/CarButton";
+import CarthagosButton from "../component/CarthagosButton";
 import { StyleSheet, View, TextInput, Text } from "react-native";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../authentication/Firebase";
+import { auth } from "../config/Firebase";
 import colors from "../config/colors";
 import TextLogo from "../assets/TextLogo";
-import Screen from "../component/Screen";
-import CarLinkButton from "../component/CarLinkButton";
+import CarthagosScreen from "../component/CarthagosScreen";
+import CarthagosLinkButton from "../component/CarthagosLinkButton";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -34,14 +34,14 @@ const ForgotPasswordScreen = ({ navigation }) => {
   };
 
   return (
-    <Screen style={styles.container} behavior="height">
+    <CarthagosScreen style={styles.container} behavior="height">
       {emailSent ? (
         <>
           <View style={{ alignItems: "center", marginTop: 200 }}>
             <Text style={styles.emailSentText}>
               Password reset email has been sent.
             </Text>
-            <CarButton
+            <CarthagosButton
               title=" Back To home"
               onPress={handleBackto}
               width={277}
@@ -67,7 +67,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
             {errormsg ? <Text style={styles.errorText}>{errormsg}</Text> : null}
           </View>
           <View style={styles.btnContainer}>
-            <CarLinkButton
+            <CarthagosLinkButton
               navigation={navigation}
               onPress={handleResetPassword}
               title="Submit"
@@ -80,7 +80,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
           </View>
         </>
       )}
-    </Screen>
+    </CarthagosScreen>
   );
 };
 

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
 import colors from "../config/colors";
-import CarButton from "../component/CarButton";
+import CarthagosButton from "../component/CarthagosButton";
 
 const DigitPassword = () => {
   return (
@@ -20,7 +20,7 @@ const DigitPassword = () => {
         </View>
       </View>
       <View style={styles.btn}>
-        <CarButton title="confirm" width={277} textColor={colors.white} />
+        <CarthagosButton title="confirm" width={277} textColor={colors.white} />
       </View>
     </View>
   );

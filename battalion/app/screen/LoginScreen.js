@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { auth } from "../authentication/Firebase";
+import { auth } from "../config/Firebase";
 import {
   signInWithEmailAndPassword,
   updateProfile,
@@ -15,7 +15,7 @@ import {
 } from "firebase/auth";
 import { useAuth } from "../navigation/AuthNavigator";
 import colors from "../config/colors";
-import CarLinkButton from "../component/CarLinkButton";
+import CarthagosLinkButton from "../component/CarthagosLinkButton";
 import TextLogo from "../assets/TextLogo";
 import { useRoute } from "@react-navigation/native";
 
@@ -122,7 +122,7 @@ const LoginScreen = ({ navigation }) => {
         ) : null}
       </View>
       <View style={styles.btnLink}>
-        <CarLinkButton
+        <CarthagosLinkButton
           navigation={navigation}
           onPress={handleLogin}
           title="Sign in"

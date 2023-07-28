@@ -1,10 +1,10 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
-import { auth } from "../authentication/Firebase";
+import { auth } from "../config/Firebase";
 
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import colors from "../config/colors";
-import CarButton from "../component/CarButton";
+import CarthagosButton from "../component/CarthagosButton";
 import { PhoneAuthProvider } from "firebase/auth";
 
 const VerifyPhoneOne = ({ navigation }) => {
@@ -71,7 +71,7 @@ const VerifyPhoneOne = ({ navigation }) => {
         <Text style={styles.info}>{info}</Text>
       </View>
       <View style={styles.btn}>
-        <CarButton
+        <CarthagosButton
           title="confirm"
           width={277}
           textColor={colors.white}

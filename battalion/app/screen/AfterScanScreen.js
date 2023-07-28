@@ -2,7 +2,7 @@ import { StyleSheet, Text, Image, TouchableOpacity, View } from "react-native";
 import React from "react";
 import colors from "../config/colors";
 
-import CarButton from "../component/CarButton";
+import CarthagosButton from "../component/CarthagosButton";
 
 const AfterScanScreen = ({ navigation }) => {
   return (
@@ -19,7 +19,7 @@ const AfterScanScreen = ({ navigation }) => {
         </View>
       </View>
       <View style={styles.btn}>
-        <CarButton title="confirm" textColor="white" width={277} />
+        <CarthagosButton title="confirm" textColor="white" width={277} />
       </View>
     </View>
   );

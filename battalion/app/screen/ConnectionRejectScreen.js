@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, ImageBackground, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import CarButton from "../component/CarButton";
+import CarthagosButton from "../component/CarthagosButton";
 import colors from "../config/colors";
 
 const ConnectionRejectScreen = ({ navigation }) => {
@@ -17,7 +17,7 @@ const ConnectionRejectScreen = ({ navigation }) => {
         </View>
 
         <View style={styles.btn}>
-          <CarButton title="continue" textColor="white" width={277} />
+          <CarthagosButton title="continue" textColor="white" width={277} />
         </View>
       </ImageBackground>
     </View>
