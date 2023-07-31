@@ -5,7 +5,7 @@ import TextLogo from "../assets/TextLogo";
 import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../config/Firebase";
 import CarthagosLinkButton from "../component/CarthagosLinkButton";
-import { useAuth } from "../navigation/AuthNavigator";
+import { useAuth } from "../utils/AuthProvider";
 import handleClearMessage from "../utils/HandleClearErrorMessage";
 
 export default function RegisterScreen({ navigation }) {
@@ -47,6 +47,7 @@ export default function RegisterScreen({ navigation }) {
       });
 
       console.log("Registered with:", user.email);
+      console.log("User displayName:", user.providerData[0].displayName);
       setRegisterSuccessMessage("Successfully registered");
       setName("");
       setEmail("");

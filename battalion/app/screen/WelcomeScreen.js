@@ -9,7 +9,7 @@ import {
   ImageBackground,
 } from "react-native";
 
-import { useAuth } from "../navigation/AuthNavigator";
+import { useAuth } from "../utils/AuthProvider";
 
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";

@@ -5,7 +5,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../config/colors";
 import ProfileScreen from "../screen/ProfileScreen";
 import WelcomeScreen from "../screen/WelcomeScreen";
-import { useAuth } from "../navigation/AuthNavigator";
+import { useAuth } from "../utils/AuthProvider";
 import PublicRoute from "./PublicRoute";
 import VerifyPhoneManually from "../screen/VerifyPhoneManually";
 import ForgotPasswordScreen from "../screen/ForgotPasswordScreen";
@@ -18,7 +18,6 @@ const PrivateRoute = () => {
   // Check if currentUser and currentUser.phoneNumber exist
   if (currentUser && currentUser.phoneNumber) {
     const Stack = createNativeStackNavigator();
-
     return (
       <Stack.Navigator>
         <Stack.Screen

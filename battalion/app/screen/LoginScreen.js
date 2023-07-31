@@ -13,7 +13,7 @@ import {
   updateProfile,
   onAuthStateChanged,
 } from "firebase/auth";
-import { useAuth } from "../navigation/AuthNavigator";
+import { useAuth } from "../utils/AuthProvider";
 import colors from "../config/colors";
 import CarthagosLinkButton from "../component/CarthagosLinkButton";
 import TextLogo from "../assets/TextLogo";
@@ -53,7 +53,7 @@ const LoginScreen = ({ navigation }) => {
           await updateProfile(auth.currentUser, { email: email });
         }
         console.log("Email and phone number match.");
-        navigation.navigate("Home");
+        /*  navigation.navigate("Home"); */
       } else {
         // Navigate to the "Phoneverify" screen if phone is not verified
         navigation.navigate("Phoneverify");

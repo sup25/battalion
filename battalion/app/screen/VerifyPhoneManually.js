@@ -2,9 +2,9 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState } from "react";
 import colors from "../config/colors";
 import CarthagosButton from "../component/CarthagosButton";
-import writeUserData from "../authentication/Database";
+import AddUserData from "../config/Database";
 
-import { useAuth } from "../navigation/AuthNavigator";
+import { useAuth } from "../utils/AuthProvider";
 
 const VerifyPhoneManually = () => {
   const { currentUser } = useAuth();
@@ -33,7 +33,7 @@ const VerifyPhoneManually = () => {
       users: ["User1", "User2", "User3"], // Replace with the desired users array
     };
 
-    writeUserData(updatedUserData);
+    AddUserData(updatedUserData);
     console.log("Saving data:", updatedUserData);
 
     // Show success message

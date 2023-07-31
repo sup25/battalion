@@ -1,6 +1,6 @@
 import React from "react";
 import { StyleSheet, Text, View, TextInput } from "react-native";
-import { useAuth } from "../navigation/AuthNavigator";
+import { useAuth } from "../utils/AuthProvider";
 import CarthagosButton from "../component/CarthagosButton";
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";

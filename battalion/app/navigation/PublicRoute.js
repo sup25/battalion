@@ -8,11 +8,10 @@ import ForgotPasswordScreen from "../screen/ForgotPasswordScreen";
 
 import InsertCode from "../screen/InsertCode";
 import VerifyPhoneOne from "../screen/VerifyPhoneOne";
-
 import VerifyPhoneManually from "../screen/VerifyPhoneManually";
-import WelcomeScreen from "../screen/WelcomeScreen";
+
 const Stack = createNativeStackNavigator();
-const LoggedOutNavigator = () => {
+const PublicRoute = () => {
   return (
     <Stack.Navigator initialRouteName="Main">
       <Stack.Screen
@@ -57,4 +56,4 @@ const LoggedOutNavigator = () => {
   );
 };
 
-export default LoggedOutNavigator;
+export default PublicRoute;

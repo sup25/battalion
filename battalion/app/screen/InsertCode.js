@@ -10,7 +10,7 @@ import { auth } from "../config/Firebase";
 import colors from "../config/colors";
 import CarthagosButton from "../component/CarthagosButton";
 import { useRoute } from "@react-navigation/native";
-import { useAuth } from "../navigation/AuthNavigator";
+import { useAuth } from "../utils/AuthProvider";
 
 const InsertCode = ({ navigation }) => {
   const { currentUser } = useAuth();
@@ -54,7 +54,7 @@ const InsertCode = ({ navigation }) => {
       const message = "Success: Phone authentication successful";
       setInfo(message);
       console.log("Message", message);
-      navigation.navigate("MainTabs");
+      navigation.navigate("Login");
     } catch (error) {
       setInfo(`Error: ${error.message}`);
     }
