@@ -58,9 +58,7 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(false);
       }
     };
-
     checkUserAuthentication();
-
     // Clean up the event listener when component unmounts
     return () => unsubscribe();
   }, []);

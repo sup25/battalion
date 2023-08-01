@@ -8,16 +8,13 @@ import {
   Image,
 } from "react-native";
 import { auth } from "../config/Firebase";
-import {
-  signInWithEmailAndPassword,
-  updateProfile,
-  onAuthStateChanged,
-} from "firebase/auth";
+import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { useAuth } from "../utils/AuthProvider";
 import colors from "../config/colors";
 import CarthagosLinkButton from "../component/CarthagosLinkButton";
 import TextLogo from "../assets/TextLogo";
 import { useRoute } from "@react-navigation/native";
+import handleClearMessage from "../utils/HandleClearMessage";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -53,7 +50,7 @@ const LoginScreen = ({ navigation }) => {
           await updateProfile(auth.currentUser, { email: email });
         }
         console.log("Email and phone number match.");
-        /*  navigation.navigate("Home"); */
+        navigation.navigate("Home");
       } else {
         // Navigate to the "Phoneverify" screen if phone is not verified
         navigation.navigate("Phoneverify");
@@ -72,9 +69,7 @@ const LoginScreen = ({ navigation }) => {
         setLoginErrorMessage("Login failed. Please try again.");
       }
       console.log(error);
-      setTimeout(() => {
-        setLoginErrorMessage("");
-      }, 3000);
+      handleClearMessage(setLoginErrorMessage, 3000);
     }
   };
 

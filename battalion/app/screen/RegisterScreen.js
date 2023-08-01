@@ -6,7 +6,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "../config/Firebase";
 import CarthagosLinkButton from "../component/CarthagosLinkButton";
 import { useAuth } from "../utils/AuthProvider";
-import handleClearMessage from "../utils/HandleClearErrorMessage";
+import handleClearMessage from "../utils/HandleClearMessage";
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
@@ -41,19 +41,20 @@ export default function RegisterScreen({ navigation }) {
       );
 
       const user = userCredentials.user;
+      console.log("User name for updateProfile:", name);
 
       await updateProfile(user, {
         displayName: name,
       });
 
       console.log("Registered with:", user.email);
-      console.log("User displayName:", user.providerData[0].displayName);
+      /*  console.log(user); */
+      console.log("User displayName:", user.displayName);
       setRegisterSuccessMessage("Successfully registered");
       setName("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
-
       handleClearMessage(setRegisterSuccessMessage, 3000);
 
       // If the phone is verified, navigate to another screen

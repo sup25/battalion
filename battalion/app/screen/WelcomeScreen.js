@@ -16,8 +16,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
-  const userEmail = currentUser?.email;
-  const userName = userEmail ? userEmail.split("@")[0] : "";
+  const userName = currentUser?.displayName;
 
   return (
     <View style={styles.container}>
@@ -75,10 +74,12 @@ const WelcomeScreen = ({ navigation }) => {
           <View style={styles.TempConatinerBg}>
             <Text style={styles.degree}>-- °F</Text>
             <View style={styles.setTextContainer}>
-              <Text style={styles.setText}>
-                Set the box Temperature
-                <MaterialCommunityIcons name="arrow-right" size={20} />
-              </Text>
+              <Text style={styles.setText}>Set the box Temperature</Text>
+              <MaterialCommunityIcons
+                name="arrow-right"
+                size={20}
+                color="white"
+              />
             </View>
           </View>
         </View>

@@ -8,14 +8,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 const ProfileScreen = ({ navigation }) => {
   const { logout, currentUser } = useAuth();
   const userEmail = currentUser?.email;
-  const userName = userEmail ? userEmail.split("@")[0] : "";
+  const userName = currentUser?.displayName;
   const phoneNumber = currentUser?.phoneNumber;
 
   const handleLogout = () => {
     logout();
-    /*   .then(() => {
-      navigation.navigate("Main");
-    }); */
   };
 
   return (

@@ -5,7 +5,6 @@ import {
   linkWithCredential,
   updateProfile,
 } from "firebase/auth";
-
 import { auth } from "../config/Firebase";
 import colors from "../config/colors";
 import CarthagosButton from "../component/CarthagosButton";
@@ -50,11 +49,20 @@ const InsertCode = ({ navigation }) => {
         email: currentUser?.email || "", // Update the email to the one from which the user signed up
         phoneNumber: currentUser?.phoneNumber || "", // Keep the existing phone number as it is already verified
       });
-
       const message = "Success: Phone authentication successful";
       setInfo(message);
       console.log("Message", message);
-      navigation.navigate("Login");
+
+      // Navigate and resetting the stack (this method is not good)
+      navigation.reset({
+        routes: [{ name: "privateRoute" }],
+        index: 0,
+      });
+
+      // Navigate to the top of the stack
+      /*  navigation.popToTop();
+      // Navigate to the "Home" screen
+      navigation.navigate("Home"); */
     } catch (error) {
       setInfo(`Error: ${error.message}`);
     }

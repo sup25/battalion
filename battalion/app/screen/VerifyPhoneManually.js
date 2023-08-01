@@ -8,8 +8,8 @@ import { useAuth } from "../utils/AuthProvider";
 
 const VerifyPhoneManually = () => {
   const { currentUser } = useAuth();
-  const userEmail = currentUser?.email;
-  const userName = userEmail ? userEmail.split("@")[0] : "";
+  const userName = currentUser?.displayName;
+
   const [displayMessage, setDisplayMessage] = useState("");
   const [userData, setUserData] = useState({
     combinedSerialNum: "",
