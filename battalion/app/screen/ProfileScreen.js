@@ -1,19 +1,21 @@
 import React from "react";
-import { StyleSheet, Text, View, TextInput } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 import { useAuth } from "../utils/AuthProvider";
-import CarthagosButton from "../component/CarthagosButton";
+
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const ProfileScreen = ({ navigation }) => {
-  const { logout, currentUser } = useAuth();
+  const { currentUser } = useAuth();
   const userEmail = currentUser?.email;
   const userName = currentUser?.displayName;
   const phoneNumber = currentUser?.phoneNumber;
-
-  const handleLogout = () => {
-    logout();
-  };
 
   return (
     <View style={styles.container}>
@@ -79,12 +81,25 @@ const ProfileScreen = ({ navigation }) => {
           />
           <Text style={styles.nodeviceTxt}>No devices connected</Text>
         </View>
-        <CarthagosButton
-          title="Logout"
-          textColor="white"
-          width={277}
-          onPress={handleLogout}
-        />
+
+        <View style={styles.ForgetPasswordBox}>
+          <View style={styles.resetPasswordBox}>
+            <Text style={styles.resetPasswordTxt}>reset Password</Text>
+          </View>
+          <TouchableOpacity
+            onPress={() => {
+              navigation.navigate("forgotpasswordprivate");
+            }}
+            style={styles.forgotpasswordTxtIcon}
+          >
+            <Text style={styles.forgetText}>Forgot the Password?</Text>
+            <MaterialCommunityIcons
+              name="arrow-right"
+              size={30}
+              color="white"
+            />
+          </TouchableOpacity>
+        </View>
       </View>
     </View>
   );
@@ -140,6 +155,30 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     color: colors.white,
   },
+  ForgetPasswordBox: {
+    display: "flex",
+    flexDirection: "row",
+    backgroundColor: "#2626266E",
+    width: 337,
+    height: 95,
+    justifyContent: "space-between",
+    padding: 18,
+  },
+  forgetText: {
+    color: colors.white,
+    maxWidth: 80,
+    fontSize: 18,
+    fontWeight: 500,
+  },
+  forgotpasswordTxtIcon: {
+    backgroundColor: colors.primary,
+    padding: 5,
+    borderRadius: 5,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: 138,
+  },
   inputs: {
     backgroundColor: "#1B1B1B",
     width: 307,
@@ -176,6 +215,16 @@ const styles = StyleSheet.create({
     fontWeight: 900,
     textTransform: "uppercase",
     alignSelf: "flex-start",
+  },
+  resetPasswordBox: {
+    width: 126,
+  },
+  resetPasswordTxt: {
+    fontSize: 24,
+    textTransform: "uppercase",
+    fontWeight: 800,
+    color: colors.white,
+    maxWidth: 80,
   },
 
   userName: {

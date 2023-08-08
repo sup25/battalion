@@ -52,17 +52,7 @@ const InsertCode = ({ navigation }) => {
       const message = "Success: Phone authentication successful";
       setInfo(message);
       console.log("Message", message);
-
-      // Navigate and resetting the stack (this method is not good)
-      navigation.reset({
-        routes: [{ name: "privateRoute" }],
-        index: 0,
-      });
-
-      // Navigate to the top of the stack
-      /*  navigation.popToTop();
-      // Navigate to the "Home" screen
-      navigation.navigate("Home"); */
+      navigation.navigate("privateRoute", { screen: "MainTabs" });
     } catch (error) {
       setInfo(`Error: ${error.message}`);
     }

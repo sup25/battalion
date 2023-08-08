@@ -8,14 +8,13 @@ import WelcomeScreen from "../screen/WelcomeScreen";
 import { useAuth } from "../utils/AuthProvider";
 import PublicRoute from "./PublicRoute";
 import VerifyPhoneManually from "../screen/VerifyPhoneManually";
-import ForgotPasswordScreen from "../screen/ForgotPasswordScreen";
+import ForgotPassword from "../screen/ForgetPasswordPrivate";
 
 const Tab = createBottomTabNavigator();
 
 const PrivateRoute = () => {
   const { currentUser } = useAuth();
 
-  // Check if currentUser and currentUser.phoneNumber exist
   if (currentUser && currentUser.phoneNumber) {
     const Stack = createNativeStackNavigator();
     return (
@@ -31,8 +30,8 @@ const PrivateRoute = () => {
           options={{ headerShown: false }}
         />
         <Stack.Screen
-          name="forgotPasswordScreen"
-          component={ForgotPasswordScreen}
+          name="forgotpasswordprivate"
+          component={ForgotPassword}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>
@@ -47,8 +46,10 @@ const MainTabs = () => {
     <Tab.Navigator
       screenOptions={() => ({
         headerShown: false,
+        tabBarLabelStyle: { fontSize: 15, color: "#fff" },
         tabBarStyle: {
           backgroundColor: "#000",
+          flexDirection: "row",
         },
       })}
     >
@@ -56,7 +57,7 @@ const MainTabs = () => {
         name="Home"
         component={WelcomeScreen}
         options={{
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({ size, focused }) => (
             <MaterialCommunityIcons
               name="home"
               color={focused ? colors.white : "#676767"}
@@ -69,7 +70,7 @@ const MainTabs = () => {
         name="Profile"
         component={ProfileScreen}
         options={{
-          tabBarIcon: ({ color, size, focused }) => (
+          tabBarIcon: ({ size, focused }) => (
             <MaterialCommunityIcons
               name="account"
               color={focused ? colors.white : "#676767"}

@@ -50,7 +50,7 @@ const LoginScreen = ({ navigation }) => {
           await updateProfile(auth.currentUser, { email: email });
         }
         console.log("Email and phone number match.");
-        navigation.navigate("Home");
+        navigation.navigate("MainTabs");
       } else {
         // Navigate to the "Phoneverify" screen if phone is not verified
         navigation.navigate("Phoneverify");
