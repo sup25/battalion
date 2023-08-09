@@ -15,30 +15,30 @@ const Tab = createBottomTabNavigator();
 const PrivateRoute = () => {
   const { currentUser } = useAuth();
 
-  if (currentUser && currentUser.phoneNumber) {
-    const Stack = createNativeStackNavigator();
-    return (
-      <Stack.Navigator>
-        <Stack.Screen
-          name="MainTabs"
-          component={MainTabs}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="verifyphonemanually"
-          component={VerifyPhoneManually}
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="forgotpasswordprivate"
-          component={ForgotPassword}
-          options={{ headerShown: false }}
-        />
-      </Stack.Navigator>
-    );
-  } else {
+  if (!currentUser && !currentUser?.phoneNumber) {
     return <PublicRoute />;
   }
+
+  const Stack = createNativeStackNavigator();
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="MainTabs"
+        component={MainTabs}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="verifyphonemanually"
+        component={VerifyPhoneManually}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="forgotpasswordprivate"
+        component={ForgotPassword}
+        options={{ headerShown: false }}
+      />
+    </Stack.Navigator>
+  );
 };
 
 const MainTabs = () => {
