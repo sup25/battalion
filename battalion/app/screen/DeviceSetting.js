@@ -1,12 +1,24 @@
-import { StyleSheet, Text, View } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  TextInput,
+} from "react-native";
 import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../config/colors";
-const DeviceSetting = () => {
+const DeviceSetting = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.heading}>
-        <MaterialCommunityIcons name="arrow-left" size={30} color="#FFFFFF82" />
+        <TouchableOpacity onPress={() => navigation.navigate("devicedetails")}>
+          <MaterialCommunityIcons
+            name="arrow-left"
+            size={30}
+            color="#FFFFFF82"
+          />
+        </TouchableOpacity>
         <Text style={styles.txtHeading}>Device Settings</Text>
       </View>
 
@@ -29,31 +41,31 @@ const DeviceSetting = () => {
 
         <View style={styles.boxContainer}>
           <View style={styles.box}>
-            <MaterialCommunityIcons
-              name="multiplication"
-              size={20}
-              color={colors.white}
+            <TextInput
+              placeholder="*"
+              placeholderTextColor="white"
+              style={styles.textInput}
             />
           </View>
           <View style={styles.box}>
-            <MaterialCommunityIcons
-              name="multiplication"
-              size={20}
-              color={colors.white}
+            <TextInput
+              placeholder="*"
+              placeholderTextColor="white"
+              style={styles.textInput}
             />
           </View>
           <View style={styles.box}>
-            <MaterialCommunityIcons
-              name="multiplication"
-              size={20}
-              color={colors.white}
+            <TextInput
+              placeholder="*"
+              placeholderTextColor="white"
+              style={styles.textInput}
             />
           </View>
           <View style={styles.box}>
-            <MaterialCommunityIcons
-              name="multiplication"
-              size={20}
-              color={colors.white}
+            <TextInput
+              placeholder="*"
+              placeholderTextColor="white"
+              style={styles.textInput}
             />
           </View>
         </View>
@@ -143,5 +155,9 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: colors.white,
     marginLeft: 9,
+  },
+  textInput: {
+    fontSize: 32,
+    color: colors.white,
   },
 });

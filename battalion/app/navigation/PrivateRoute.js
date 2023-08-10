@@ -9,16 +9,22 @@ import { useAuth } from "../utils/AuthProvider";
 import PublicRoute from "./PublicRoute";
 import VerifyPhoneManually from "../screen/VerifyPhoneManually";
 import ForgotPassword from "../screen/ForgetPasswordPrivate";
+import DeviceDetails from "../screen/DeviceDetails";
+import DeviceSetting from "../screen/DeviceSetting";
 
 const Tab = createBottomTabNavigator();
 
 const PrivateRoute = () => {
   const { currentUser } = useAuth();
 
-  if (!currentUser && !currentUser?.phoneNumber) {
+  if (!currentUser || !currentUser?.phoneNumber) {
     return <PublicRoute />;
   }
 
+  return <PrivateStackNavigator />;
+};
+
+const PrivateStackNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
     <Stack.Navigator>
@@ -35,6 +41,16 @@ const PrivateRoute = () => {
       <Stack.Screen
         name="forgotpasswordprivate"
         component={ForgotPassword}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="devicedetails"
+        component={DeviceDetails}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="devicesetting"
+        component={DeviceSetting}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

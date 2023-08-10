@@ -8,55 +8,58 @@ import {
   Image,
 } from "react-native";
 import { auth } from "../config/Firebase";
-import { signInWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { useAuth } from "../utils/AuthProvider";
+import { signInWithEmailAndPassword } from "firebase/auth";
+
 import colors from "../config/colors";
 import CarthagosLinkButton from "../component/CarthagosLinkButton";
 import TextLogo from "../assets/TextLogo";
 import { useRoute } from "@react-navigation/native";
 import handleClearMessage from "../utils/HandleClearMessage";
+import * as LocalAuthentication from "expo-local-authentication";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loginErrorMessage, setLoginErrorMessage] = useState("");
-  const { currentUser } = useAuth();
+
   const route = useRoute();
 
   useEffect(() => {
-    // Use the 'route' prop to access the parameters passed from the 'VerifyPhoneOne' screen
     const { phoneNumber } = route.params || {};
     if (phoneNumber) {
-      // If the phone number is available, update the 'email' state with the phone number
       setEmail(phoneNumber);
     }
   }, [route]);
 
   const handleLogin = async () => {
     try {
-      const userCredentials = await signInWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const hasBiometricHardware = await LocalAuthentication.hasHardwareAsync();
 
-      console.log("Logged in with:", userCredentials.user.email);
-      console.log("Phone number:", userCredentials.user.phoneNumber);
+      if (hasBiometricHardware) {
+        const isBiometricEnrolled = await LocalAuthentication.isEnrolledAsync();
 
-      if (userCredentials.user.phoneNumber) {
-        // If the phone is verified, update the user's profile with the email (if not already set)
-        const currentEmail = userCredentials.user.email || "";
-        if (currentEmail !== email) {
-          await updateProfile(auth.currentUser, { email: email });
+        if (isBiometricEnrolled) {
+          const biometricResult = await LocalAuthentication.authenticateAsync({
+            promptMessage: "Authenticate to sign in",
+          });
+
+          if (biometricResult.success) {
+            // Biometric authentication successful
+            // Proceed with login logic
+            await signInWithEmailAndPassword(auth, email, password);
+            navigation.navigate("MainTabs");
+          } else {
+            // Biometric authentication failed
+            console.log("Biometric authentication failed");
+            return;
+          }
+        } else {
+          // Biometric not enrolled
+          console.log("Biometric not enrolled");
         }
-        console.log("Email and phone number match.");
-        navigation.navigate("MainTabs");
       } else {
-        // Navigate to the "Phoneverify" screen if phone is not verified
-        navigation.navigate("Phoneverify");
-        console.log(
-          "Phonenumber is not verified. Redirecting to phone verify."
-        );
+        // Biometric hardware not available
+        console.log("Biometric hardware not available");
       }
     } catch (error) {
       if (error.code === "auth/wrong-password") {

@@ -1,4 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
+import colors from "../config/colors";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
 import {
   StyleSheet,
   Text,
@@ -9,16 +12,7 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
-
-import { useAuth } from "../utils/AuthProvider";
-
-import colors from "../config/colors";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
-
-const WelcomeScreen = ({ navigation }) => {
-  const { currentUser } = useAuth();
-  const userName = currentUser?.displayName;
-
+const DeviceDetails = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
@@ -26,19 +20,20 @@ const WelcomeScreen = ({ navigation }) => {
         style={styles.background}
         source={require("../assets/background.png")}
       >
-        <View style={{ paddingHorizontal: 20, width: "100%" }}>
-          <Text style={styles.textEmail}>Welcome, {userName}</Text>
-        </View>
-        <View style={styles.deviceContainer}>
-          <Text style={styles.connDevice}>Devices Connected</Text>
-          <Text
-            style={styles.addDevice}
-            onPress={() => {
-              navigation.navigate("verifyphonemanually");
-            }}
+        <View style={styles.headingContainer}>
+          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+            <MaterialCommunityIcons
+              name="arrow-left"
+              size={30}
+              color="#B0B0B0"
+            />
+          </TouchableOpacity>
+          <Text style={styles.texHeading}>device details</Text>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("devicesetting")}
           >
-            Add Device +
-          </Text>
+            <AntDesign name="setting" size={30} color="#fff" />
+          </TouchableOpacity>
         </View>
         <View style={styles.battalionId}>
           <TextInput
@@ -55,12 +50,7 @@ const WelcomeScreen = ({ navigation }) => {
         </View>
       </ImageBackground>
       <View style={styles.wrapper}>
-        <TouchableOpacity
-          style={styles.unlockedImageContainer}
-          onPress={() => {
-            navigation.navigate("devicedetails");
-          }}
-        >
+        <View style={styles.unlockedImageContainer}>
           <Image
             style={styles.productImage}
             source={require("../assets/product.png")}
@@ -71,7 +61,7 @@ const WelcomeScreen = ({ navigation }) => {
             </View>
             <Text style={styles.lockedTxt}>Device Locked</Text>
           </View>
-        </TouchableOpacity>
+        </View>
         <View style={styles.unlockedTempContainer}>
           <View style={styles.TempConatinerBg}>
             <Text style={styles.degree}>-- °F</Text>
@@ -105,7 +95,7 @@ const WelcomeScreen = ({ navigation }) => {
   );
 };
 
-export default WelcomeScreen;
+export default DeviceDetails;
 
 const styles = StyleSheet.create({
   actualTxt: {
@@ -130,22 +120,11 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000a8",
     width: "100%",
   },
-  button: {
-    backgroundColor: "blue",
-    paddingHorizontal: 20,
-    paddingVertical: 10,
-    borderRadius: 5,
-    marginVertical: 10,
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
+
   container: {
     flex: 1,
   },
-  connDevice: {
+  connectedDevice: {
     fontSize: 15,
     fontWeight: 500,
     color: colors.white,
@@ -163,11 +142,19 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
     alignItems: "center",
     width: "100%",
-    marginTop: 21,
   },
   errorMessage: {
     color: "red",
     marginTop: 10,
+  },
+  headingContainer: {
+    paddingHorizontal: 20,
+    width: "100%",
+    marginTop: 37,
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "space-between",
   },
 
   input: {
@@ -248,17 +235,13 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "space-between",
   },
-  textEmail: {
+  texHeading: {
     fontSize: 32,
     fontWeight: "800",
     textTransform: "uppercase",
     color: colors.white,
     fontWeight: 900,
-    marginTop: 37,
-    borderBottomColor: colors.white,
-    borderBottomWidth: 1,
-    paddingBottom: 10,
-    width: "100%",
+    maxWidth: 196,
     alignItems: "flex-start",
   },
   textOne: {
