@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -5,10 +6,40 @@ import {
   TouchableOpacity,
   TextInput,
 } from "react-native";
-import React from "react";
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../config/colors";
+
+import { collection, doc, getDoc } from "firebase/firestore";
+import { db } from "../config/Firebase";
+
 const DeviceSetting = ({ navigation }) => {
+  const [fourDigitCode, setFourDigitCode] = useState(""); // State to hold the four-digit code
+
+  useEffect(() => {
+    const fetchCode = async () => {
+      try {
+        // Adjust the document reference based on your Firestore structure
+        const deviceRef = doc(
+          collection(db, "devices"),
+          data.combinedSerialNum
+        );
+        const deviceDoc = await getDoc(deviceRef);
+
+        if (deviceDoc.exists()) {
+          const code = deviceDoc.data().fourDigitCode; // Fetch the code from the document data
+          setFourDigitCode(code);
+        } else {
+          console.log("Device data not found.");
+        }
+      } catch (error) {
+        console.log("Error fetching four-digit code:", error);
+      }
+    };
+
+    fetchCode();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.heading}>
@@ -40,34 +71,18 @@ const DeviceSetting = ({ navigation }) => {
         </View>
 
         <View style={styles.boxContainer}>
-          <View style={styles.box}>
-            <TextInput
-              placeholder="*"
-              placeholderTextColor="white"
-              style={styles.textInput}
-            />
-          </View>
-          <View style={styles.box}>
-            <TextInput
-              placeholder="*"
-              placeholderTextColor="white"
-              style={styles.textInput}
-            />
-          </View>
-          <View style={styles.box}>
-            <TextInput
-              placeholder="*"
-              placeholderTextColor="white"
-              style={styles.textInput}
-            />
-          </View>
-          <View style={styles.box}>
-            <TextInput
-              placeholder="*"
-              placeholderTextColor="white"
-              style={styles.textInput}
-            />
-          </View>
+          {Array.from({ length: 4 }).map((_, index) => (
+            <View style={styles.box} key={index}>
+              <TextInput
+                placeholder="*"
+                placeholderTextColor="white"
+                style={styles.textInput}
+                value={fourDigitCode[index] || ""}
+                editable={false}
+                d
+              />
+            </View>
+          ))}
         </View>
       </View>
     </View>

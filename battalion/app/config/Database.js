@@ -2,25 +2,20 @@ import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 
 const AddUserData = async (data) => {
-  const { combinedSerialNum } = data;
-
   try {
     // Validate the owner field
     if (!data.owner) {
       throw new Error("Owner field is required.");
     }
 
-    // Extract the four parts from the combinedSerialNum
-    const modelNum = combinedSerialNum.substring(0, 4);
-    const prodDate = combinedSerialNum.substring(4, 8);
-    const serialNum = combinedSerialNum.substring(8, 12);
-    const remaining = combinedSerialNum.substring(0, 12);
-
-    // Format the prodDate as "DD/MM" (e.g., "23/07")
-    const formattedProdDate = prodDate.replace(/(\d{2})(\d{2})/, "$1/$2");
+    // Extract the individual parts from the combinedSerialNum
+    const modelNum = data.combinedSerialNum.substring(0, 4);
+    const prodDate = data.combinedSerialNum.substring(4, 8);
+    const serialNum = data.combinedSerialNum.substring(8, 12);
+    const remaining = data.combinedSerialNum.substring(0, 12);
 
     // Create the document reference using combinedSerialNum
-    const deviceRef = doc(collection(db, "devices"), combinedSerialNum);
+    const deviceRef = doc(collection(db, "devices"), data.combinedSerialNum);
     const deviceDoc = await getDoc(deviceRef);
 
     if (deviceDoc.exists()) {
@@ -28,11 +23,15 @@ const AddUserData = async (data) => {
       return;
     }
 
+    // Set fourDigitCode to be the same as serialNum for now
+    const fourDigitCode = serialNum;
+
     await setDoc(deviceRef, {
       modelNum,
-      prodDate: formattedProdDate,
+      prodDate,
       serialNum,
       combinedSerialNum: remaining,
+      fourDigitCode,
       owner: data.owner,
       users: data.users,
     });
