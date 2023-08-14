@@ -29,7 +29,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
       setErrorMsg("");
     }, 3000);
   };
-  const handleBackto = () => {
+  const handleBacktoHome = () => {
     navigation.navigate("Login");
   };
 
@@ -43,7 +43,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
             </Text>
             <CarthagosButton
               title=" Back To home"
-              onPress={handleBackto}
+              onPress={handleBacktoHome}
               width={277}
             />
           </View>

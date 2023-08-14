@@ -2,23 +2,57 @@ import {
   StyleSheet,
   Text,
   View,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
   TextInput,
 } from "react-native";
-import React from "react";
+import React, { useState, useEffect } from "react";
+import { db } from "../config/Firebase";
+import { doc, getDoc } from "firebase/firestore";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../config/colors";
+
 const DeviceSetting = ({ navigation }) => {
+  const [fourDigitCode, setFourDigitCode] = useState("");
+  const [show, setShow] = useState(false);
+  const handleShowPassword = () => {
+    setShow(!show);
+  };
+
+  useEffect(() => {
+    const fetchDocument = async () => {
+      const documentID = "123455789012";
+      const docRef = doc(db, "devices", documentID);
+
+      try {
+        const docSnapshot = await getDoc(docRef);
+
+        if (docSnapshot.exists()) {
+          const code = docSnapshot.data().fourDigitCode;
+          setFourDigitCode(code);
+          console.log(code);
+        } else {
+          console.log("Document not found");
+        }
+      } catch (error) {
+        console.log("Error getting document:", error);
+      }
+    };
+
+    fetchDocument();
+  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.heading}>
-        <TouchableOpacity onPress={() => navigation.navigate("devicedetails")}>
+        <TouchableWithoutFeedback
+          onPress={() => navigation.navigate("devicedetails")}
+        >
           <MaterialCommunityIcons
             name="arrow-left"
             size={30}
             color="#FFFFFF82"
           />
-        </TouchableOpacity>
+        </TouchableWithoutFeedback>
         <Text style={styles.txtHeading}>Device Settings</Text>
       </View>
 
@@ -32,42 +66,26 @@ const DeviceSetting = ({ navigation }) => {
       <View style={styles.passwordContainer}>
         <View style={styles.passwordIcon}>
           <Text style={styles.digitTxt}>4 digit password</Text>
-          <MaterialCommunityIcons
-            name="eye-off"
-            size={30}
-            color={colors.white}
-          />
+          <TouchableWithoutFeedback onPress={handleShowPassword}>
+            <MaterialCommunityIcons
+              name={show ? "eye" : "eye-off"}
+              size={30}
+              color={colors.white}
+            />
+          </TouchableWithoutFeedback>
         </View>
-
         <View style={styles.boxContainer}>
-          <View style={styles.box}>
-            <TextInput
-              placeholder="*"
-              placeholderTextColor="white"
-              style={styles.textInput}
-            />
-          </View>
-          <View style={styles.box}>
-            <TextInput
-              placeholder="*"
-              placeholderTextColor="white"
-              style={styles.textInput}
-            />
-          </View>
-          <View style={styles.box}>
-            <TextInput
-              placeholder="*"
-              placeholderTextColor="white"
-              style={styles.textInput}
-            />
-          </View>
-          <View style={styles.box}>
-            <TextInput
-              placeholder="*"
-              placeholderTextColor="white"
-              style={styles.textInput}
-            />
-          </View>
+          {fourDigitCode.split("").map((digit, index) => (
+            <View key={index} style={styles.box}>
+              <TextInput
+                value={show ? digit : "*"}
+                placeholder="*"
+                placeholderTextColor="white"
+                style={styles.textInput}
+                editable={false}
+              />
+            </View>
+          ))}
         </View>
       </View>
     </View>

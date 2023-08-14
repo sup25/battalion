@@ -10,7 +10,7 @@ import {
   StatusBar,
   Image,
   ImageBackground,
-  TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
 const DeviceDetails = ({ navigation }) => {
   return (
@@ -21,19 +21,19 @@ const DeviceDetails = ({ navigation }) => {
         source={require("../assets/background.png")}
       >
         <View style={styles.headingContainer}>
-          <TouchableOpacity onPress={() => navigation.navigate("Home")}>
+          <TouchableWithoutFeedback onPress={() => navigation.navigate("Home")}>
             <MaterialCommunityIcons
               name="arrow-left"
               size={30}
               color="#B0B0B0"
             />
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
           <Text style={styles.texHeading}>device details</Text>
-          <TouchableOpacity
+          <TouchableWithoutFeedback
             onPress={() => navigation.navigate("devicesetting")}
           >
             <AntDesign name="setting" size={30} color="#fff" />
-          </TouchableOpacity>
+          </TouchableWithoutFeedback>
         </View>
         <View style={styles.battalionId}>
           <TextInput

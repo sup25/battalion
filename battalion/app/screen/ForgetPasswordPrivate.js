@@ -5,91 +5,75 @@ import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../config/Firebase";
 import colors from "../config/colors";
 import TextLogo from "../assets/TextLogo";
-import CarthagosScreen from "../component/CarthagosScreen";
 import { useAuth } from "../utils/AuthProvider";
 
 const ForgotPasswordPrivate = ({ navigation }) => {
   const { currentUser, logout } = useAuth();
 
   const [email, setEmail] = useState("");
-  const [emailSent, setEmailSent] = useState(false);
 
   const [errormsg, setErrorMsg] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
 
-  const handleResetPassword = () => {
-    if (currentUser && currentUser.email === email) {
+  const handleResetPassword = async () => {
+    if (currentUser && currentUser.email && currentUser.email === email) {
       try {
-        sendPasswordResetEmail(auth, email);
-        setEmailSent(true);
+        console.log("Sending reset email to:", email);
+        await sendPasswordResetEmail(auth, email);
+        setSuccessMessage("sent successfully");
       } catch (error) {
-        if (error.code === "auth/user-not-found") {
-          setErrorMsg("User Not Found");
-        } else if (!currentUser) {
-          setErrorMsg("Pass your current email");
-        } else {
-          setErrorMsg(error.message);
-        }
+        setErrorMsg(error.message);
+        console.log("Error message:", error.message);
       }
+    } else {
+      setErrorMsg("Invalid email or user not logged in");
     }
+  };
+  const handleInputFocus = () => {
+    setErrorMsg("");
+    setSuccessMessage("");
   };
 
   return (
-    <CarthagosScreen style={styles.container} behavior="height">
-      {emailSent ? (
-        <>
-          <View style={{ alignItems: "center", marginTop: 200 }}>
-            <Text style={styles.emailSentText}>
-              Password reset email has been sent.
-            </Text>
-            <CarthagosButton
-              title=" Back To home"
-              onPress={() => {
-                navigation.navigate("Home");
-              }}
-              width={277}
-              textColor="white"
-            />
-          </View>
-        </>
-      ) : (
-        <>
-          <View style={styles.textLogo}>
-            <View style={styles.logoContainer}>
-              <TextLogo />
-              <Text style={styles.title}>Forgot Password?</Text>
-            </View>
-            <TextInput
-              placeholder="Email"
-              placeholderTextColor="#656565"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              style={styles.input}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              color="white"
-            />
-            {errormsg ? <Text style={styles.errorText}>{errormsg}</Text> : null}
-          </View>
-          <View style={styles.btnContainer}>
-            <CarthagosButton
-              navigation={navigation}
-              onPress={handleResetPassword}
-              title="Submit"
-              width={277}
-              textColor="white"
-            />
-            <CarthagosButton
-              width={277}
-              textColor="white"
-              onPress={() => {
-                logout();
-              }}
-              title="logout"
-            />
-          </View>
-        </>
-      )}
-    </CarthagosScreen>
+    <View style={styles.container} behavior="height">
+      <View style={styles.textLogo}>
+        <View style={styles.logoContainer}>
+          <TextLogo />
+          <Text style={styles.title}>Forgot Password?</Text>
+        </View>
+        <TextInput
+          placeholder="Email"
+          placeholderTextColor="#656565"
+          value={email}
+          onChangeText={(text) => setEmail(text)}
+          onFocus={handleInputFocus}
+          style={styles.input}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          color="white"
+        />
+        {errormsg ? <Text style={styles.errorText}>{errormsg}</Text> : null}
+        {successMessage ? (
+          <Text style={styles.SuccessText}>{successMessage}</Text>
+        ) : null}
+      </View>
+      <View style={styles.btnContainer}>
+        <CarthagosButton
+          onPress={handleResetPassword}
+          title="Submit"
+          width={277}
+          textColor="white"
+        />
+        <CarthagosButton
+          width={277}
+          textColor="white"
+          onPress={() => {
+            logout();
+          }}
+          title="logout"
+        />
+      </View>
+    </View>
   );
 };
 
@@ -132,6 +116,11 @@ const styles = StyleSheet.create({
   logoContainer: {
     justifyContent: "flex-start",
     alignItems: "center",
+  },
+  SuccessText: {
+    color: "green",
+    marginBottom: 10,
+    fontSize: 14,
   },
 
   textLogo: {
