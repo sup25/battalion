@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+
 import {
   StyleSheet,
   Text,
@@ -11,8 +12,18 @@ import {
   Image,
   ImageBackground,
   TouchableWithoutFeedback,
+  Animated,
 } from "react-native";
 const DeviceDetails = ({ navigation }) => {
+  const [switchLocked, setSwithLocked] = useState(true);
+  const [brightnessToggel, setBrightnessToggel] = useState(true);
+  const handleSwitch = () => {
+    setSwithLocked(!switchLocked);
+  };
+  const handleBrightnessToggel = () => {
+    setBrightnessToggel(!brightnessToggel);
+  };
+
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
@@ -55,20 +66,71 @@ const DeviceDetails = ({ navigation }) => {
             style={styles.productImage}
             source={require("../assets/product.png")}
           />
-          <View style={styles.lockedConatiner}>
-            <View style={styles.iconEllipse}>
-              <MaterialCommunityIcons name="lock" size={20} color="#B0B0B0" />
+
+          <View style={{ display: "flex", gap: 18 }}>
+            <View style={styles.deviceLocked}>
+              <Text style={styles.lockedTxt}>Device Locked</Text>
+              <View
+                style={[
+                  styles.switchOnOff,
+                  switchLocked ? styles.flexEnd : styles.flexStart,
+                ]}
+              >
+                <View style={styles.iconBackgroundContainer}>
+                  <TouchableWithoutFeedback onPress={handleSwitch}>
+                    {switchLocked ? (
+                      <MaterialCommunityIcons
+                        name="lock"
+                        size={20}
+                        color="#B0B0B0"
+                      />
+                    ) : (
+                      <MaterialCommunityIcons
+                        name="lock-open"
+                        size={20}
+                        color="black"
+                      />
+                    )}
+                  </TouchableWithoutFeedback>
+                </View>
+              </View>
             </View>
-            <Text style={styles.lockedTxt}>Device Locked</Text>
+            <View style={styles.brightnes}>
+              <Text style={styles.brightnessTxt}>Light Auto</Text>
+              <View
+                style={[
+                  styles.switchOnOff,
+                  brightnessToggel ? styles.flexEnd : styles.flexStart,
+                ]}
+              >
+                <View style={styles.iconBackgroundContainer}>
+                  <TouchableWithoutFeedback onPress={handleBrightnessToggel}>
+                    {brightnessToggel ? (
+                      <MaterialCommunityIcons
+                        name="brightness-5"
+                        size={20}
+                        color="#B0B0B0"
+                      />
+                    ) : (
+                      <MaterialCommunityIcons
+                        name="brightness-5"
+                        size={20}
+                        color="black"
+                      />
+                    )}
+                  </TouchableWithoutFeedback>
+                </View>
+              </View>
+            </View>
           </View>
         </View>
         <View style={styles.unlockedTempContainer}>
           <View style={styles.TempConatinerBg}>
-            <Text style={styles.degree}>-- °F</Text>
+            <Text style={styles.degree}> 72°F</Text>
             <Text style={styles.actualTxt}>Actual box temperature</Text>
           </View>
           <View style={styles.TempConatinerBg}>
-            <Text style={styles.degree}>-- °F</Text>
+            <Text style={styles.degree}>83°F</Text>
             <View style={styles.setTextContainer}>
               <Text style={styles.setText}>Set the box Temperature</Text>
               <MaterialCommunityIcons
@@ -79,16 +141,32 @@ const DeviceDetails = ({ navigation }) => {
             </View>
           </View>
         </View>
-        <View style={styles.perTxtContainer}>
+        <View style={styles.percentagetxtContainer}>
           <View style={styles.percentageText}>
-            <Text style={styles.textOne}>--%</Text>
-            <Text style={styles.textTwo}>Plug your Device</Text>
+            <Text style={styles.BatteryPercentagetextOne}>33%</Text>
+
+            <Text style={styles.BatteryPercentagetextTwo}>
+              Plug your Device
+            </Text>
           </View>
-          <MaterialCommunityIcons
-            name="loading"
-            size={20}
-            color={colors.primary}
-          />
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <MaterialCommunityIcons
+              name="battery-outline"
+              color={colors.white}
+              size={20}
+            />
+            <MaterialCommunityIcons
+              name="loading"
+              size={20}
+              color={colors.primary}
+            />
+          </View>
         </View>
       </View>
     </View>
@@ -102,7 +180,7 @@ const styles = StyleSheet.create({
     maxWidth: 124,
     fontWeight: 500,
     fontSize: 15,
-    color: "#5A5A5A",
+    color: colors.white,
   },
   addDevice: {
     backgroundColor: colors.primary,
@@ -120,6 +198,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000a8",
     width: "100%",
   },
+  brightnes: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  brightnessTxt: {
+    fontWeight: 500,
+    fontSize: 14,
+    color: "#B0B0B0",
+  },
 
   container: {
     flex: 1,
@@ -132,7 +221,14 @@ const styles = StyleSheet.create({
   degree: {
     fontWeight: 800,
     fontSize: 36,
-    color: "#5A5A5A",
+    color: colors.white,
+  },
+  deviceLocked: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 30,
+    alignItems: "center",
   },
   deviceContainer: {
     backgroundColor: "#000000a8",
@@ -147,6 +243,14 @@ const styles = StyleSheet.create({
     color: "red",
     marginTop: 10,
   },
+  flexEnd: {
+    justifyContent: "flex-end",
+    backgroundColor: colors.primary,
+  },
+  flexStart: {
+    justifyContent: "flex-start",
+    backgroundColor: "#424242",
+  },
   headingContainer: {
     paddingHorizontal: 20,
     width: "100%",
@@ -157,6 +261,20 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
 
+  icon: {
+    position: "absolute",
+    right: 50,
+    top: "50%",
+    transform: [{ translateY: -15 }],
+  },
+  iconBackgroundContainer: {
+    width: 34,
+    height: 34,
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 50,
+  },
   input: {
     width: 311,
     height: 40,
@@ -165,28 +283,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     backgroundColor: "#1B1B1B",
   },
-  icon: {
-    position: "absolute",
-    right: 50,
-    top: "50%",
-    transform: [{ translateY: -15 }],
-  },
-  iconEllipse: {
-    width: 34,
-    height: 34,
-    backgroundColor: "#5A5A5A",
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 50,
-  },
-  lockedConatiner: {
-    backgroundColor: "#1B1B1B",
-    width: 125,
-    height: 93,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 5,
-  },
+
   lockedTxt: {
     fontWeight: 500,
     fontSize: 14,
@@ -200,7 +297,7 @@ const styles = StyleSheet.create({
     height: 74,
     opacity: 0.5,
   },
-  perTxtContainer: {
+  percentagetxtContainer: {
     flexDirection: "row",
     width: "100%",
     backgroundColor: "#2626266E",
@@ -218,7 +315,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     padding: 5,
     borderRadius: 5,
-    opacity: 0.5,
+
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
@@ -226,6 +323,15 @@ const styles = StyleSheet.create({
   successMessage: {
     color: "green",
     marginTop: 10,
+  },
+  switchOnOff: {
+    width: 60,
+    height: 24,
+    borderRadius: 18,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
   },
   TempConatinerBg: {
     width: 150,
@@ -244,15 +350,15 @@ const styles = StyleSheet.create({
     maxWidth: 196,
     alignItems: "flex-start",
   },
-  textOne: {
+  BatteryPercentagetextOne: {
     fontSize: 36,
     fontWeight: 800,
-    color: "#5A5A5A",
+    color: colors.white,
   },
-  textTwo: {
+  BatteryPercentagetextTwo: {
     fontSize: 16,
     fontWeight: 800,
-    color: "#5A5A5A",
+    color: colors.white,
   },
 
   unlockedImageContainer: {
