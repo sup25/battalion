@@ -4,7 +4,10 @@ import {
   View,
   TouchableWithoutFeedback,
   TextInput,
+  Animated,
+  Easing,
 } from "react-native";
+
 import React, { useState, useEffect } from "react";
 import { db } from "../config/Firebase";
 import { doc, getDoc } from "firebase/firestore";
@@ -14,8 +17,26 @@ import colors from "../config/colors";
 const DeviceSetting = ({ navigation }) => {
   const [fourDigitCode, setFourDigitCode] = useState("");
   const [show, setShow] = useState(false);
+  const [temperatureToggle, setTemperatureToggle] = useState(false);
+
+  let opacity = new Animated.Value(0);
+
+  const animate = (easing) => {
+    opacity.setValue(0);
+    Animated.timing(opacity, {
+      toValue: 1,
+      duration: 1200,
+      easing,
+      useNativeDriver: true,
+    }).start();
+  };
+
   const handleShowPassword = () => {
     setShow(!show);
+  };
+  const handleTemperatureChange = () => {
+    setTemperatureToggle(!temperatureToggle);
+    animate(Easing.ease);
   };
 
   useEffect(() => {
@@ -60,7 +81,20 @@ const DeviceSetting = ({ navigation }) => {
         <Text style={styles.metricTxt}>Metric System</Text>
         <View style={styles.temperatureContainer}>
           <Text style={styles.tempTxt}>Fahrenheit / Celsius</Text>
-          <MaterialCommunityIcons name="circle" size={20} color="white" />
+          <TouchableWithoutFeedback onPress={handleTemperatureChange}>
+            <Animated.View
+              style={[
+                styles.switchOnOff,
+                temperatureToggle ? styles.flexEnd : styles.flexStart,
+              ]}
+            >
+              <View style={styles.iconBackgroundContainer}>
+                <Text style={styles.temperatureIndicatortxt}>
+                  {temperatureToggle ? "°C" : "°F"}
+                </Text>
+              </View>
+            </Animated.View>
+          </TouchableWithoutFeedback>
         </View>
       </View>
       <View style={styles.passwordContainer}>
@@ -120,11 +154,27 @@ const styles = StyleSheet.create({
     fontWeight: 500,
     fontSize: 18,
   },
+  flexEnd: {
+    justifyContent: "flex-end",
+    backgroundColor: colors.primary,
+  },
+  flexStart: {
+    justifyContent: "flex-start",
+    backgroundColor: "#424242",
+  },
   heading: {
     flexDirection: "row",
     paddingHorizontal: 20,
     marginTop: 37,
     alignItems: "center",
+  },
+  iconBackgroundContainer: {
+    width: 34,
+    height: 34,
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 50,
   },
   metricTxt: {
     fontSize: 16,
@@ -147,6 +197,16 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
   },
+  switchOnOff: {
+    width: 60,
+    height: 24,
+    borderRadius: 18,
+    transform: [{ translateY: 0 }],
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
   systemContainer: {
     width: 335,
     height: 106,
@@ -155,6 +215,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginTop: 17,
+  },
+  temperatureIndicatortxt: {
+    fontSize: 16,
+    fontWeight: 500,
   },
   tempTxt: {
     fontSize: 14,

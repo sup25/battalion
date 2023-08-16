@@ -11,6 +11,7 @@ import VerifyPhoneManually from "../screen/VerifyPhoneManually";
 import ForgotPassword from "../screen/ForgetPasswordPrivate";
 import DeviceDetails from "../screen/DeviceDetails";
 import DeviceSetting from "../screen/DeviceSetting";
+import SetTemperatureScreen from "../screen/SetTemperatureScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -51,6 +52,11 @@ const PrivateStackNavigator = () => {
       <Stack.Screen
         name="devicesetting"
         component={DeviceSetting}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="setTemperatureScreen"
+        component={SetTemperatureScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

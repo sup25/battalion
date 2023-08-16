@@ -16,7 +16,7 @@ import {
 } from "react-native";
 const DeviceDetails = ({ navigation }) => {
   const [switchLocked, setSwithLocked] = useState(true);
-  const [brightnessToggel, setBrightnessToggel] = useState(true);
+  const [brightnessToggel, setBrightnessToggel] = useState(false);
   const handleSwitch = () => {
     setSwithLocked(!switchLocked);
   };
@@ -69,7 +69,9 @@ const DeviceDetails = ({ navigation }) => {
 
           <View style={{ display: "flex", gap: 18 }}>
             <View style={styles.deviceLocked}>
-              <Text style={styles.lockedTxt}>Device Locked</Text>
+              <Text style={styles.lockedTxt}>
+                {switchLocked ? "Device Locked" : "Device Unlocked"}
+              </Text>
               <View
                 style={[
                   styles.switchOnOff,
@@ -95,7 +97,8 @@ const DeviceDetails = ({ navigation }) => {
                 </View>
               </View>
             </View>
-            <View style={styles.brightnes}>
+
+            <View style={styles.brightness}>
               <Text style={styles.brightnessTxt}>Light Auto</Text>
               <View
                 style={[
@@ -131,14 +134,18 @@ const DeviceDetails = ({ navigation }) => {
           </View>
           <View style={styles.TempConatinerBg}>
             <Text style={styles.degree}>83°F</Text>
-            <View style={styles.setTextContainer}>
-              <Text style={styles.setText}>Set the box Temperature</Text>
-              <MaterialCommunityIcons
-                name="arrow-right"
-                size={20}
-                color="white"
-              />
-            </View>
+            <TouchableWithoutFeedback
+              onPress={() => navigation.navigate("setTemperatureScreen")}
+            >
+              <View style={styles.setTextContainer}>
+                <Text style={styles.setText}>Set the box Temperature</Text>
+                <MaterialCommunityIcons
+                  name="arrow-right"
+                  size={20}
+                  color="white"
+                />
+              </View>
+            </TouchableWithoutFeedback>
           </View>
         </View>
         <View style={styles.percentagetxtContainer}>
@@ -198,7 +205,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000a8",
     width: "100%",
   },
-  brightnes: {
+  brightness: {
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
@@ -227,7 +234,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 30,
+    gap: 10,
     alignItems: "center",
   },
   deviceContainer: {
