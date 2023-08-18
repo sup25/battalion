@@ -2,6 +2,7 @@ import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 
 const AddUserData = async (data) => {
+  const { fourDigitCode } = data;
   try {
     // Validate the owner field
     if (!data.owner) {
@@ -22,9 +23,6 @@ const AddUserData = async (data) => {
       console.log("Device data already exists. Cannot update.");
       return;
     }
-
-    // Set fourDigitCode to be the same as serialNum for now
-    const fourDigitCode = serialNum;
 
     await setDoc(deviceRef, {
       modelNum,

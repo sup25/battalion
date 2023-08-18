@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.black,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "center", 
   },
   slider: {
     width: 295,
