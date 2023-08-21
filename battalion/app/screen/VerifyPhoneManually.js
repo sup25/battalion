@@ -6,11 +6,12 @@ import AddUserData from "../config/Database";
 
 import { useAuth } from "../utils/AuthProvider";
 
-const VerifyPhoneManually = () => {
+const VerifyPhoneManually = ({ navigation, route }) => {
   const { currentUser } = useAuth();
   const userName = currentUser?.displayName;
 
   const [displayMessage, setDisplayMessage] = useState("");
+
   const [userData, setUserData] = useState({
     combinedSerialNum: "",
   });
@@ -29,8 +30,9 @@ const VerifyPhoneManually = () => {
     // Set the owner and users values in userData
     const updatedUserData = {
       ...userData,
-      owner: userName, // Set the owner to the current user's name
+      owner: userName,
       users: ["User1", "User2", "User3"], // Replace with the desired users array
+      fourDigitCode: "",
     };
 
     AddUserData(updatedUserData);
@@ -72,6 +74,17 @@ const VerifyPhoneManually = () => {
           <Text style={styles.message}>{displayMessage}</Text>
         ) : null}
       </View>
+      <View style={{ alignItems: "center", top: 20 }}>
+        <Text
+          onPress={() => {
+            navigation.navigate("fourdigitcodeinsertscreen");
+          }}
+          style={styles.InserCodetxt}
+        >
+          Insert code
+        </Text>
+      </View>
+
       <View style={styles.btn}>
         <CarthagosButton
           title="confirm"
@@ -99,6 +112,12 @@ const styles = StyleSheet.create({
   containerSmall: {
     width: "100%",
     marginTop: 76,
+  },
+  InserCodetxt: {
+    color: colors.medium,
+    fontSize: 14,
+    fontWeight: 500,
+    alignItems: "center",
   },
   txtInput: {
     width: 283,

@@ -12,6 +12,7 @@ import ForgotPassword from "../screen/ForgetPasswordPrivate";
 import DeviceDetails from "../screen/DeviceDetails";
 import DeviceSetting from "../screen/DeviceSetting";
 import SetTemperatureScreen from "../screen/SetTemperatureScreen";
+import FourDigitCodeInsertScreen from "../screen/FourDigitCodeInsertScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -57,6 +58,11 @@ const PrivateStackNavigator = () => {
       <Stack.Screen
         name="setTemperatureScreen"
         component={SetTemperatureScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="fourdigitcodeinsertscreen"
+        component={FourDigitCodeInsertScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
