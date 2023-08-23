@@ -41,7 +41,7 @@ const DeviceSetting = ({ navigation }) => {
 
   useEffect(() => {
     const fetchDocument = async () => {
-      const documentID = "123455789012";
+      const documentID = "222222222222";
       const docRef = doc(db, "devices", documentID);
 
       try {

@@ -16,7 +16,7 @@ const VerifyPhoneManually = ({ navigation, route }) => {
     combinedSerialNum: "",
   });
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const { combinedSerialNum } = userData;
 
     // Validate the combinedSerialNum field
@@ -31,11 +31,12 @@ const VerifyPhoneManually = ({ navigation, route }) => {
     const updatedUserData = {
       ...userData,
       owner: userName,
-      users: ["User1", "User2", "User3"], // Replace with the desired users array
+      users: ["User1", "User2", "User3"],
       fourDigitCode: "",
     };
 
-    AddUserData(updatedUserData);
+    // Call AddUserData to send combinedSerialNum
+    await AddUserData(updatedUserData);
     console.log("Saving data:", updatedUserData);
 
     // Show success message

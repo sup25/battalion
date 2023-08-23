@@ -3,8 +3,13 @@ import React, { useState } from "react";
 import colors from "../config/colors";
 import CarthagosButton from "../component/CarthagosButton";
 
-export default function FourDigitCodeInsertScreen({ navigation }) {
+import { collection, doc, updateDoc } from "firebase/firestore";
+import { db } from "../config/Firebase";
+
+export default function FourDigitCodeInsertScreen() {
   const [digitValues, setDigitValues] = useState(["", "", "", ""]);
+
+  /* const { combinedSerialNum } = route.params; */
 
   const handleDigitChange = (index, value) => {
     const newDigitValues = [...digitValues];
@@ -12,18 +17,28 @@ export default function FourDigitCodeInsertScreen({ navigation }) {
     setDigitValues(newDigitValues);
   };
 
-  const handleConfirm = () => {
+  const handleConfirm = async () => {
     const fourDigitCode = digitValues.join("");
     if (fourDigitCode.length !== 4) {
-      console.log("enter valid digit");
+      console.log("Enter valid digit");
       return;
-    } else {
-      console.log("value saved");
     }
 
+    // Update the Firestore document with the new fourDigitCode
+    try {
+      const deviceRef = doc(collection(db, "devices"), "222222222222");
+      await updateDoc(deviceRef, {
+        fourDigitCode: fourDigitCode,
+      });
+
+      console.log("Four-digit code updated successfully");
+    } catch (error) {
+      console.log("Error updating four-digit code:", error.message);
+    }
+
+    // Reset the digitValues
     setDigitValues(["", "", "", ""]);
   };
-
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>

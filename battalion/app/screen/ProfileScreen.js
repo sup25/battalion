@@ -7,11 +7,12 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
+import { updateProfile } from "firebase/auth";
+
 import { useAuth } from "../utils/AuthProvider";
 import * as LocalAuthentication from "expo-local-authentication";
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { updateProfile } from "firebase/auth";
 
 const ProfileScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
@@ -70,24 +71,28 @@ const ProfileScreen = ({ navigation }) => {
 
   const handleSaveUserName = async () => {
     try {
-      if (currentUser) {
-        const newUserName = updatedUserName.trim();
-
-        if (newUserName === "") {
-          console.log("Username cannot be empty");
-          return;
-        }
-        console.log(currentUser.displayName);
-
-        await updateProfile(currentUser, {
-          displayName: newUserName,
-        });
-
-        console.log("Profile update successful");
-        setIsEditingUsername(false);
-      } else {
+      if (!currentUser) {
         console.log("User is not available");
+        return;
       }
+
+      const newUserName = updatedUserName.trim();
+
+      if (newUserName === "") {
+        console.log("Username cannot be empty");
+        return;
+      }
+
+      console.log("Before update:", currentUser.displayName);
+
+      await updateProfile(currentUser, {
+        displayName: newUserName,
+      });
+
+      console.log("After update:", currentUser.displayName);
+
+      console.log("Profile update successful");
+      setIsEditingUsername(false);
     } catch (error) {
       console.log("Error updating username:", error);
     }
