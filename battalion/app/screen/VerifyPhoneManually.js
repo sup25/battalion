@@ -18,7 +18,7 @@ const VerifyPhoneManually = ({ navigation, route }) => {
 
   const handleConfirm = async () => {
     const { combinedSerialNum } = userData;
-
+  
     // Validate the combinedSerialNum field
     if (!combinedSerialNum || combinedSerialNum.length !== 12) {
       const message =
@@ -26,28 +26,33 @@ const VerifyPhoneManually = ({ navigation, route }) => {
       setDisplayMessage(message);
       return;
     }
-
+  
+    // Determine if the combinedSerialNum contains letters or numbers
+    const isLetters = /^[A-Za-z]+$/.test(combinedSerialNum);
+    const isNumbers = /^[0-9]+$/.test(combinedSerialNum);
+  
     // Set the owner and users values in userData
     const updatedUserData = {
       ...userData,
       owner: userName,
       users: ["User1", "User2", "User3"],
       fourDigitCode: "",
+      teamType: isLetters ? "Team A" : isNumbers ? "Team B" : "Uncategorized",
     };
-
+  
     // Call AddUserData to send combinedSerialNum
     await AddUserData(updatedUserData);
-    console.log("Saving data:", updatedUserData);
-
+  
     // Show success message
     const successMessage = "Data saved successfully!";
     setDisplayMessage(successMessage);
-
+  
     // Clear the text input field
     setUserData({
       combinedSerialNum: "",
     });
   };
+  
 
   const handleChangeText = (key, value) => {
     // Clear the success message when the user starts typing
@@ -78,7 +83,9 @@ const VerifyPhoneManually = ({ navigation, route }) => {
       <View style={{ alignItems: "center", top: 20 }}>
         <Text
           onPress={() => {
-            navigation.navigate("fourdigitcodeinsertscreen");
+            navigation.navigate("fourdigitcodeinsertscreen",{
+              combinedSerialNum: userData.combinedSerialNum,
+            });
           }}
           style={styles.InserCodetxt}
         >

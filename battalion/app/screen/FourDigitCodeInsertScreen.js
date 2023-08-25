@@ -6,10 +6,11 @@ import CarthagosButton from "../component/CarthagosButton";
 import { collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../config/Firebase";
 
-export default function FourDigitCodeInsertScreen() {
+export default function FourDigitCodeInsertScreen({route}) {
   const [digitValues, setDigitValues] = useState(["", "", "", ""]);
 
-  /* const { combinedSerialNum } = route.params; */
+/*   const combinedSerialNum = route.params?.combinedSerialNum || "";
+ console.log("combinedSerialNum :",combinedSerialNum) */
 
   const handleDigitChange = (index, value) => {
     const newDigitValues = [...digitValues];
@@ -26,7 +27,7 @@ export default function FourDigitCodeInsertScreen() {
 
     // Update the Firestore document with the new fourDigitCode
     try {
-      const deviceRef = doc(collection(db, "devices"), "222222222222");
+      const deviceRef = doc(collection(db, "devices"), "111111111100");
       await updateDoc(deviceRef, {
         fourDigitCode: fourDigitCode,
       });

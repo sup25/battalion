@@ -2,12 +2,20 @@ import { collection, doc, setDoc, getDoc } from "firebase/firestore";
 import { db } from "./Firebase";
 
 const AddUserData = async (data) => {
-  const { fourDigitCode } = data;
+  const { fourDigitCode, combinedSerialNum} = data;
   try {
     // Validate the owner field
     if (!data.owner) {
       throw new Error("Owner field is required.");
     }
+    // Determine the team type
+    const isLetters = /^[A-Za-z]+$/.test(combinedSerialNum);
+    const isNumbers = /^[0-9]+$/.test(combinedSerialNum);
+    const teamType = isLetters
+      ? "Team A"
+      : isNumbers
+      ? "Team B"
+      : "Uncategorized";
 
     // Extract the individual parts from the combinedSerialNum
     const modelNum = data.combinedSerialNum.substring(0, 4);
@@ -28,10 +36,11 @@ const AddUserData = async (data) => {
       modelNum,
       prodDate,
       serialNum,
-      combinedSerialNum: remaining,
+      combinedSerialNum: remaining, 
       fourDigitCode,
       owner: data.owner,
       users: data.users,
+      teamType, 
     });
 
     console.log("Device data saved successfully");
