@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import colors from "../config/colors";
 import CarthagosButton from "../component/CarthagosButton";
 import AddUserData from "../config/Database";
@@ -9,6 +9,8 @@ import { useAuth } from "../utils/AuthProvider";
 const VerifyPhoneManually = ({ navigation, route }) => {
   const { currentUser } = useAuth();
   const userName = currentUser?.displayName;
+
+  const combinedSerialNumRef = useRef("");
 
   const [displayMessage, setDisplayMessage] = useState("");
 
@@ -82,11 +84,11 @@ const VerifyPhoneManually = ({ navigation, route }) => {
       </View>
       <View style={{ alignItems: "center", top: 20 }}>
         <Text
-          onPress={() => {
-            navigation.navigate("fourdigitcodeinsertscreen",{
-              combinedSerialNum: userData.combinedSerialNum,
-            });
+           onPress={() => {
+            combinedSerialNumRef.current = userData.combinedSerialNum; 
+            navigation.navigate("fourdigitcodeinsertscreen");
           }}
+         
           style={styles.InserCodetxt}
         >
           Insert code

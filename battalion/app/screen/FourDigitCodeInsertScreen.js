@@ -1,5 +1,5 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useState } from "react";
+import React, { useState,useRef } from "react";
 import colors from "../config/colors";
 import CarthagosButton from "../component/CarthagosButton";
 
@@ -11,6 +11,8 @@ export default function FourDigitCodeInsertScreen({route}) {
 
 /*   const combinedSerialNum = route.params?.combinedSerialNum || "";
  console.log("combinedSerialNum :",combinedSerialNum) */
+ 
+ /* const combinedSerialNumRef = useRef(""); */
 
   const handleDigitChange = (index, value) => {
     const newDigitValues = [...digitValues];
@@ -19,6 +21,8 @@ export default function FourDigitCodeInsertScreen({route}) {
   };
 
   const handleConfirm = async () => {
+   /*  const combinedSerialNum = combinedSerialNumRef.current;  */
+  
     const fourDigitCode = digitValues.join("");
     if (fourDigitCode.length !== 4) {
       console.log("Enter valid digit");
@@ -27,7 +31,7 @@ export default function FourDigitCodeInsertScreen({route}) {
 
     // Update the Firestore document with the new fourDigitCode
     try {
-      const deviceRef = doc(collection(db, "devices"), "111111111100");
+      const deviceRef = doc(collection(db, "devices"),"222222222222");
       await updateDoc(deviceRef, {
         fourDigitCode: fourDigitCode,
       });
