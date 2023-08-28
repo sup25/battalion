@@ -13,7 +13,7 @@ import { db } from "../config/Firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../config/colors";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 const DeviceSetting = ({ navigation }) => {
   const [fourDigitCode, setFourDigitCode] = useState("");
   const [show, setShow] = useState(false);
@@ -41,26 +41,33 @@ const DeviceSetting = ({ navigation }) => {
 
   useEffect(() => {
     const fetchDocument = async () => {
-      const documentID = "222222222222";
-      const docRef = doc(db, "devices", documentID);
-
       try {
-        const docSnapshot = await getDoc(docRef);
-
-        if (docSnapshot.exists()) {
-          const code = docSnapshot.data().fourDigitCode;
-          setFourDigitCode(code);
-          console.log(code);
+        // Retrieve the combinedSerialNumber from AsyncStorage
+        const combinedSerialNumber = await AsyncStorage.getItem("combinedSerialNum");
+  
+        if (combinedSerialNumber) {
+          const docRef = doc(db, "devices", combinedSerialNumber);
+  
+          const docSnapshot = await getDoc(docRef);
+  
+          if (docSnapshot.exists()) {
+            const code = docSnapshot.data().fourDigitCode;
+            setFourDigitCode(code);
+            console.log(code);
+          } else {
+            console.log("Document not found");
+          }
         } else {
-          console.log("Document not found");
+          console.log("No combinedSerialNumber found in AsyncStorage");
         }
       } catch (error) {
-        console.log("Error getting document:", error);
+        console.log("Error:", error);
       }
     };
-
+  
     fetchDocument();
   }, []);
+  
 
   return (
     <View style={styles.container}>

@@ -1,8 +1,8 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useState,useRef } from "react";
+import React, { useState,useRef,useEffect } from "react";
 import colors from "../config/colors";
 import CarthagosButton from "../component/CarthagosButton";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../config/Firebase";
 
@@ -13,6 +13,24 @@ export default function FourDigitCodeInsertScreen({route}) {
  console.log("combinedSerialNum :",combinedSerialNum) */
  
  /* const combinedSerialNumRef = useRef(""); */
+
+ const [combinedSerialNum, setCombinedSerialNum] = useState("");
+
+ useEffect(() => {
+  const fetchCombinedSerialNum = async () => {
+    try {
+      const storedCombinedSerialNum = await AsyncStorage.getItem("combinedSerialNum");
+      if (storedCombinedSerialNum !== null) {
+        setCombinedSerialNum(storedCombinedSerialNum);
+      }
+    } catch (error) {
+      console.log("Error fetching combinedSerialNum from AsyncStorage:", error);
+    }
+  };
+
+  fetchCombinedSerialNum();
+}, []);
+
 
   const handleDigitChange = (index, value) => {
     const newDigitValues = [...digitValues];
@@ -28,10 +46,11 @@ export default function FourDigitCodeInsertScreen({route}) {
       console.log("Enter valid digit");
       return;
     }
-
+   
     // Update the Firestore document with the new fourDigitCode
     try {
-      const deviceRef = doc(collection(db, "devices"),"222222222222");
+      console.log("combinedSerialNum:", combinedSerialNum);
+      const deviceRef = doc(collection(db, "devices"),combinedSerialNum);
       await updateDoc(deviceRef, {
         fourDigitCode: fourDigitCode,
       });

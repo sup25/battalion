@@ -3,6 +3,7 @@ import React, { useState,useRef } from "react";
 import colors from "../config/colors";
 import CarthagosButton from "../component/CarthagosButton";
 import AddUserData from "../config/Database";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 import { useAuth } from "../utils/AuthProvider";
 
@@ -54,6 +55,18 @@ const VerifyPhoneManually = ({ navigation, route }) => {
       combinedSerialNum: "",
     });
   };
+  const handleNavigation =async() =>{   
+    const combinedSerialNum = combinedSerialNumRef.current; 
+    if (!combinedSerialNum || combinedSerialNum.length !== 12) {
+      console.log("Invalid combinedSerialNum:", combinedSerialNum);
+      return;
+    }
+    await AsyncStorage.setItem("combinedSerialNum", combinedSerialNum);
+    console.log("Entered combined serial number:", combinedSerialNum);
+    navigation.navigate("fourdigitcodeinsertscreen");
+  }
+    
+  
   
 
   const handleChangeText = (key, value) => {
@@ -61,6 +74,8 @@ const VerifyPhoneManually = ({ navigation, route }) => {
     if (displayMessage) {
       setDisplayMessage("");
     }
+  // Update the combinedSerialNumRef with the current value
+  combinedSerialNumRef.current = value;
 
     setUserData((prevData) => ({
       ...prevData,
@@ -84,10 +99,7 @@ const VerifyPhoneManually = ({ navigation, route }) => {
       </View>
       <View style={{ alignItems: "center", top: 20 }}>
         <Text
-           onPress={() => {
-            combinedSerialNumRef.current = userData.combinedSerialNum; 
-            navigation.navigate("fourdigitcodeinsertscreen");
-          }}
+         onPress={handleNavigation}
          
           style={styles.InserCodetxt}
         >
