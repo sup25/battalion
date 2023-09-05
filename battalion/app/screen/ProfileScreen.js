@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,8 +7,10 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import { updateProfile } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
+import { updateProfile } from "firebase/auth";
+import { auth } from "../config/Firebase";
 import { useAuth } from "../utils/AuthProvider";
 import * as LocalAuthentication from "expo-local-authentication";
 import colors from "../config/colors";
@@ -16,6 +18,11 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const ProfileScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
+  
+ /*  const user = auth.currentUser;
+  console.log("user", user); */
+
+  
 
   const userEmail = currentUser?.email;
 
@@ -27,6 +34,26 @@ const ProfileScreen = ({ navigation }) => {
   const [updatedUserName, setUpdatedUserName] = useState(
     currentUser?.displayName || ""
   );
+  useEffect(() => {
+    // Retrieve the stored display name from AsyncStorage
+    const getDisplayName = async () => {
+      try {
+        const storedDisplayName = await AsyncStorage.getItem("displayName");
+        if (storedDisplayName) {
+          setUpdatedUserName(storedDisplayName);
+        } else {
+          // If no stored display name found, use the currentUser's display name
+          setUpdatedUserName(currentUser?.displayName || "");
+        }
+      } catch (error) {
+        console.error("Error getting display name from AsyncStorage:", error);
+      }
+    };
+  
+    getDisplayName();
+  }, [currentUser]);
+  
+
   const handleEmailChange = async () => {
     if (!isEditingEmail) {
       try {
@@ -75,28 +102,37 @@ const ProfileScreen = ({ navigation }) => {
         console.log("User is not available");
         return;
       }
-
+  
       const newUserName = updatedUserName.trim();
-
+      console.log("Updated User Name:", newUserName);
+  
       if (newUserName === "") {
         console.log("Username cannot be empty");
         return;
       }
+  
+      // Set the display name directly on the currentUser object
+      currentUser.displayName = newUserName;
 
-      console.log("Before update:", currentUser.displayName);
-
-      await updateProfile(currentUser, {
-        displayName: newUserName,
-      });
-
-      console.log("After update:", currentUser.displayName);
-
+    /*   await updateProfile(currentUser, {
+        displayName: newUserName,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
+      }); */
+  
+      // Persist the updated display name to AsyncStorage
+      await AsyncStorage.setItem("displayName", newUserName);
+  
+      console.log("Updated Display Name:", currentUser.displayName);
+  
       console.log("Profile update successful");
       setIsEditingUsername(false);
     } catch (error) {
       console.log("Error updating username:", error);
     }
   };
+  
+  
+  
+  
 
   return (
     <View style={styles.container}>

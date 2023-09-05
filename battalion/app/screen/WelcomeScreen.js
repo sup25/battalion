@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState,useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,6 +9,7 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
+import { useIsFocused } from "@react-navigation/native";
 
 import { useAuth } from "../utils/AuthProvider";
 
@@ -17,6 +18,12 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    // This code will run whenever currentUser changes
+    console.log('Current User:', currentUser);
+  }, [currentUser,isFocused]);
   const userName = currentUser?.displayName;
 
   return (
