@@ -1,4 +1,5 @@
 import React, { useState,useEffect } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   StyleSheet,
   Text,
@@ -16,15 +17,18 @@ import { useAuth } from "../utils/AuthProvider";
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
+
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
   const isFocused = useIsFocused();
+  const [userName, setUserName] = useState(""); // State to store the user's display name
 
   useEffect(() => {
-    // This code will run whenever currentUser changes
-    console.log('Current User:', currentUser);
-  }, [currentUser,isFocused]);
-  const userName = currentUser?.displayName;
+    // Set the user's display name from currentUser
+    if (currentUser) {
+      setUserName(currentUser.displayName || "Name"); 
+    }
+  }, [isFocused, currentUser]);
 
   return (
     <View style={styles.container}>

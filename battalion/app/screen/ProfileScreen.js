@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,10 +7,9 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
-import { updateProfile } from "firebase/auth";
-import { auth } from "../config/Firebase";
+import { updateProfile, updateEmail } from "firebase/auth";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../utils/AuthProvider";
 import * as LocalAuthentication from "expo-local-authentication";
 import colors from "../config/colors";
@@ -18,13 +17,6 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const ProfileScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
-  
- /*  const user = auth.currentUser;
-  console.log("user", user); */
-
-  
-
-  const userEmail = currentUser?.email;
 
   const phoneNumber = currentUser?.phoneNumber;
   const [isChangingEmail, setIsChangingEmail] = useState(false);
@@ -34,25 +26,8 @@ const ProfileScreen = ({ navigation }) => {
   const [updatedUserName, setUpdatedUserName] = useState(
     currentUser?.displayName || ""
   );
-  useEffect(() => {
-    // Retrieve the stored display name from AsyncStorage
-    const getDisplayName = async () => {
-      try {
-        const storedDisplayName = await AsyncStorage.getItem("displayName");
-        if (storedDisplayName) {
-          setUpdatedUserName(storedDisplayName);
-        } else {
-          // If no stored display name found, use the currentUser's display name
-          setUpdatedUserName(currentUser?.displayName || "");
-        }
-      } catch (error) {
-        console.error("Error getting display name from AsyncStorage:", error);
-      }
-    };
-  
-    getDisplayName();
-  }, [currentUser]);
-  
+
+  const [updatedEmail, setUpdatedEmail] = useState(currentUser?.email || "");
 
   const handleEmailChange = async () => {
     if (!isEditingEmail) {
@@ -102,37 +77,115 @@ const ProfileScreen = ({ navigation }) => {
         console.log("User is not available");
         return;
       }
-  
+
       const newUserName = updatedUserName.trim();
       console.log("Updated User Name:", newUserName);
-  
+
       if (newUserName === "") {
         console.log("Username cannot be empty");
         return;
       }
-  
+
       // Set the display name directly on the currentUser object
       currentUser.displayName = newUserName;
 
-    /*   await updateProfile(currentUser, {
-        displayName: newUserName,                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                 
-      }); */
-  
-      // Persist the updated display name to AsyncStorage
-      await AsyncStorage.setItem("displayName", newUserName);
-  
+      // Now, check the authentication provider and update if needed
+      const passwordProvider = currentUser.providerData.find(
+        (provider) => provider.providerId === "password"
+      );
+      console.log("Provider Data:", currentUser.providerData);
+      console.log("Provider ID:", passwordProvider);
+
+      if (passwordProvider && passwordProvider.providerId === "password") {
+        console.log("User is authenticated with email/password ");
+
+        // Update the display name directly for the "password" provider
+        passwordProvider.displayName = newUserName;
+
+        try {
+          // Update the display name for the "password" provider
+          await updateProfile(currentUser, { displayName: newUserName });
+          await AsyncStorage.setItem("currentUser", JSON.stringify(newUserName));
+         
+          console.log("Profile update successful for password provider");
+        } catch (error) {
+          console.log("Error updating username for password provider:", error);
+        }
+      }
+
+      const phoneProvider = currentUser.providerData.find(
+        (provider) => provider.providerId === "phone"
+      );
+
+      if (phoneProvider && phoneProvider.providerId === "phone") {
+        console.log("User is authenticated with phone");
+
+        console.log("Profile update successful for phone provider");
+      }
+
       console.log("Updated Display Name:", currentUser.displayName);
-  
-      console.log("Profile update successful");
+
+      console.log("Provider ID:", passwordProvider);
+      console.log("Provider ID:", phoneProvider);
+
       setIsEditingUsername(false);
     } catch (error) {
       console.log("Error updating username:", error);
     }
   };
-  
-  
-  
-  
+
+  const handleSaveEmail = async () => {
+    try {
+      if (!currentUser) {
+        console.log("User is not available");
+        return;
+      }
+
+      console.log("providerdata", currentUser.providerData);
+
+      const newEmail = updatedEmail.trim();
+      console.log("Updated Email:", newEmail);
+
+      if (newEmail === "") {
+        console.log("Email cannot be empty");
+        return;
+      }
+
+      // Find the providerData object with providerId "password"
+      const passwordProvider = currentUser.providerData.find(
+        (provider) => provider.providerId === "password"
+      );
+
+      if (passwordProvider) {
+        // Update the email and uid properties of the "password" provider
+        passwordProvider.email = newEmail;
+        passwordProvider.uid = newEmail; //updating userId as well
+
+        // Now, you can log the updated providerData to verify the change
+        console.log("Updated providerData:", currentUser.providerData);
+      } else {
+        console.log("Password provider not found in providerData");
+      }
+
+      try {
+        // Now that the user is reauthenticated, update their email
+        await updateEmail(currentUser, newEmail);
+
+        // Update the local state with the new email
+        setUpdatedEmail(newEmail);
+        setIsEditingEmail(false);
+
+        // Store the updated user data in AsyncStorage
+        await AsyncStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+        console.log("Email update successful for the currently signed-in user");
+      } catch (error) {
+        console.log("Error updating email:", error);
+      }
+    } catch (error) {
+      console.log("Error updating email:", error);
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -181,18 +234,30 @@ const ProfileScreen = ({ navigation }) => {
                 ]}
                 placeholder=""
                 placeholderTextColor="white"
-                value={userEmail}
+                value={updatedEmail}
                 editable={isEditingEmail}
                 onFocus={() => setIsChangingEmail(true)}
                 onBlur={() => setIsChangingEmail(false)}
+                onChangeText={setUpdatedEmail}
               />
-              <MaterialCommunityIcons
-                name="pencil"
-                color="#5A5A5A"
-                size={30}
-                style={styles.icon}
-                onPress={handleEmailChange}
-              />
+
+              {isEditingEmail ? (
+                <MaterialCommunityIcons
+                  name="check"
+                  color="#5A5A5A"
+                  size={30}
+                  style={styles.icon}
+                  onPress={handleSaveEmail}
+                />
+              ) : (
+                <MaterialCommunityIcons
+                  name="pencil"
+                  color="#5A5A5A"
+                  size={30}
+                  style={styles.icon}
+                  onPress={handleEmailChange}
+                />
+              )}
             </View>
           </TouchableWithoutFeedback>
           <View>
