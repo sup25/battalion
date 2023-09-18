@@ -29,6 +29,24 @@ const ProfileScreen = ({ navigation }) => {
 
   const [updatedEmail, setUpdatedEmail] = useState(currentUser?.email || "");
 
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const storedUserData = await AsyncStorage.getItem("currentUser");
+        if (storedUserData) {
+          const parsedUser = JSON.parse(storedUserData);
+          // Update state with email and display name
+          setUpdatedEmail(parsedUser.email || "");
+          setUpdatedUserName(parsedUser.displayName || "");
+        }
+      } catch (error) {
+        console.error("Error loading data from AsyncStorage:", error);
+      }
+    };
+
+    loadData();
+  }, []);
+
   const handleEmailChange = async () => {
     if (!isEditingEmail) {
       try {
@@ -71,6 +89,7 @@ const ProfileScreen = ({ navigation }) => {
     setIsEditingUsername(!isEditingUsername);
   };
 
+  //saving the displayName
   const handleSaveUserName = async () => {
     try {
       if (!currentUser) {
@@ -105,8 +124,12 @@ const ProfileScreen = ({ navigation }) => {
         try {
           // Update the display name for the "password" provider
           await updateProfile(currentUser, { displayName: newUserName });
-          await AsyncStorage.setItem("currentUser", JSON.stringify(newUserName));
-         
+          // Save the updated user data in AsyncStorage
+          await AsyncStorage.setItem(
+            "currentUser",
+            JSON.stringify(currentUser)
+          );
+
           console.log("Profile update successful for password provider");
         } catch (error) {
           console.log("Error updating username for password provider:", error);
@@ -134,6 +157,7 @@ const ProfileScreen = ({ navigation }) => {
     }
   };
 
+  //saving the email
   const handleSaveEmail = async () => {
     try {
       if (!currentUser) {
@@ -168,7 +192,7 @@ const ProfileScreen = ({ navigation }) => {
       }
 
       try {
-        // Now that the user is reauthenticated, update their email
+        // Now update their email
         await updateEmail(currentUser, newEmail);
 
         // Update the local state with the new email
@@ -176,7 +200,8 @@ const ProfileScreen = ({ navigation }) => {
         setIsEditingEmail(false);
 
         // Store the updated user data in AsyncStorage
-        await AsyncStorage.setItem("currentUser", JSON.stringify(currentUser));
+        const updatedUser = { ...currentUser, email: newEmail };
+        await AsyncStorage.setItem("currentUser", JSON.stringify(updatedUser));
 
         console.log("Email update successful for the currently signed-in user");
       } catch (error) {
