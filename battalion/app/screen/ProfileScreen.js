@@ -98,7 +98,7 @@ const ProfileScreen = ({ navigation }) => {
       }
 
       const newUserName = updatedUserName.trim();
-      console.log("Updated User Name:", newUserName);
+      console.log("User name to be updated:", newUserName);
 
       if (newUserName === "") {
         console.log("Username cannot be empty");
@@ -108,12 +108,10 @@ const ProfileScreen = ({ navigation }) => {
       // Set the display name directly on the currentUser object
       currentUser.displayName = newUserName;
 
-      // Now, check the authentication provider and update if needed
+      // Now, check the authentication provider and update diaplay name
       const passwordProvider = currentUser.providerData.find(
         (provider) => provider.providerId === "password"
       );
-      console.log("Provider Data:", currentUser.providerData);
-      console.log("Provider ID:", passwordProvider);
 
       if (passwordProvider && passwordProvider.providerId === "password") {
         console.log("User is authenticated with email/password ");
@@ -168,7 +166,7 @@ const ProfileScreen = ({ navigation }) => {
       console.log("providerdata", currentUser.providerData);
 
       const newEmail = updatedEmail.trim();
-      console.log("Updated Email:", newEmail);
+      console.log("Updated Email Should Be:", newEmail);
 
       if (newEmail === "") {
         console.log("Email cannot be empty");
@@ -183,17 +181,11 @@ const ProfileScreen = ({ navigation }) => {
       if (passwordProvider) {
         // Update the email and uid properties of the "password" provider
         passwordProvider.email = newEmail;
-        passwordProvider.uid = newEmail; //updating userId as well
+        passwordProvider.uid = newEmail; // Updating userId as well
 
-        // Now, you can log the updated providerData to verify the change
-        console.log("Updated providerData:", currentUser.providerData);
-      } else {
-        console.log("Password provider not found in providerData");
-      }
-
-      try {
-        // Now update their email
         await updateEmail(currentUser, newEmail);
+
+        console.log("Updated providerData:", currentUser.providerData);
 
         // Update the local state with the new email
         setUpdatedEmail(newEmail);
@@ -204,8 +196,9 @@ const ProfileScreen = ({ navigation }) => {
         await AsyncStorage.setItem("currentUser", JSON.stringify(updatedUser));
 
         console.log("Email update successful for the currently signed-in user");
-      } catch (error) {
-        console.log("Error updating email:", error);
+      } else {
+        console.log("Password provider not found in providerData");
+        console.log("Trying to update the wrong provider");
       }
     } catch (error) {
       console.log("Error updating email:", error);
