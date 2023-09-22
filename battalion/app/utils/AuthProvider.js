@@ -30,20 +30,7 @@ export const AuthProvider = ({ children }) => {
       console.log("Error logging out:", error);
     }
   };
-
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
-      userHandler(user);
-      // Store the user authentication state in AsyncStorage
-      if (user) {
-        AsyncStorage.setItem("currentUser", JSON.stringify(user))
-          .then(() => console.log("User authentication state stored"))
-          .catch((error) =>
-            console.log("Error storing user authentication state:", error)
-          );
-      }
-    });
-
     // Retrieve user authentication state from AsyncStorage on app startup
     const checkUserAuthentication = async () => {
       try {
@@ -58,10 +45,54 @@ export const AuthProvider = ({ children }) => {
         setIsLoading(false);
       }
     };
+
+    // Call the function to retrieve user authentication state from AsyncStorage
     checkUserAuthentication();
-    // Clean up the event listener when component unmounts
+  }, []);
+
+  
+  useEffect(() => {
+    // Initialize a variable to track whether fetching user data is complete
+    let isFetchComplete = false;
+  
+    // Fetch the user data from Firebase during initialization
+    const fetchUserData = async () => {
+      try {
+        const user = auth.currentUser;
+        userHandler(user);
+  
+        // Store the user authentication state in AsyncStorage
+        if (user) {
+          await AsyncStorage.setItem("currentUser", JSON.stringify(user));
+          console.log("User authentication state stored");
+        }
+  
+        // Mark user data fetching as complete
+        isFetchComplete = true;
+      } catch (error) {
+        console.log("Error fetching user data:", error);
+      }
+    };
+  
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      userHandler(user);
+  
+      // If user data fetching is complete, set isLoading to false
+      if (isFetchComplete) {
+        setIsLoading(false);
+      }
+    });
+  
+    // Fetch user data from Firebase during app startup
+    fetchUserData();
+  
+    // Clean up the event listener when the component unmounts
     return () => unsubscribe();
   }, []);
+
+  
+  
+
 
   if (isLoading) {
     // Render loading state or a loader component

@@ -182,7 +182,7 @@ const ProfileScreen = ({ navigation }) => {
         // Update the email and uid properties of the "password" provider
         passwordProvider.email = newEmail;
         passwordProvider.uid = newEmail; // Updating userId as well
-
+        
         await updateEmail(currentUser, newEmail);
 
         console.log("Updated providerData:", currentUser.providerData);
