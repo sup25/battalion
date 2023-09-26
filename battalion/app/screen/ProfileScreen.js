@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-import { updateProfile, updateEmail } from "firebase/auth";
+import { updateProfile, updateEmail, onAuthStateChanged } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../utils/AuthProvider";
 import * as LocalAuthentication from "expo-local-authentication";
@@ -182,9 +182,9 @@ const ProfileScreen = ({ navigation }) => {
         // Update the email and uid properties of the "password" provider
         passwordProvider.email = newEmail;
         passwordProvider.uid = newEmail; // Updating userId as well
-        
-        await updateEmail(currentUser, newEmail);
 
+        await updateEmail(currentUser, newEmail);
+        // Now, you can log the updated providerData to verify the change
         console.log("Updated providerData:", currentUser.providerData);
 
         // Update the local state with the new email
