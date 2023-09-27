@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
 
   const userHandler = (user) => {
     user ? setCurrentUser(user) : setCurrentUser(null);
-    setIsLoading(false);
+    setIsLoading(false); // Set loading state to false once user state is determined
   };
 
   const logout = async () => {
@@ -32,38 +32,34 @@ export const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged(async (user) => {
-      // Check if a user is authenticated
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      userHandler(user);
+      // Store the user authentication state in AsyncStorage
       if (user) {
-        // If the user is authenticated, set the current user state
-        userHandler(user);
-
-        // Store the user authentication state in AsyncStorage
-        try {
-          await AsyncStorage.setItem("currentUser", JSON.stringify(user));
-          console.log("User authentication state stored");
-        } catch (error) {
-          console.log("Error storing user authentication state:", error);
-        }
-      } else {
-        // If no user is authenticated, check AsyncStorage for stored user data
-        try {
-          const storedUser = await AsyncStorage.getItem("currentUser");
-          if (storedUser) {
-            // Parse and set the current user state
-            setCurrentUser(JSON.parse(storedUser));
-            console.log(storedUser);
-          }
-        } catch (error) {
-          console.log("Error retrieving user authentication state:", error);
-        }
+        AsyncStorage.setItem("currentUser", JSON.stringify(user))
+          .then(() => console.log("User authentication state stored"))
+          .catch((error) =>
+            console.log("Error storing user authentication state:", error)
+          );
       }
-
-      // Set loading state to false once user state is determined
-      setIsLoading(false);
     });
 
-    // Clean up the event listener when the component unmounts
+    // Retrieve user authentication state from AsyncStorage on app startup
+    const checkUserAuthentication = async () => {
+      try {
+        const storedUser = await AsyncStorage.getItem("currentUser");
+        if (storedUser) {
+          setCurrentUser(JSON.parse(storedUser));
+          console.log(storedUser);
+        }
+        setIsLoading(false);
+      } catch (error) {
+        console.log("Error retrieving user authentication state:", error);
+        setIsLoading(false);
+      }
+    };
+    checkUserAuthentication();
+    // Clean up the event listener when component unmounts
     return () => unsubscribe();
   }, []);
 

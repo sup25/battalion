@@ -8,7 +8,7 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-import { updateProfile, updateEmail, onAuthStateChanged } from "firebase/auth";
+import { updateProfile, updateEmail } from "firebase/auth";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../utils/AuthProvider";
 import * as LocalAuthentication from "expo-local-authentication";
@@ -26,7 +26,13 @@ const ProfileScreen = ({ navigation }) => {
   const [updatedUserName, setUpdatedUserName] = useState(
     currentUser?.displayName || ""
   );
-
+  /*  if (currentUser) {
+    // Iterate through the providerData array to find the sign-in provider
+    currentUser.providerData.forEach((provider) => {
+      // The provider.providerId property contains the provider's ID
+      console.log("Provider ID:", provider.providerId);
+    });
+  } */
   const [updatedEmail, setUpdatedEmail] = useState(currentUser?.email || "");
 
   useEffect(() => {
@@ -134,20 +140,9 @@ const ProfileScreen = ({ navigation }) => {
         }
       }
 
-      const phoneProvider = currentUser.providerData.find(
-        (provider) => provider.providerId === "phone"
-      );
-
-      if (phoneProvider && phoneProvider.providerId === "phone") {
-        console.log("User is authenticated with phone");
-
-        console.log("Profile update successful for phone provider");
-      }
-
       console.log("Updated Display Name:", currentUser.displayName);
 
       console.log("Provider ID:", passwordProvider);
-      console.log("Provider ID:", phoneProvider);
 
       setIsEditingUsername(false);
     } catch (error) {
@@ -183,7 +178,16 @@ const ProfileScreen = ({ navigation }) => {
         passwordProvider.email = newEmail;
         passwordProvider.uid = newEmail; // Updating userId as well
 
-        await updateEmail(currentUser, newEmail);
+        await updateEmail(currentUser, newEmail)
+          .then(() => {
+            console.log("email updated");
+          })
+          .catch((error) => {
+            console.log(" An error occurred while updating the email", error);
+          });
+
+        currentUser.email = newEmail;
+
         // Now, you can log the updated providerData to verify the change
         console.log("Updated providerData:", currentUser.providerData);
 
