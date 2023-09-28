@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }) => {
       // Store the user authentication state in AsyncStorage
       if (user) {
         AsyncStorage.setItem("currentUser", JSON.stringify(user))
-          .then(() => console.log("User authentication state stored"))
+          .then(() => console.log("User authentication state stored", user))
           .catch((error) =>
             console.log("Error storing user authentication state:", error)
           );
@@ -50,7 +50,7 @@ export const AuthProvider = ({ children }) => {
         const storedUser = await AsyncStorage.getItem("currentUser");
         if (storedUser) {
           setCurrentUser(JSON.parse(storedUser));
-          console.log(storedUser);
+          console.log("current user details", storedUser);
         }
         setIsLoading(false);
       } catch (error) {
@@ -59,7 +59,6 @@ export const AuthProvider = ({ children }) => {
       }
     };
     checkUserAuthentication();
-    // Clean up the event listener when component unmounts
     return () => unsubscribe();
   }, []);
 

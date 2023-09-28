@@ -26,13 +26,7 @@ const ProfileScreen = ({ navigation }) => {
   const [updatedUserName, setUpdatedUserName] = useState(
     currentUser?.displayName || ""
   );
-  /*  if (currentUser) {
-    // Iterate through the providerData array to find the sign-in provider
-    currentUser.providerData.forEach((provider) => {
-      // The provider.providerId property contains the provider's ID
-      console.log("Provider ID:", provider.providerId);
-    });
-  } */
+
   const [updatedEmail, setUpdatedEmail] = useState(currentUser?.email || "");
 
   useEffect(() => {
