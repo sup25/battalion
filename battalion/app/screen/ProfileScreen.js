@@ -8,44 +8,35 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-import { updateProfile, updateEmail } from "firebase/auth";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../utils/AuthProvider";
 import * as LocalAuthentication from "expo-local-authentication";
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { db } from "../config/Firebase";
+import { setDoc, getDoc, doc } from "firebase/firestore";
+import UserProfileData from "../../Hooks/userProfileData";
 
 const ProfileScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
-
+  const userData = UserProfileData(currentUser);
   const phoneNumber = currentUser?.phoneNumber;
   const [isChangingEmail, setIsChangingEmail] = useState(false);
   const [isEditingEmail, setIsEditingEmail] = useState(false);
   const [isEditingUsername, setIsEditingUsername] = useState(false);
 
-  const [updatedUserName, setUpdatedUserName] = useState(
-    currentUser?.displayName || ""
-  );
+  const [updatedUserName, setUpdatedUserName] = useState();
 
   const [updatedEmail, setUpdatedEmail] = useState(currentUser?.email || "");
 
-  useEffect(() => {
-    const loadData = async () => {
-      try {
-        const storedUserData = await AsyncStorage.getItem("currentUser");
-        if (storedUserData) {
-          const parsedUser = JSON.parse(storedUserData);
-          // Update state with email and display name
-          setUpdatedEmail(parsedUser.email || "");
-          setUpdatedUserName(parsedUser.displayName || "");
-        }
-      } catch (error) {
-        console.error("Error loading data from AsyncStorage:", error);
-      }
-    };
+  const [userProfileData, setUserProfileData] = useState(null);
 
-    loadData();
-  }, []);
+  useEffect(() => {
+    if (userData) {
+      setUserProfileData(userData);
+
+      setUpdatedUserName(userData?.name || "");
+    }
+  }, [userData]);
 
   const handleEmailChange = async () => {
     if (!isEditingEmail) {
@@ -89,117 +80,34 @@ const ProfileScreen = ({ navigation }) => {
     setIsEditingUsername(!isEditingUsername);
   };
 
-  //saving the displayName
-  const handleSaveUserName = async () => {
-    try {
-      if (!currentUser) {
-        console.log("User is not available");
-        return;
-      }
-
-      const newUserName = updatedUserName.trim();
-      console.log("User name to be updated:", newUserName);
-
-      if (newUserName === "") {
+  //update the displayName
+  const handleUpdateUserName = () => {
+    if (currentUser && userProfileData) {
+      // Make sure updatedUserName is not empty
+      if (!updatedUserName.trim()) {
         console.log("Username cannot be empty");
         return;
       }
 
-      // Set the display name directly on the currentUser object
-      currentUser.displayName = newUserName;
+      // Update the user profile data
+      const updatedUserData = {
+        ...userProfileData,
+        name: updatedUserName,
+      };
 
-      // Now, check the authentication provider and update diaplay name
-      const passwordProvider = currentUser.providerData.find(
-        (provider) => provider.providerId === "password"
-      );
+      // Update the display name in the state
+      setUpdatedUserName(updatedUserName);
 
-      if (passwordProvider && passwordProvider.providerId === "password") {
-        console.log("User is authenticated with email/password ");
-
-        // Update the display name directly for the "password" provider
-        passwordProvider.displayName = newUserName;
-
-        try {
-          // Update the display name for the "password" provider
-          await updateProfile(currentUser, { displayName: newUserName });
-          // Save the updated user data in AsyncStorage
-          await AsyncStorage.setItem(
-            "currentUser",
-            JSON.stringify(currentUser)
-          );
-
-          console.log("Profile update successful for password provider");
-        } catch (error) {
-          console.log("Error updating username for password provider:", error);
-        }
-      }
-
-      console.log("Updated Display Name:", currentUser.displayName);
-
-      console.log("Provider ID:", passwordProvider);
-
-      setIsEditingUsername(false);
-    } catch (error) {
-      console.log("Error updating username:", error);
-    }
-  };
-
-  //saving the email
-  const handleSaveEmail = async () => {
-    try {
-      if (!currentUser) {
-        console.log("User is not available");
-        return;
-      }
-
-      console.log("providerdata", currentUser.providerData);
-
-      const newEmail = updatedEmail.trim();
-      console.log("Updated Email Should Be:", newEmail);
-
-      if (newEmail === "") {
-        console.log("Email cannot be empty");
-        return;
-      }
-
-      // Find the providerData object with providerId "password"
-      const passwordProvider = currentUser.providerData.find(
-        (provider) => provider.providerId === "password"
-      );
-
-      if (passwordProvider) {
-        // Update the email and uid properties of the "password" provider
-        passwordProvider.email = newEmail;
-        passwordProvider.uid = newEmail; // Updating userId as well
-
-        await updateEmail(currentUser, newEmail)
-          .then(() => {
-            console.log("email updated");
-          })
-          .catch((error) => {
-            console.log(" An error occurred while updating the email", error);
-          });
-
-        currentUser.email = newEmail;
-
-        // Now, you can log the updated providerData to verify the change
-        console.log("Updated providerData:", currentUser.providerData);
-
-        // Update the local state with the new email
-        setUpdatedEmail(newEmail);
-        setIsEditingEmail(false);
-
-        // Store the updated user data in AsyncStorage
-        const updatedUser = { ...currentUser, email: newEmail };
-        await AsyncStorage.setItem("currentUser", JSON.stringify(updatedUser));
-
-        console.log("Email update successful for the currently signed-in user");
-      } else {
-        console.log("Password provider not found in providerData");
-        console.log("Trying to update the wrong provider");
-      }
-    } catch (error) {
-      console.log("Error updating email:", error);
+      // Update the user profile data in Firestore
+      const userDocRef = doc(db, "users", currentUser.uid);
+      setDoc(userDocRef, updatedUserData, { merge: true })
+        .then(() => {
+          console.log("User profile data updated successfully");
+          setIsEditingUsername(false);
+        })
+        .catch((error) => {
+          console.error("Error updating user profile data:", error);
+        });
     }
   };
 
@@ -225,7 +133,7 @@ const ProfileScreen = ({ navigation }) => {
                 color="#5A5A5A"
                 size={30}
                 style={styles.icon}
-                onPress={handleSaveUserName}
+                onPress={handleUpdateUserName}
               />
             ) : (
               <MaterialCommunityIcons
@@ -263,7 +171,6 @@ const ProfileScreen = ({ navigation }) => {
                   color="#5A5A5A"
                   size={30}
                   style={styles.icon}
-                  onPress={handleSaveEmail}
                 />
               ) : (
                 <MaterialCommunityIcons

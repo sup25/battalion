@@ -7,8 +7,9 @@ import { auth } from "../config/Firebase";
 import CarthagosLinkButton from "../component/CarthagosLinkButton";
 import { useAuth } from "../utils/AuthProvider";
 import handleClearMessage from "../utils/HandleClearMessage";
+import { addUserToFirestore } from "../config/UsersCollection";
 
-export default function RegisterScreen({ navigation }) {
+export default function RegisterScreen({ navigation, phoneNum }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -46,6 +47,19 @@ export default function RegisterScreen({ navigation }) {
       await updateProfile(user, {
         displayName: name,
       });
+
+      const userData = {
+        name,
+        email,
+      };
+
+      const addedToFirestore = await addUserToFirestore(user.uid, userData);
+
+      if (addedToFirestore) {
+        console.log("User data added to Firestore successfully.");
+      } else {
+        console.error("Failed to add user data to Firestore.");
+      }
 
       console.log("Registered with:", user.email);
       /*  console.log(user); */

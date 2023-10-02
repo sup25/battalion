@@ -1,16 +1,16 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
 import { auth } from "../config/Firebase";
-
+import { addUserToFirestore } from "../config/UsersCollection";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import colors from "../config/colors";
 import CarthagosButton from "../component/CarthagosButton";
 import { PhoneAuthProvider } from "firebase/auth";
-
-const VerifyPhoneOne = ({ navigation }) => {
+import { useAuth } from "../utils/AuthProvider";
+const VerifyPhoneOne = ({ navigation, setPhoneNum }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("+1");
-
+  const { currentUser } = useAuth();
   const recaptchaVerifier = useRef(null);
   const [info, setInfo] = useState("");
 
@@ -33,12 +33,29 @@ const VerifyPhoneOne = ({ navigation }) => {
       );
       const message = "Success: Verification code has been sent to your phone";
       setInfo(message);
-      console.log("Message:", message); // If Ok, show message.
+      console.log("Message:", message);
+
+      const user = currentUser;
+      console.log(user);
+      if (user) {
+        const userData = {
+          phoneNumber: fullPhoneNumber,
+        };
+        const addedToFirestore = await addUserToFirestore(user.uid, userData);
+
+        if (addedToFirestore) {
+          console.log("Phone number added to Firestore successfully.");
+        } else {
+          console.error("Failed to add phone number to Firestore.");
+        }
+      }
 
       navigation.navigate("ConfirmCode", {
         verificationId,
         phoneNumber: fullPhoneNumber,
       });
+
+      setPhoneNum(phoneNumber);
     } catch (error) {
       setInfo(`Error: ${error.message}`);
     }

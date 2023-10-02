@@ -1,4 +1,4 @@
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   StyleSheet,
@@ -10,25 +10,25 @@ import {
   ImageBackground,
   TouchableOpacity,
 } from "react-native";
-import { useIsFocused } from "@react-navigation/native";
 
 import { useAuth } from "../utils/AuthProvider";
-
+import UserProfileData from "../../Hooks/userProfileData";
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
-  const isFocused = useIsFocused();
-  const [userName, setUserName] = useState(""); // State to store the user's display name
+
+  const [userName, setUserName] = useState();
+
+  const userData = UserProfileData(currentUser);
 
   useEffect(() => {
     // Set the user's display name from currentUser
-    if (currentUser) {
-      setUserName(currentUser.displayName || "Name"); 
+    if (userData) {
+      setUserName(userData?.name || "");
     }
-  }, [isFocused, currentUser]);
+  }, [userData]);
 
   return (
     <View style={styles.container}>
