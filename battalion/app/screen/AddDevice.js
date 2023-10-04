@@ -1,18 +1,23 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import React, { useState,useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import colors from "../config/colors";
 import CarthagosButton from "../component/CarthagosButton";
 import AddUserData from "../config/Database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-
+import UserProfileData from "../../Hooks/userProfileData";
 import { useAuth } from "../utils/AuthProvider";
 
-const VerifyPhoneManually = ({ navigation, route }) => {
+const AddDevice = ({ navigation }) => {
   const { currentUser } = useAuth();
-  const userName = currentUser?.displayName;
-
+  const [userName, setUserName] = useState();
+  const Data = UserProfileData(currentUser);
   const combinedSerialNumRef = useRef("");
 
+  useEffect(() => {
+    if (Data) {
+      setUserName(Data?.name || "");
+    }
+  }, [Data]);
   const [displayMessage, setDisplayMessage] = useState("");
 
   const [userData, setUserData] = useState({
@@ -21,7 +26,7 @@ const VerifyPhoneManually = ({ navigation, route }) => {
 
   const handleConfirm = async () => {
     const { combinedSerialNum } = userData;
-  
+
     // Validate the combinedSerialNum field
     if (!combinedSerialNum || combinedSerialNum.length !== 12) {
       const message =
@@ -29,34 +34,34 @@ const VerifyPhoneManually = ({ navigation, route }) => {
       setDisplayMessage(message);
       return;
     }
-  
+
     // Determine if the combinedSerialNum contains letters or numbers
     const isLetters = /^[A-Za-z]+$/.test(combinedSerialNum);
     const isNumbers = /^[0-9]+$/.test(combinedSerialNum);
-  
+
     // Set the owner and users values in userData
     const updatedUserData = {
       ...userData,
-      owner: userName,
-      users: ["User1", "User2", "User3"],
+      owner: currentUser.uid,
+      users: { userName },
       fourDigitCode: "",
       teamType: isLetters ? "Team A" : isNumbers ? "Team B" : "Uncategorized",
     };
-  
+
     // Call AddUserData to send combinedSerialNum
     await AddUserData(updatedUserData);
-  
+
     // Show success message
     const successMessage = "Data saved successfully!";
     setDisplayMessage(successMessage);
-  
+
     // Clear the text input field
     setUserData({
       combinedSerialNum: "",
     });
   };
-  const handleNavigation =async() =>{   
-    const combinedSerialNum = combinedSerialNumRef.current; 
+  const handleNavigation = async () => {
+    const combinedSerialNum = combinedSerialNumRef.current;
     if (!combinedSerialNum || combinedSerialNum.length !== 12) {
       console.log("Invalid combinedSerialNum:", combinedSerialNum);
       return;
@@ -64,18 +69,15 @@ const VerifyPhoneManually = ({ navigation, route }) => {
     await AsyncStorage.setItem("combinedSerialNum", combinedSerialNum);
     console.log("Entered combined serial number:", combinedSerialNum);
     navigation.navigate("fourdigitcodeinsertscreen");
-  }
-    
-  
-  
+  };
 
   const handleChangeText = (key, value) => {
     // Clear the success message when the user starts typing
     if (displayMessage) {
       setDisplayMessage("");
     }
-  // Update the combinedSerialNumRef with the current value
-  combinedSerialNumRef.current = value;
+    // Update the combinedSerialNumRef with the current value
+    combinedSerialNumRef.current = value;
 
     setUserData((prevData) => ({
       ...prevData,
@@ -98,11 +100,7 @@ const VerifyPhoneManually = ({ navigation, route }) => {
         ) : null}
       </View>
       <View style={{ alignItems: "center", top: 20 }}>
-        <Text
-         onPress={handleNavigation}
-         
-          style={styles.InserCodetxt}
-        >
+        <Text onPress={handleNavigation} style={styles.InserCodetxt}>
           Insert code
         </Text>
       </View>
@@ -119,7 +117,7 @@ const VerifyPhoneManually = ({ navigation, route }) => {
   );
 };
 
-export default VerifyPhoneManually;
+export default AddDevice;
 
 const styles = StyleSheet.create({
   btn: {

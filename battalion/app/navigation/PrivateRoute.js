@@ -7,12 +7,13 @@ import ProfileScreen from "../screen/ProfileScreen";
 import WelcomeScreen from "../screen/WelcomeScreen";
 import { useAuth } from "../utils/AuthProvider";
 import PublicRoute from "./PublicRoute";
-import VerifyPhoneManually from "../screen/VerifyPhoneManually";
 import ForgotPassword from "../screen/ForgetPasswordPrivate";
 import DeviceDetails from "../screen/DeviceDetails";
 import DeviceSetting from "../screen/DeviceSetting";
 import SetTemperatureScreen from "../screen/SetTemperatureScreen";
 import FourDigitCodeInsertScreen from "../screen/FourDigitCodeInsertScreen";
+
+import AddDevice from "../screen/AddDevice";
 
 const Tab = createBottomTabNavigator();
 
@@ -36,8 +37,8 @@ const PrivateStackNavigator = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="verifyphonemanually"
-        component={VerifyPhoneManually}
+        name="addDevice"
+        component={AddDevice}
         options={{ headerShown: false }}
       />
       <Stack.Screen

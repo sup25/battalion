@@ -5,77 +5,37 @@ import {
   View,
   TextInput,
   TouchableOpacity,
-  TouchableWithoutFeedback,
 } from "react-native";
 
 import { useAuth } from "../utils/AuthProvider";
-import * as LocalAuthentication from "expo-local-authentication";
+
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { db } from "../config/Firebase";
-import { setDoc, getDoc, doc } from "firebase/firestore";
+import { setDoc, doc } from "firebase/firestore";
 import UserProfileData from "../../Hooks/userProfileData";
 
 const ProfileScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
   const userData = UserProfileData(currentUser);
-  const phoneNumber = currentUser?.phoneNumber;
-  const [isChangingEmail, setIsChangingEmail] = useState(false);
-  const [isEditingEmail, setIsEditingEmail] = useState(false);
+  const [phoneNumber, setPhoneNumber] = useState();
   const [isEditingUsername, setIsEditingUsername] = useState(false);
 
   const [updatedUserName, setUpdatedUserName] = useState();
 
-  const [updatedEmail, setUpdatedEmail] = useState(currentUser?.email || "");
+  const [userEmail, setUserEmail] = useState();
 
   const [userProfileData, setUserProfileData] = useState(null);
 
   useEffect(() => {
     if (userData) {
       setUserProfileData(userData);
-
       setUpdatedUserName(userData?.name || "");
+      setUserEmail(userData?.email);
+      setPhoneNumber(userData?.phoneNumber);
     }
   }, [userData]);
 
-  const handleEmailChange = async () => {
-    if (!isEditingEmail) {
-      try {
-        const hasBiometricHardware =
-          await LocalAuthentication.hasHardwareAsync();
-
-        if (hasBiometricHardware) {
-          const isBiometricEnrolled =
-            await LocalAuthentication.isEnrolledAsync();
-
-          if (isBiometricEnrolled) {
-            const biometricResult = await LocalAuthentication.authenticateAsync(
-              {
-                promptMessage: "Authenticate to change email",
-              }
-            );
-
-            if (biometricResult.success) {
-              // User successfully authenticated using biometrics
-              setIsEditingEmail(true); // Enable email editing
-              setIsChangingEmail(true); // Also enable onFocus effect
-            } else {
-              // Biometric authentication failed
-              console.log("Biometric authentication failed");
-            }
-          } else {
-            // Biometric not enrolled
-            console.log("Biometric not enrolled");
-          }
-        } else {
-          // Biometric hardware not available
-          console.log("Biometric hardware not available");
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-  };
   const handleUsernameEdit = () => {
     setIsEditingUsername(!isEditingUsername);
   };
@@ -146,43 +106,18 @@ const ProfileScreen = ({ navigation }) => {
             )}
           </View>
 
-          <TouchableWithoutFeedback onPress={handleEmailChange}>
-            <View>
-              <Text style={styles.email}>Email</Text>
-              <TextInput
-                style={[
-                  styles.inputs,
-                  {
-                    backgroundColor: isEditingEmail ? "#1B1B1B" : "transparent",
-                  },
-                ]}
-                placeholder=""
-                placeholderTextColor="white"
-                value={updatedEmail}
-                editable={isEditingEmail}
-                onFocus={() => setIsChangingEmail(true)}
-                onBlur={() => setIsChangingEmail(false)}
-                onChangeText={setUpdatedEmail}
-              />
+          <View>
+            <Text style={styles.email}>Email</Text>
+            <TextInput
+              style={styles.inputs}
+              placeholder=""
+              placeholderTextColor="white"
+              value={userEmail}
+              editable={false}
+              selectTextOnFocus={false}
+            />
+          </View>
 
-              {isEditingEmail ? (
-                <MaterialCommunityIcons
-                  name="check"
-                  color="#5A5A5A"
-                  size={30}
-                  style={styles.icon}
-                />
-              ) : (
-                <MaterialCommunityIcons
-                  name="pencil"
-                  color="#5A5A5A"
-                  size={30}
-                  style={styles.icon}
-                  onPress={handleEmailChange}
-                />
-              )}
-            </View>
-          </TouchableWithoutFeedback>
           <View>
             <Text style={styles.phoneNumber}>Phone Number</Text>
             <TextInput

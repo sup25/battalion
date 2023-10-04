@@ -73,12 +73,12 @@ const VerifyPhoneOne = ({ navigation, setPhoneNum }) => {
         </Text>
         <View style={styles.txtInputContainer}>
           <TextInput
-            style={styles.txtInputPhoneNumber}
+            style={styles.countryCodetxt}
             defaultValue={countryCode}
             onChangeText={(code) => setCountryCode(code)}
           />
           <TextInput
-            style={styles.txtInput}
+            style={styles.phoneNumberInput}
             autoCompleteType="tel"
             keyboardType="phone-pad"
             textContentType="telephoneNumber"
@@ -120,8 +120,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     color: colors.white,
   },
-  txtInput: {
-    width: 250,
+  phoneNumberInput: {
+    width: 230,
     backgroundColor: "#1E1E1E",
     color: colors.white,
     borderRadius: 5,
@@ -132,8 +132,8 @@ const styles = StyleSheet.create({
     marginLeft: 10,
     fontSize: 24,
   },
-  txtInputPhoneNumber: {
-    width: 50,
+  countryCodetxt: {
+    width: 70,
     backgroundColor: "#1E1E1E",
     color: colors.white,
     borderRadius: 5,

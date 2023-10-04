@@ -45,7 +45,7 @@ const WelcomeScreen = ({ navigation }) => {
           <Text
             style={styles.addDevice}
             onPress={() => {
-              navigation.navigate("verifyphonemanually");
+              navigation.navigate("addDevice");
             }}
           >
             Add Device +

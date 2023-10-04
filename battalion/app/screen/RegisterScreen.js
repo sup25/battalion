@@ -2,14 +2,14 @@ import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, StatusBar } from "react-native";
 import colors from "../config/colors";
 import TextLogo from "../assets/TextLogo";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../config/Firebase";
 import CarthagosLinkButton from "../component/CarthagosLinkButton";
 import { useAuth } from "../utils/AuthProvider";
 import handleClearMessage from "../utils/HandleClearMessage";
 import { addUserToFirestore } from "../config/UsersCollection";
 
-export default function RegisterScreen({ navigation, phoneNum }) {
+export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -43,10 +43,6 @@ export default function RegisterScreen({ navigation, phoneNum }) {
 
       const user = userCredentials.user;
       console.log("User name for updateProfile:", name);
-
-      await updateProfile(user, {
-        displayName: name,
-      });
 
       const userData = {
         name,
