@@ -14,7 +14,7 @@ export const AuthProvider = ({ children }) => {
 
   const userHandler = (user) => {
     user ? setCurrentUser(user) : setCurrentUser(null);
-    setIsLoading(false); // Set loading state to false once user state is determined
+    setIsLoading(false);
   };
 
   const logout = async () => {

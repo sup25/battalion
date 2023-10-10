@@ -8,7 +8,7 @@ import {
 } from "react-native";
 
 import { useAuth } from "../utils/AuthProvider";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { db } from "../config/Firebase";
@@ -30,10 +30,24 @@ const ProfileScreen = ({ navigation }) => {
   useEffect(() => {
     if (userData) {
       setUserProfileData(userData);
-      setUpdatedUserName(userData?.name || "");
+      /* setUpdatedUserName(userData?.name || ""); */
       setUserEmail(userData?.email);
-      setPhoneNumber(userData?.phoneNumber);
+      /*  setPhoneNumber(userData?.phoneNumber); */
     }
+    AsyncStorage.getItem("userProfileData")
+      .then((data) => {
+        if (data) {
+          const savedUserData = JSON.parse(data);
+          setUpdatedUserName(savedUserData.name || "");
+          setPhoneNumber(savedUserData.phoneNumber || "");
+        }
+      })
+      .catch((error) => {
+        console.error(
+          "Error retrieving user profile data from AsyncStorage:",
+          error
+        );
+      });
   }, [userData]);
 
   const handleUsernameEdit = () => {
@@ -57,6 +71,18 @@ const ProfileScreen = ({ navigation }) => {
 
       // Update the display name in the state
       setUpdatedUserName(updatedUserName);
+
+      AsyncStorage.setItem("userProfileData", JSON.stringify(updatedUserData))
+        .then(() => {
+          console.log("User profile data updated successfully in AsyncStorage");
+          setIsEditingUsername(false);
+        })
+        .catch((error) => {
+          console.error(
+            "Error updating user profile data in AsyncStorage:",
+            error
+          );
+        });
 
       // Update the user profile data in Firestore
       const userDocRef = doc(db, "users", currentUser.uid);
