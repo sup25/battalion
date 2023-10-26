@@ -30,24 +30,10 @@ const ProfileScreen = ({ navigation }) => {
   useEffect(() => {
     if (userData) {
       setUserProfileData(userData);
-      /* setUpdatedUserName(userData?.name || ""); */
+      setUpdatedUserName(userData?.name || "");
       setUserEmail(userData?.email);
-      /*  setPhoneNumber(userData?.phoneNumber); */
+      setPhoneNumber(userData?.phoneNumber);
     }
-    AsyncStorage.getItem("userProfileData")
-      .then((data) => {
-        if (data) {
-          const savedUserData = JSON.parse(data);
-          setUpdatedUserName(savedUserData.name || "");
-          setPhoneNumber(savedUserData.phoneNumber || "");
-        }
-      })
-      .catch((error) => {
-        console.error(
-          "Error retrieving user profile data from AsyncStorage:",
-          error
-        );
-      });
   }, [userData]);
 
   const handleUsernameEdit = () => {

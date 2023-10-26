@@ -85,7 +85,7 @@ const LoginScreen = ({ navigation }) => {
       <Text style={styles.watermarkText}>Battalion</Text>
       <Image
         style={styles.productImage}
-        source={require("../assets/product.png")}
+        source={require("../assets/device.png")}
       />
       <View style={styles.logoConatiner}>
         <TextLogo />
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   },
   logoConatiner: {
     alignItems: "center",
-    bottom: 170,
+    bottom: 160,
   },
   productImage: {
     height: 360,

@@ -64,7 +64,7 @@ const DeviceDetails = ({ navigation }) => {
         <View style={styles.unlockedImageContainer}>
           <Image
             style={styles.productImage}
-            source={require("../assets/product.png")}
+            source={require("../assets/devicedetail.png")}
           />
 
           <View style={{ display: "flex", gap: 18 }}>

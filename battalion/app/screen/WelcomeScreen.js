@@ -25,25 +25,9 @@ const WelcomeScreen = ({ navigation }) => {
 
   useEffect(() => {
     // Set the user's display name from currentUser
-    /*  if (userData) {
+    if (userData) {
       setUserName(userData?.name || "");
-    } */
-    const unsubscribe = navigation.addListener("focus", async () => {
-      AsyncStorage.getItem("userProfileData")
-        .then((data) => {
-          if (data) {
-            const savedUserData = JSON.parse(data);
-            setUserName(savedUserData.name || "");
-          }
-        })
-        .catch((error) => {
-          console.error(
-            "Error retrieving user profile data from AsyncStorage:",
-            error
-          );
-        });
-    });
-    return unsubscribe;
+    }
   }, [userData]);
 
   return (
@@ -90,7 +74,7 @@ const WelcomeScreen = ({ navigation }) => {
         >
           <Image
             style={styles.productImage}
-            source={require("../assets/product.png")}
+            source={require("../assets/devicedetail.png")}
           />
           <View style={styles.lockedConatiner}>
             <View style={styles.iconEllipse}>
