@@ -9,10 +9,10 @@ import {
 } from "react-native";
 
 import React, { useState, useEffect } from "react";
-import { db } from "../config/Firebase";
+import { db } from "../../config/Firebase";
 import { doc, getDoc } from "firebase/firestore";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import colors from "../config/colors";
+import colors from "../../config/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 const DeviceSetting = ({ navigation }) => {
   const [fourDigitCode, setFourDigitCode] = useState("");
@@ -43,13 +43,15 @@ const DeviceSetting = ({ navigation }) => {
     const fetchDocument = async () => {
       try {
         // Retrieve the combinedSerialNumber from AsyncStorage
-        const combinedSerialNumber = await AsyncStorage.getItem("combinedSerialNum");
-  
+        const combinedSerialNumber = await AsyncStorage.getItem(
+          "combinedSerialNum"
+        );
+
         if (combinedSerialNumber) {
           const docRef = doc(db, "devices", combinedSerialNumber);
-  
+
           const docSnapshot = await getDoc(docRef);
-  
+
           if (docSnapshot.exists()) {
             const code = docSnapshot.data().fourDigitCode;
             setFourDigitCode(code);
@@ -64,10 +66,9 @@ const DeviceSetting = ({ navigation }) => {
         console.log("Error:", error);
       }
     };
-  
+
     fetchDocument();
   }, []);
-  
 
   return (
     <View style={styles.container}>

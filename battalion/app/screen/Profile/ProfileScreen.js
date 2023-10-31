@@ -7,17 +7,17 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { useAuth } from "../utils/AuthProvider";
+import { useAuth } from "../../utils/AuthProvider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import colors from "../config/colors";
+import colors from "../../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { db } from "../config/Firebase";
+import { db } from "../../config/Firebase";
 import { setDoc, doc } from "firebase/firestore";
-import UserProfileData from "../../Hooks/userProfileData";
+import FetchUserProfile from "../../Hooks/UserProfile";
 
 const ProfileScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
-  const userData = UserProfileData(currentUser);
+  const userData = FetchUserProfile(currentUser);
   const [phoneNumber, setPhoneNumber] = useState();
   const [isEditingUsername, setIsEditingUsername] = useState(false);
 
@@ -25,7 +25,7 @@ const ProfileScreen = ({ navigation }) => {
 
   const [userEmail, setUserEmail] = useState();
 
-  const [userProfileData, setUserProfileData] = useState(null);
+  const [userProfileData, setUserProfileData] = useState();
 
   useEffect(() => {
     if (userData) {
@@ -39,6 +39,9 @@ const ProfileScreen = ({ navigation }) => {
   const handleUsernameEdit = () => {
     setIsEditingUsername(!isEditingUsername);
   };
+  if (userData === null) {
+    return <Text>Loading...</Text>;
+  }
 
   //update the displayName
   const handleUpdateUserName = () => {

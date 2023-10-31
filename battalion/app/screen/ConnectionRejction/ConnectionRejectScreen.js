@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, ImageBackground, View } from "react-native";
 import { FontAwesome } from "@expo/vector-icons";
-import CarthagosButton from "../component/CarthagosButton";
-import colors from "../config/colors";
+import CarthagosButton from "../../component/CarthagosButton";
+import colors from "../../config/colors";
 
 const ConnectionRejectScreen = ({ navigation }) => {
   return (

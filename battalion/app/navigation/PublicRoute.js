@@ -1,15 +1,14 @@
 import React, { useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MainScreen from "../screen/MainScreen";
-import LoginScreen from "../screen/LoginScreen";
-import RegisterScreen from "../screen/RegisterScreen";
+import MainScreen from "../screen/Main/MainScreen";
+import LoginScreen from "../screen/Login/LoginScreen";
+import RegisterScreen from "../screen/Register/RegisterScreen";
 import ForgotPasswordScreen from "../screen/ForgotPasswordScreen";
-import InsertCode from "../screen/InsertCode";
+import InsertCode from "../screen/InsertCode/InsertCode";
 import VerifyPhoneOne from "../screen/VerifyPhoneOne";
 
 const Stack = createNativeStackNavigator();
 const PublicRoute = () => {
-  const [phoneNum, setPhoneNum] = useState(null);
   return (
     <Stack.Navigator initialRouteName="Main">
       <Stack.Screen

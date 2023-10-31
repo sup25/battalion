@@ -5,11 +5,11 @@ import {
   linkWithCredential,
   updateProfile,
 } from "firebase/auth";
-import { auth } from "../config/Firebase";
-import colors from "../config/colors";
-import CarthagosButton from "../component/CarthagosButton";
+import { auth } from "../../config/Firebase";
+import colors from "../../config/colors";
+import CarthagosButton from "../../component/CarthagosButton";
 import { useRoute } from "@react-navigation/native";
-import { useAuth } from "../utils/AuthProvider";
+import { useAuth } from "../../utils/AuthProvider";
 
 const InsertCode = ({ navigation }) => {
   const { currentUser } = useAuth();

@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import colors from "../config/colors";
-import Slider from "@react-native-community/slider";
+/* import Slider from "@react-native-community/slider"; */
 
 export default function SetTemperatureScreen() {
   return (
@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.black,
     alignItems: "center",
-    justifyContent: "center", 
+    justifyContent: "center",
   },
   slider: {
     width: 295,

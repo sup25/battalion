@@ -1,8 +1,8 @@
 import { StyleSheet, Text, Image, TouchableOpacity, View } from "react-native";
 import React from "react";
-import colors from "../config/colors";
+import colors from "../../config/colors";
 
-import CarthagosButton from "../component/CarthagosButton";
+import CarthagosButton from "../../component/CarthagosButton";
 
 const AfterScanScreen = ({ navigation }) => {
   return (
@@ -15,7 +15,7 @@ const AfterScanScreen = ({ navigation }) => {
         <View style={styles.deviceInfo}>
           <Text style={styles.batTxt}>Battalion Device Name</Text>
           <Text style={styles.barcodeTxt}>345234652XXFRW</Text>
-          <Image source={require("../assets/barcode.png")} />
+          <Image source={require("../../assets/barcode.png")} />
         </View>
       </View>
       <View style={styles.btn}>

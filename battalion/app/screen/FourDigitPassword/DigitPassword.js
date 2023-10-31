@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React from "react";
-import colors from "../config/colors";
-import CarthagosButton from "../component/CarthagosButton";
+import colors from "../../config/colors";
+import CarthagosButton from "../../component/CarthagosButton";
 
 const DigitPassword = () => {
   return (

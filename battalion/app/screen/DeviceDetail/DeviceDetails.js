@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import colors from "../config/colors";
+import colors from "../../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -17,11 +17,9 @@ import {
 const DeviceDetails = ({ navigation }) => {
   const [switchLocked, setSwithLocked] = useState(true);
   const [brightnessToggel, setBrightnessToggel] = useState(false);
-  const handleSwitch = () => {
-    setSwithLocked(!switchLocked);
-  };
-  const handleBrightnessToggel = () => {
-    setBrightnessToggel(!brightnessToggel);
+
+  const handleToggle = (Do) => {
+    Do((prevValue) => !prevValue);
   };
 
   return (
@@ -29,7 +27,7 @@ const DeviceDetails = ({ navigation }) => {
       <StatusBar translucent backgroundColor="transparent" />
       <ImageBackground
         style={styles.background}
-        source={require("../assets/background.png")}
+        source={require("../../assets/background.png")}
       >
         <View style={styles.headingContainer}>
           <TouchableWithoutFeedback onPress={() => navigation.navigate("Home")}>
@@ -64,7 +62,7 @@ const DeviceDetails = ({ navigation }) => {
         <View style={styles.unlockedImageContainer}>
           <Image
             style={styles.productImage}
-            source={require("../assets/devicedetail.png")}
+            source={require("../../assets/devicedetail.png")}
           />
 
           <View style={{ display: "flex", gap: 18 }}>
@@ -79,7 +77,9 @@ const DeviceDetails = ({ navigation }) => {
                 ]}
               >
                 <View style={styles.iconBackgroundContainer}>
-                  <TouchableWithoutFeedback onPress={handleSwitch}>
+                  <TouchableWithoutFeedback
+                    onPress={() => handleToggle(setSwithLocked)}
+                  >
                     {switchLocked ? (
                       <MaterialCommunityIcons
                         name="lock"
@@ -107,7 +107,9 @@ const DeviceDetails = ({ navigation }) => {
                 ]}
               >
                 <View style={styles.iconBackgroundContainer}>
-                  <TouchableWithoutFeedback onPress={handleBrightnessToggel}>
+                  <TouchableWithoutFeedback
+                    onPress={() => handleToggle(setBrightnessToggel)}
+                  >
                     {brightnessToggel ? (
                       <MaterialCommunityIcons
                         name="brightness-5"

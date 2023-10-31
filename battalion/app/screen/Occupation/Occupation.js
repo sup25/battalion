@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View, TextInput } from "react-native";
 import React from "react";
-import CarthagosLinkButton from "../component/CarthagosLinkButton";
+import CarthagosLinkButton from "../../component/CarthagosLinkButton";
 import Screen from "../component/Screen";
-import colors from "../config/colors";
-import TextLogo from "../assets/TextLogo";
+import colors from "../../config/colors";
+import TextLogo from "../../assets/TextLogo";
 
 const Occupation = ({ navigation }) => {
   const Category = [

@@ -8,8 +8,8 @@ import {
   View,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CarthagosButton from "../component/CarthagosButton";
-import colors from "../config/colors";
+import CarthagosButton from "../../component/CarthagosButton";
+import colors from "../../config/colors";
 
 const FoundDevices = ({ navigation }) => {
   const [clicks, setClicks] = useState([false, false]);
@@ -34,7 +34,7 @@ const FoundDevices = ({ navigation }) => {
             style={styles.deviceInfo}
           >
             <Image
-              source={require("../assets/product.png")}
+              source={require("../../assets/product.png")}
               style={{ width: 71, height: 60 }}
             />
             <View style={{ flexDirection: "column", marginLeft: 20 }}>
@@ -55,7 +55,7 @@ const FoundDevices = ({ navigation }) => {
             style={styles.deviceInfo}
           >
             <Image
-              source={require("../assets/product.png")}
+              source={require("../../assets/product.png")}
               style={{ width: 71, height: 60 }}
             />
             <View style={{ flexDirection: "column", marginLeft: 20 }}>

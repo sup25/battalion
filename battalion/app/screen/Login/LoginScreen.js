@@ -7,15 +7,14 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { auth } from "../config/Firebase";
+import { auth } from "../../config/Firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-
-import colors from "../config/colors";
-import CarthagosLinkButton from "../component/CarthagosLinkButton";
-import TextLogo from "../assets/TextLogo";
+import colors from "../../config/colors";
+import CarthagosLinkButton from "../../component/CarthagosLinkButton";
+import TextLogo from "../../assets/TextLogo";
 import { useRoute } from "@react-navigation/native";
-import handleClearMessage from "../utils/HandleClearMessage";
-import * as LocalAuthentication from "expo-local-authentication";
+import handleClearMessage from "../../utils/HandleClearMessage";
+import { UseBioMetric } from "../../Hooks/UseBioMetricAuth";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -33,33 +32,13 @@ const LoginScreen = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const hasBiometricHardware = await LocalAuthentication.hasHardwareAsync();
+      const biometricResult = await UseBioMetric();
 
-      if (hasBiometricHardware) {
-        const isBiometricEnrolled = await LocalAuthentication.isEnrolledAsync();
-
-        if (isBiometricEnrolled) {
-          const biometricResult = await LocalAuthentication.authenticateAsync({
-            promptMessage: "Authenticate to sign in",
-          });
-
-          if (biometricResult.success) {
-            // Biometric authentication successful
-            // Proceed with login logic
-            await signInWithEmailAndPassword(auth, email, password);
-            navigation.navigate("MainTabs");
-          } else {
-            // Biometric authentication failed
-            console.log("Biometric authentication failed");
-            return;
-          }
-        } else {
-          // Biometric not enrolled
-          console.log("Biometric not enrolled");
-        }
+      if (biometricResult) {
+        await signInWithEmailAndPassword(auth, email, password);
+        navigation.navigate("MainTabs");
       } else {
-        // Biometric hardware not available
-        console.log("Biometric hardware not available");
+        console.log("Biometric authentication failed");
       }
     } catch (error) {
       if (error.code === "auth/wrong-password") {
@@ -85,7 +64,7 @@ const LoginScreen = ({ navigation }) => {
       <Text style={styles.watermarkText}>Battalion</Text>
       <Image
         style={styles.productImage}
-        source={require("../assets/device.png")}
+        source={require("../../assets/device.png")}
       />
       <View style={styles.logoConatiner}>
         <TextLogo />

@@ -11,9 +11,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { useAuth } from "../utils/AuthProvider";
-import UserProfileData from "../../Hooks/userProfileData";
-import colors from "../config/colors";
+import { useAuth } from "../../utils/AuthProvider";
+import FetchUserProfile from "../../Hooks/UserProfile";
+import colors from "../../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const WelcomeScreen = ({ navigation }) => {
@@ -21,7 +21,7 @@ const WelcomeScreen = ({ navigation }) => {
 
   const [userName, setUserName] = useState();
 
-  const userData = UserProfileData(currentUser);
+  const userData = FetchUserProfile(currentUser);
 
   useEffect(() => {
     // Set the user's display name from currentUser
@@ -35,7 +35,7 @@ const WelcomeScreen = ({ navigation }) => {
       <StatusBar translucent backgroundColor="transparent" />
       <ImageBackground
         style={styles.background}
-        source={require("../assets/background.png")}
+        source={require("../../assets/background.png")}
       >
         <View style={{ paddingHorizontal: 20, width: "100%" }}>
           <Text style={styles.textEmail}>Welcome, {userName}</Text>
@@ -45,7 +45,7 @@ const WelcomeScreen = ({ navigation }) => {
           <Text
             style={styles.addDevice}
             onPress={() => {
-              navigation.navigate("addDevice");
+              navigation.navigate("searchscreen");
             }}
           >
             Add Device +
@@ -74,7 +74,7 @@ const WelcomeScreen = ({ navigation }) => {
         >
           <Image
             style={styles.productImage}
-            source={require("../assets/devicedetail.png")}
+            source={require("../../assets/devicedetail.png")}
           />
           <View style={styles.lockedConatiner}>
             <View style={styles.iconEllipse}>
