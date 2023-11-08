@@ -1,14 +1,14 @@
 import React, { useState } from "react";
 import { StyleSheet, Text, ImageBackground, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CarthagosButton from "../component/CarthagosButton";
-import colors from "../config/colors";
+import CarthagosButton from "../../component/CarthagosButton";
+import colors from "../../config/colors";
 
 const ConnectionScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require("../assets/Groupcircle.png")}
+        source={require("../../assets/Groupcircle.png")}
         style={styles.background}
       >
         <Text style={styles.txtFirst}>Connection Approved </Text>

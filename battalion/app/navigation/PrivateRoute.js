@@ -3,17 +3,18 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../config/colors";
-import ProfileScreen from "../screen/ProfileScreen";
-import WelcomeScreen from "../screen/WelcomeScreen";
+import ProfileScreen from "../screen/Profile/ProfileScreen";
+import WelcomeScreen from "../screen/Welcome/WelcomeScreen";
 import { useAuth } from "../utils/AuthProvider";
 import PublicRoute from "./PublicRoute";
 import ForgotPassword from "../screen/ForgetPasswordPrivate";
-import DeviceDetails from "../screen/DeviceDetails";
-import DeviceSetting from "../screen/DeviceSetting";
+import DeviceDetails from "../screen/DeviceDetail/DeviceDetails";
+import DeviceSetting from "../screen/DeviceSetting/DeviceSetting";
 import SetTemperatureScreen from "../screen/SetTemperatureScreen";
 import FourDigitCodeInsertScreen from "../screen/FourDigitCodeInsertScreen";
 
-import AddDevice from "../screen/AddDevice";
+import AddDevice from "../screen/AddDevice/AddDevice";
+import SearchScreen from "../screen/Search/SearchScreen";
 
 const Tab = createBottomTabNavigator();
 
@@ -64,6 +65,11 @@ const PrivateStackNavigator = () => {
       <Stack.Screen
         name="fourdigitcodeinsertscreen"
         component={FourDigitCodeInsertScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="searchscreen"
+        component={SearchScreen}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>

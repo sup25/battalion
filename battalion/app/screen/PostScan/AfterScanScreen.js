@@ -1,8 +1,8 @@
 import { StyleSheet, Text, Image, TouchableOpacity, View } from "react-native";
 import React from "react";
-import colors from "../config/colors";
+import colors from "../../config/colors";
 
-import CarthagosButton from "../component/CarthagosButton";
+import CarthagosButton from "../../component/CarthagosButton";
 
 const AfterScanScreen = ({ navigation }) => {
   return (
@@ -15,7 +15,7 @@ const AfterScanScreen = ({ navigation }) => {
         <View style={styles.deviceInfo}>
           <Text style={styles.batTxt}>Battalion Device Name</Text>
           <Text style={styles.barcodeTxt}>345234652XXFRW</Text>
-          <Image source={require("../assets/barcode.png")} />
+          <Image source={require("../../assets/barcode.png")} />
         </View>
       </View>
       <View style={styles.btn}>
@@ -30,13 +30,13 @@ export default AfterScanScreen;
 const styles = StyleSheet.create({
   barcodeTxt: {
     fontSize: 16,
-    fontWeight: 500,
+    fontWeight: "500",
     color: "#868686",
     marginBottom: 8,
   },
   batTxt: {
     fontSize: 25,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
     marginBottom: 20,
   },
@@ -76,7 +76,7 @@ const styles = StyleSheet.create({
   txtFirst: {
     color: colors.white,
     fontSize: 24,
-    fontWeight: 500,
+    fontWeight: "500",
     textAlign: "center",
     maxWidth: 181,
     alignItems: "center",
@@ -84,7 +84,7 @@ const styles = StyleSheet.create({
   txtSecond: {
     color: "#8F8F8F",
     fontSize: 16,
-    fontWeight: 400,
+    fontWeight: "400",
     textAlign: "center",
     marginTop: 8,
     maxWidth: 170,
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
   txtThird: {
     color: "#8F8F8F",
     fontSize: 16,
-    fontWeight: 400,
+    fontWeight: "400",
     alignSelf: "center",
     marginTop: 8,
     maxWidth: 170,

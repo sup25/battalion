@@ -1,16 +1,16 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
-import colors from "../config/colors";
-import CarthagosButton from "../component/CarthagosButton";
-import AddUserData from "../config/Database";
+import colors from "../../config/colors";
+import CarthagosButton from "../../component/CarthagosButton";
+import AddUserData from "../../config/Database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import UserProfileData from "../../Hooks/userProfileData";
-import { useAuth } from "../utils/AuthProvider";
+import FetchUserProfile from "../../Hooks/UserProfile";
+import { useAuth } from "../../utils/AuthProvider";
 
 const AddDevice = ({ navigation }) => {
   const { currentUser } = useAuth();
   const [userName, setUserName] = useState();
-  const Data = UserProfileData(currentUser);
+  const Data = FetchUserProfile(currentUser);
   const combinedSerialNumRef = useRef("");
 
   useEffect(() => {
@@ -136,7 +136,7 @@ const styles = StyleSheet.create({
   InserCodetxt: {
     color: colors.medium,
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: "500",
     alignItems: "center",
   },
   txtInput: {
@@ -152,13 +152,13 @@ const styles = StyleSheet.create({
   txtFirst: {
     color: colors.white,
     fontSize: 24,
-    fontWeight: 500,
+    fontWeight: "500",
     textAlign: "center",
   },
   txtSecond: {
     color: colors.white,
     fontSize: 16,
-    fontWeight: 400,
+    fontWeight: "400",
     textAlign: "center",
     marginTop: 8,
   },

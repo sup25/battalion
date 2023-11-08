@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, StatusBar } from "react-native";
-import colors from "../config/colors";
-import TextLogo from "../assets/TextLogo";
+import colors from "../../config/colors";
+import TextLogo from "../../assets/TextLogo";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../config/Firebase";
-import CarthagosLinkButton from "../component/CarthagosLinkButton";
-import { useAuth } from "../utils/AuthProvider";
-import handleClearMessage from "../utils/HandleClearMessage";
-import { addUserToFirestore } from "../config/UsersCollection";
+import { auth } from "../../config/Firebase";
+import CarthagosLinkButton from "../../component/CarthagosLinkButton";
+import { useAuth } from "../../utils/AuthProvider";
+import handleClearMessage from "../../utils/HandleClearMessage";
+import { addUserToFirestore } from "../../config/UsersCollection";
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 24,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
     marginTop: 18,
   },

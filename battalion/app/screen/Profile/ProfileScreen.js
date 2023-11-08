@@ -7,17 +7,17 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { useAuth } from "../utils/AuthProvider";
+import { useAuth } from "../../utils/AuthProvider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import colors from "../config/colors";
+import colors from "../../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { db } from "../config/Firebase";
+import { db } from "../../config/Firebase";
 import { setDoc, doc } from "firebase/firestore";
-import UserProfileData from "../../Hooks/userProfileData";
+import FetchUserProfile from "../../Hooks/UserProfile";
 
 const ProfileScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
-  const userData = UserProfileData(currentUser);
+  const userData = FetchUserProfile(currentUser);
   const [phoneNumber, setPhoneNumber] = useState();
   const [isEditingUsername, setIsEditingUsername] = useState(false);
 
@@ -25,7 +25,7 @@ const ProfileScreen = ({ navigation }) => {
 
   const [userEmail, setUserEmail] = useState();
 
-  const [userProfileData, setUserProfileData] = useState(null);
+  const [userProfileData, setUserProfileData] = useState();
 
   useEffect(() => {
     if (userData) {
@@ -39,6 +39,9 @@ const ProfileScreen = ({ navigation }) => {
   const handleUsernameEdit = () => {
     setIsEditingUsername(!isEditingUsername);
   };
+  if (userData === null) {
+    return <Text>Loading...</Text>;
+  }
 
   //update the displayName
   const handleUpdateUserName = () => {
@@ -189,7 +192,7 @@ const styles = StyleSheet.create({
   addDevice: {
     backgroundColor: colors.primary,
     color: colors.white,
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 14,
     borderRadius: 20,
     padding: 10,
@@ -218,7 +221,7 @@ const styles = StyleSheet.create({
   },
   deviceCntd: {
     fontSize: 15,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
   deviceTxtContainer: {
@@ -230,7 +233,7 @@ const styles = StyleSheet.create({
   },
   email: {
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
   ForgetPasswordBox: {
@@ -246,7 +249,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     maxWidth: 80,
     fontSize: 18,
-    fontWeight: 500,
+    fontWeight: "500",
   },
   forgotpasswordTxtIcon: {
     backgroundColor: colors.primary,
@@ -275,7 +278,7 @@ const styles = StyleSheet.create({
   },
   nodeviceTxt: {
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
   notfoundIcon: {
@@ -285,13 +288,13 @@ const styles = StyleSheet.create({
   },
   phoneNumber: {
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
   profileTxt: {
     color: colors.white,
     fontSize: 32,
-    fontWeight: 900,
+    fontWeight: "900",
     textTransform: "uppercase",
     alignSelf: "flex-start",
   },
@@ -301,14 +304,14 @@ const styles = StyleSheet.create({
   resetPasswordTxt: {
     fontSize: 24,
     textTransform: "uppercase",
-    fontWeight: 800,
+    fontWeight: "800",
     color: colors.white,
     maxWidth: 80,
   },
 
   userName: {
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
   wrapper: {

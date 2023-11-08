@@ -11,9 +11,9 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { useAuth } from "../utils/AuthProvider";
-import UserProfileData from "../../Hooks/userProfileData";
-import colors from "../config/colors";
+import { useAuth } from "../../utils/AuthProvider";
+import FetchUserProfile from "../../Hooks/UserProfile";
+import colors from "../../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const WelcomeScreen = ({ navigation }) => {
@@ -21,7 +21,7 @@ const WelcomeScreen = ({ navigation }) => {
 
   const [userName, setUserName] = useState();
 
-  const userData = UserProfileData(currentUser);
+  const userData = FetchUserProfile(currentUser);
 
   useEffect(() => {
     // Set the user's display name from currentUser
@@ -35,7 +35,7 @@ const WelcomeScreen = ({ navigation }) => {
       <StatusBar translucent backgroundColor="transparent" />
       <ImageBackground
         style={styles.background}
-        source={require("../assets/background.png")}
+        source={require("../../assets/background.png")}
       >
         <View style={{ paddingHorizontal: 20, width: "100%" }}>
           <Text style={styles.textEmail}>Welcome, {userName}</Text>
@@ -45,7 +45,7 @@ const WelcomeScreen = ({ navigation }) => {
           <Text
             style={styles.addDevice}
             onPress={() => {
-              navigation.navigate("addDevice");
+              navigation.navigate("searchscreen");
             }}
           >
             Add Device +
@@ -74,7 +74,7 @@ const WelcomeScreen = ({ navigation }) => {
         >
           <Image
             style={styles.productImage}
-            source={require("../assets/devicedetail.png")}
+            source={require("../../assets/devicedetail.png")}
           />
           <View style={styles.lockedConatiner}>
             <View style={styles.iconEllipse}>
@@ -121,7 +121,7 @@ export default WelcomeScreen;
 const styles = StyleSheet.create({
   actualTxt: {
     maxWidth: 124,
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 15,
     color: "#5A5A5A",
   },
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: "500",
   },
 
   battalionId: {
@@ -158,11 +158,11 @@ const styles = StyleSheet.create({
   },
   connDevice: {
     fontSize: 15,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
   degree: {
-    fontWeight: 800,
+    fontWeight: "800",
     fontSize: 36,
     color: "#5A5A5A",
   },
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   lockedTxt: {
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 14,
     color: "#B0B0B0",
   },
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   },
   setText: {
     maxWidth: 124,
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 15,
     color: colors.white,
   },
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     textTransform: "uppercase",
     color: colors.white,
-    fontWeight: 900,
+    fontWeight: "900",
     marginTop: 37,
     borderBottomColor: colors.white,
     borderBottomWidth: 1,
@@ -274,12 +274,12 @@ const styles = StyleSheet.create({
   },
   textOne: {
     fontSize: 36,
-    fontWeight: 800,
+    fontWeight: "800",
     color: "#5A5A5A",
   },
   textTwo: {
     fontSize: 16,
-    fontWeight: 800,
+    fontWeight: "800",
     color: "#5A5A5A",
   },
 

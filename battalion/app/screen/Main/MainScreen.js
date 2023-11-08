@@ -7,8 +7,8 @@ import {
   ImageBackground,
 } from "react-native";
 
-import colors from "../config/colors";
-import CarthagosButton from "../component/CarthagosButton";
+import colors from "../../config/colors";
+import CarthagosButton from "../../component/CarthagosButton";
 
 export default function MainScreen({ navigation }) {
   return (
@@ -17,7 +17,7 @@ export default function MainScreen({ navigation }) {
 
       <ImageBackground
         style={styles.background}
-        source={require("../assets/background.png")}
+        source={require("../../assets/background.png")}
       >
         <View style={styles.headingTextContainer}>
           <Text style={styles.headingText}>make hard work easier</Text>

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { db } from "../app/config/Firebase";
+import { db } from "../config/Firebase";
 import { doc, getDoc } from "firebase/firestore";
 
-function UserProfileData(currentUser) {
-  const [userData, setUserData] = useState(null);
+function FetchUserProfile(currentUser) {
+  const [userData, setUserData] = useState();
 
   useEffect(() => {
     const loadUserProfileData = async () => {
@@ -33,4 +33,4 @@ function UserProfileData(currentUser) {
   return userData;
 }
 
-export default UserProfileData;
+export default FetchUserProfile;

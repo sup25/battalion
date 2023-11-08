@@ -3,8 +3,8 @@ import { Text, View } from "react-native";
 import Entypo from "@expo/vector-icons/Entypo";
 import * as SplashScreen from "expo-splash-screen";
 import * as Font from "expo-font";
-import TextLogo from "../assets/TextLogo";
-import colors from "../config/colors";
+import TextLogo from "../../assets/TextLogo";
+import colors from "../../config/colors";
 
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
