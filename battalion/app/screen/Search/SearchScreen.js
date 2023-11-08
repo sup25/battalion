@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
   txtFirst: {
     color: colors.white,
     fontSize: 24,
-    fontWeight: 500,
+    fontWeight: "500",
     textAlign: "center",
     maxWidth: 181,
     alignItems: "center",

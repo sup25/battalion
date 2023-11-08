@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   digitTxt: {
     color: colors.white,
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 18,
   },
   flexEnd: {
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
   },
   metricTxt: {
     fontSize: 16,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
 
@@ -226,11 +226,11 @@ const styles = StyleSheet.create({
   },
   temperatureIndicatortxt: {
     fontSize: 16,
-    fontWeight: 500,
+    fontWeight: "500",
   },
   tempTxt: {
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
   temperatureContainer: {
@@ -241,7 +241,7 @@ const styles = StyleSheet.create({
   },
   txtHeading: {
     fontSize: 32,
-    fontWeight: 900,
+    fontWeight: "900",
     textTransform: "uppercase",
     color: colors.white,
     marginLeft: 9,

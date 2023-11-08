@@ -192,7 +192,7 @@ const styles = StyleSheet.create({
   addDevice: {
     backgroundColor: colors.primary,
     color: colors.white,
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 14,
     borderRadius: 20,
     padding: 10,
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
   },
   deviceCntd: {
     fontSize: 15,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
   deviceTxtContainer: {
@@ -233,7 +233,7 @@ const styles = StyleSheet.create({
   },
   email: {
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
   ForgetPasswordBox: {
@@ -249,7 +249,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     maxWidth: 80,
     fontSize: 18,
-    fontWeight: 500,
+    fontWeight: "500",
   },
   forgotpasswordTxtIcon: {
     backgroundColor: colors.primary,
@@ -278,7 +278,7 @@ const styles = StyleSheet.create({
   },
   nodeviceTxt: {
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
   notfoundIcon: {
@@ -288,13 +288,13 @@ const styles = StyleSheet.create({
   },
   phoneNumber: {
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
   profileTxt: {
     color: colors.white,
     fontSize: 32,
-    fontWeight: 900,
+    fontWeight: "900",
     textTransform: "uppercase",
     alignSelf: "flex-start",
   },
@@ -304,14 +304,14 @@ const styles = StyleSheet.create({
   resetPasswordTxt: {
     fontSize: 24,
     textTransform: "uppercase",
-    fontWeight: 800,
+    fontWeight: "800",
     color: colors.white,
     maxWidth: 80,
   },
 
   userName: {
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
   wrapper: {

@@ -210,7 +210,7 @@ const styles = StyleSheet.create({
 
   title: {
     fontSize: 24,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
     marginTop: 18,
   },
