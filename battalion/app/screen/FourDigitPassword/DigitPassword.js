@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
   txtFirst: {
     color: colors.white,
     fontSize: 24,
-    fontWeight: 500,
+    fontWeight: "500",
     textAlign: "center",
     maxWidth: 181,
     alignItems: "center",
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
   txtSecond: {
     color: "#8F8F8F",
     fontSize: 16,
-    fontWeight: 400,
+    fontWeight: "400",
     textAlign: "center",
     marginTop: 8,
     maxWidth: 250,

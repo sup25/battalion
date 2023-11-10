@@ -6,23 +6,16 @@ import {
   View,
   TouchableOpacity,
 } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import colors from "../../config/colors";
 import TextLogo from "../../assets/TextLogo";
 import useBLE from "../../Hooks/UseBle";
 
 const SearchScreen = ({ navigation }) => {
-  const {
-    scanForPeripherals,
-    requestPermissions,
-    connectToDevice,
-    allDevices,
-    connectedDevice,
-    disconnectFromDevice,
-    heartRate,
-  } = useBLE();
-
-  console.log(connectedDevice);
+  const { requestPermissions } = useBLE();
+  useEffect(() => {
+    requestPermissions();
+  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.Text}>
@@ -34,7 +27,7 @@ const SearchScreen = ({ navigation }) => {
         </View>
       </View>
       <View>
-        {allDevices &&
+        {/* {allDevices &&
           allDevices.map((device, index) => {
             console.log(device);
             return (
@@ -45,7 +38,7 @@ const SearchScreen = ({ navigation }) => {
                 {device?.name || "no name"}
               </TouchableOpacity>
             );
-          })}
+          })} */}
       </View>
     </View>
   );
@@ -79,7 +72,7 @@ const styles = StyleSheet.create({
   txtFirst: {
     color: colors.white,
     fontSize: 24,
-    fontWeight: 500,
+    fontWeight: "500",
     textAlign: "center",
     maxWidth: 181,
     alignItems: "center",

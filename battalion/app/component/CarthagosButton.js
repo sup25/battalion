@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 20,
     textTransform: "uppercase",
-    fontWeight: "bold",
+    fontWeight: "700",
   },
 });
 

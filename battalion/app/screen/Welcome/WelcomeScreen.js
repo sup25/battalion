@@ -121,7 +121,7 @@ export default WelcomeScreen;
 const styles = StyleSheet.create({
   actualTxt: {
     maxWidth: 124,
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 15,
     color: "#5A5A5A",
   },
@@ -132,7 +132,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
     fontSize: 14,
-    fontWeight: 500,
+    fontWeight: "500",
   },
 
   battalionId: {
@@ -151,18 +151,18 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     fontSize: 16,
-    fontWeight: "bold",
+    fontWeight: "900",
   },
   container: {
     flex: 1,
   },
   connDevice: {
     fontSize: 15,
-    fontWeight: 500,
+    fontWeight: "500",
     color: colors.white,
   },
   degree: {
-    fontWeight: 800,
+    fontWeight: "800",
     fontSize: 36,
     color: "#5A5A5A",
   },
@@ -212,7 +212,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   lockedTxt: {
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 14,
     color: "#B0B0B0",
   },
@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
   },
   setText: {
     maxWidth: 124,
-    fontWeight: 500,
+    fontWeight: "500",
     fontSize: 15,
     color: colors.white,
   },
@@ -264,7 +264,7 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     textTransform: "uppercase",
     color: colors.white,
-    fontWeight: 900,
+    fontWeight: "900",
     marginTop: 37,
     borderBottomColor: colors.white,
     borderBottomWidth: 1,
@@ -274,12 +274,12 @@ const styles = StyleSheet.create({
   },
   textOne: {
     fontSize: 36,
-    fontWeight: 800,
+    fontWeight: "800",
     color: "#5A5A5A",
   },
   textTwo: {
     fontSize: 16,
-    fontWeight: 800,
+    fontWeight: "800",
     color: "#5A5A5A",
   },
 
