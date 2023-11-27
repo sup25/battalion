@@ -12,34 +12,69 @@ import TextLogo from "../../assets/TextLogo";
 import useBLE from "../../Hooks/UseBle";
 
 const SearchScreen = ({ navigation }) => {
-  const { requestPermissions } = useBLE();
+  const {
+    scanForPeripherals,
+    requestPermissions,
+    connectToDevice,
+    allDevices,
+    connectedDevice,
+    disconnectFromDevice,
+    heartRate,
+    scanning,
+    stopScanning,
+  } = useBLE();
+
+  const init = async () => {
+    let isPermitted = await requestPermissions();
+    if (isPermitted) {
+      scanForPeripherals();
+    }
+  };
   useEffect(() => {
-    requestPermissions();
+    init();
   }, []);
   return (
     <View style={styles.container}>
-      <View style={styles.Text}>
-        <Text style={styles.txtFirst}>Searching for devices</Text>
-      </View>
-      <View style={styles.circle}>
-        <View style={styles.logo}>
-          <TextLogo />
+      {scanning ? (
+        <Text>Scanning...</Text>
+      ) : (
+        <View>
+          <View style={styles.Text}>
+            <Text style={styles.txtFirst}>Searching for devices</Text>
+          </View>
+          <View style={styles.circle}>
+            <View style={styles.logo}>
+              <TextLogo />
+            </View>
+          </View>
+          <View>
+            {allDevices &&
+              allDevices.map((device, index) => {
+                return (
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={async () => {
+                      try {
+                        stopScanning();
+
+                        const res = await connectToDevice(device);
+                        navigation.navigate("testingBLE");
+                        console.log(res);
+                      } catch (err) {
+                        console.log("err to connect", err);
+                      }
+                    }}
+                    key={index}
+                  >
+                    <Text style={styles.buttonText}>
+                      {device?.name || "no name"}
+                    </Text>
+                  </TouchableOpacity>
+                );
+              })}
+          </View>
         </View>
-      </View>
-      <View>
-        {/* {allDevices &&
-          allDevices.map((device, index) => {
-            console.log(device);
-            return (
-              <TouchableOpacity
-                onPress={() => connectToDevice(device)}
-                key={index}
-              >
-                {device?.name || "no name"}
-              </TouchableOpacity>
-            );
-          })} */}
-      </View>
+      )}
     </View>
   );
 };
@@ -52,7 +87,7 @@ const styles = StyleSheet.create({
     height: 210,
     display: "flex",
     alignSelf: "center",
-    backgroundColor: colors.medium,
+    backgroundColor: colors.white,
     borderRadius: 999,
     top: 100,
     alignItems: "center",
@@ -60,7 +95,7 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
-    backgroundColor: colors.black,
+    backgroundColor: colors.white,
   },
 
   Text: {
@@ -76,5 +111,15 @@ const styles = StyleSheet.create({
     textAlign: "center",
     maxWidth: 181,
     alignItems: "center",
+  },
+  button: {
+    backgroundColor: "#3498db",
+    padding: 10,
+    margin: 10,
+    borderRadius: 5,
+    alignItems: "center",
+  },
+  buttonText: {
+    color: "white",
   },
 });

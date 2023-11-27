@@ -15,6 +15,7 @@ import FourDigitCodeInsertScreen from "../screen/FourDigitCodeInsertScreen";
 
 import AddDevice from "../screen/AddDevice/AddDevice";
 import SearchScreen from "../screen/Search/SearchScreen";
+import TestingBLE from "../screen/Search/TestingBLE";
 
 const Tab = createBottomTabNavigator();
 
@@ -70,6 +71,11 @@ const PrivateStackNavigator = () => {
       <Stack.Screen
         name="searchscreen"
         component={SearchScreen}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="testingBLE"
+        component={TestingBLE}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
