@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
   },
   tempratureIndicationtxt: {
     fontSize: 51,
-    fontWeight: 900,
+    fontWeight: "900",
     lineHeight: 63,
     textAlign: "left",
     color: colors.white,
