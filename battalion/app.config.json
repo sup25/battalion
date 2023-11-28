@@ -4,17 +4,14 @@
     "slug": "expo-ble",
     "version": "1.0.0",
     "orientation": "portrait",
-    
     "userInterfaceStyle": "light",
     "scheme": "com.example.expo-ble",
-    
-  "platforms": [
-    "ios",
-    "android",
-    "web"
-  ],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
     "splash": {
-     
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
@@ -29,10 +26,8 @@
         "@config-plugins/react-native-ble-plx",
         {
           "isBackgroundEnabled": true
-          
         }
       ]
-      
     ],
     "ios": {
       "supportsTablet": true,
@@ -45,7 +40,6 @@
     },
     "android": {
       "adaptiveIcon": {
-       
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.suparna.expoble",
@@ -58,12 +52,10 @@
         "android.permission.ACCESS_FINE_LOCATION"
       ]
     },
-    "web": {
-     
-    },
+    "web": {},
     "extra": {
       "eas": {
-        "projectId": "e21fa6c8-385a-4f9c-9309-b003a68092a0"
+        "projectId": "c2fd690f-e848-4948-a18e-ed83af96c676"
       }
     }
   }
