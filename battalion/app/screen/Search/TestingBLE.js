@@ -6,6 +6,7 @@ import {
   View,
   TouchableOpacity,
   Modal,
+  ScrollView,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
@@ -14,12 +15,17 @@ import {
   setPasswordToDevice,
   setTimeToDevice,
 } from "../../BLEfunctions";
-import useBLE from "../../Hooks/UseBle";
+import { useBleContext } from "../../utils/BLEProvider";
 
 const TestingBLE = ({ navigation }) => {
-  const { connectedDevice } = useBLE();
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
+
+  const { setDevice, device: connectedDevice } = useBleContext();
+
+  useEffect(() => {
+    console.log("connectedDevice", connectedDevice);
+  }, [connectedDevice]);
 
   const closePopup = () => {
     setPopupVisible(false);
@@ -28,8 +34,8 @@ const TestingBLE = ({ navigation }) => {
   const setPassword = async (password) => {
     try {
       const result = await setPasswordToDevice(connectedDevice, password);
-      setPopupMessage(result);
-      console.log(JSON.stringify(result)); // Output: "Password set successfully."
+      setPopupMessage(JSON.stringify(result));
+      console.log(result); // Output: "Password set successfully."
     } catch (error) {
       setPopupMessage(
         "Error setting password: " +
@@ -49,7 +55,7 @@ const TestingBLE = ({ navigation }) => {
 
   const getStatus = async () => {
     try {
-      const result = await getStatusFromDevice(ble);
+      const result = await getStatusFromDevice(connectedDevice);
       setPopupMessage(JSON.stringify(result));
       console.log(result); // Output: "Password set successfully."
     } catch (error) {
@@ -154,14 +160,14 @@ const Popup = ({ isVisible, message, onClose }) => {
           backgroundColor: "rgba(0, 0, 0, 0.5)",
         }}
       >
-        <View
+        <ScrollView
           style={{ backgroundColor: "white", padding: 20, borderRadius: 10 }}
         >
           <Text>{JSON.stringify(message)}</Text>
           <TouchableOpacity onPress={onClose} style={{ marginTop: 20 }}>
             <Text>Close</Text>
           </TouchableOpacity>
-        </View>
+        </ScrollView>
       </View>
     </Modal>
   );

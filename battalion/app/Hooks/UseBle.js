@@ -14,11 +14,6 @@ import base64 from "react-native-base64";
 const HEART_RATE_UUID = "0000180d-0000-1000-8000-00805f9b34fb";
 const HEART_RATE_CHARACTERISTIC = "00002a37-0000-1000-8000-00805f9b34fb";
 
-// Battalion UUIDs
-const SPS_SERVICE_UUID = "6e410001b5a3f393e0a9e50e54dccaa0";
-const SPS_SERVER_TX_UUID = "6e410003b5a3f393e0a9e50e54dccaa0";
-const SPS_SERVER_RX_UUID = "6e410002b5a3f393e0a9e50e54dccaa0";
-
 function useBLE() {
   const bleManager = useMemo(() => new BleManager(), []);
   const [allDevices, setAllDevices] = useState([]);
@@ -87,7 +82,7 @@ function useBLE() {
 
   let startTime = new Date();
 
-  const scanForPeripherals = () => {
+  const scanForPeripherals = (setPopupMessage, setPopupVisible) => {
     setScanning(true);
     setAllDevices([]);
 
@@ -102,10 +97,15 @@ function useBLE() {
       if (error) {
         console.log(error);
         setScanning(false);
+        bleManager.stopDeviceScan();
+        seconds = 16;
+        setPopupMessage(error.message);
+        setPopupVisible(true);
+        return { error };
       }
       if (device) {
         console.log(device);
-        setScanning(false);
+
         setAllDevices((prevState) => {
           if (!isDuplicteDevice(prevState, device)) {
             return [...prevState, device];
@@ -115,16 +115,21 @@ function useBLE() {
       }
       console.log(seconds);
       if (seconds > 15) {
+        setScanning(false);
         bleManager.stopDeviceScan(); //stop scanning if more than 5 secs passed
       }
     });
   };
 
-  const connectToDevice = async (device) => {
+  const connectToDevice = async (device, setDevice) => {
     console.log(device);
+    bleManager.stopDeviceScan();
     try {
-      const deviceConnection = await bleManager.connectToDevice(device.id);
+      const deviceConnection = await bleManager.connectToDevice(device.id, {
+        autoConnect: true,
+      });
       setConnectedDevice(deviceConnection);
+      setDevice(deviceConnection);
       const connectedDevice =
         await deviceConnection.discoverAllServicesAndCharacteristics();
       const services = await connectedDevice.services();
@@ -139,12 +144,12 @@ function useBLE() {
           console.log("Characteristic UUID:", characteristic.uuid);
         });
       });
-      bleManager.stopDeviceScan();
-      return;
+
+      return deviceConnection;
       // startStreamingData(deviceConnection);
     } catch (e) {
       console.log("FAILED TO CONNECT", e);
-      return e;
+      throw e;
     }
   };
 
