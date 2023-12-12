@@ -2,7 +2,7 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import colors from "../../config/colors";
 import CarthagosButton from "../../component/CarthagosButton";
-import AddUserData from "../../config/Database";
+import AddUserData from "../../api/Database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FetchUserProfile from "../../Hooks/UserProfile";
 import { useAuth } from "../../utils/AuthProvider";

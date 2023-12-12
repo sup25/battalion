@@ -15,20 +15,47 @@ import { useAuth } from "../../utils/AuthProvider";
 import FetchUserProfile from "../../Hooks/UserProfile";
 import colors from "../../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useTempContext } from "../../context/TempContex";
 
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
 
   const [userName, setUserName] = useState();
-
+  const { updateDegreesType } = useTempContext();
   const userData = FetchUserProfile(currentUser);
+  const [degree, setDegree] = useState({ value: "--", sign: "°F" });
+
+  const Degree_c = 30;
 
   useEffect(() => {
     // Set the user's display name from currentUser
     if (userData) {
       setUserName(userData?.name || "");
     }
-  }, [userData]);
+    const fetchSettings = async () => {
+      try {
+        // Retrieve the settings from AsyncStorage
+        const settingsString = await AsyncStorage.getItem("settings");
+        const settings = settingsString ? JSON.parse(settingsString) : {};
+        // If degrees_type exists in settings, update the context
+        if (settings.degrees_type) {
+          updateDegreesType(settings.degrees_type);
+          // Additional logic based on degrees_type
+          if (settings.degrees_type === "c") {
+            setDegree({ value: Degree_c, sign: "°C" });
+          } else if (settings.degrees_type === "f") {
+            const degreeValue = Math.round(Degree_c * 1.8 + 32);
+            const degreeF = degreeValue;
+            setDegree({ value: degreeF, sign: "°F" });
+          }
+        }
+      } catch (error) {
+        console.error("Error fetching settings:", error);
+      }
+    };
+
+    fetchSettings();
+  }, [userData, updateDegreesType]);
 
   return (
     <View style={styles.container}>
@@ -85,11 +112,13 @@ const WelcomeScreen = ({ navigation }) => {
         </TouchableOpacity>
         <View style={styles.unlockedTempContainer}>
           <View style={styles.TempConatinerBg}>
-            <Text style={styles.degree}>-- °F</Text>
+            <Text
+              style={styles.degree}
+            >{`${degree.value} ${degree.sign}`}</Text>
             <Text style={styles.actualTxt}>Actual box temperature</Text>
           </View>
           <View style={styles.TempConatinerBg}>
-            <Text style={styles.degree}>-- °F</Text>
+            <Text style={styles.degree}>-- {`${degree.sign}`}</Text>
             <View style={styles.setTextContainer}>
               <Text style={styles.setText}>Set the box Temperature</Text>
               <MaterialCommunityIcons

@@ -14,30 +14,43 @@ import { doc, getDoc } from "firebase/firestore";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../../config/colors";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTempContext } from "../../context/TempContex";
+
 const DeviceSetting = ({ navigation }) => {
   const [fourDigitCode, setFourDigitCode] = useState("");
   const [show, setShow] = useState(false);
-  const [temperatureToggle, setTemperatureToggle] = useState(false);
-
-  let opacity = new Animated.Value(0);
-
-  const animate = (easing) => {
-    opacity.setValue(0);
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 1200,
-      easing,
-      useNativeDriver: true,
-    }).start();
-  };
+  const { degreesType, updateDegreesType } = useTempContext();
+  const [temperatureToggle, setTemperatureToggle] = useState(
+    degreesType === "c"
+  );
 
   const handleShowPassword = () => {
     setShow(!show);
   };
   const handleTemperatureChange = () => {
-    setTemperatureToggle(!temperatureToggle);
-    animate(Easing.ease);
+    setTemperatureToggle((prevTemperatureToggle) => !prevTemperatureToggle);
+    const newTemperatureToggle = degreesType === "f" ? "c" : "f";
+    updateDegreesType(newTemperatureToggle);
   };
+
+  useEffect(() => {
+    const fetchDegreesType = async () => {
+      try {
+        // Retrieve the degreesType from AsyncStorage
+        const storedDegreesType = await AsyncStorage.getItem("degreesType");
+        if (storedDegreesType) {
+          // Update the context with the stored degreesType
+          updateDegreesType(storedDegreesType);
+          // Update the local state
+          setTemperatureToggle(storedDegreesType === "f");
+        }
+      } catch (error) {
+        console.log("Error fetching degreesType:", error);
+      }
+    };
+
+    fetchDegreesType();
+  }, []);
 
   useEffect(() => {
     const fetchDocument = async () => {
@@ -90,7 +103,7 @@ const DeviceSetting = ({ navigation }) => {
         <View style={styles.temperatureContainer}>
           <Text style={styles.tempTxt}>Fahrenheit / Celsius</Text>
           <TouchableWithoutFeedback onPress={handleTemperatureChange}>
-            <Animated.View
+            <View
               style={[
                 styles.switchOnOff,
                 temperatureToggle ? styles.flexEnd : styles.flexStart,
@@ -101,7 +114,7 @@ const DeviceSetting = ({ navigation }) => {
                   {temperatureToggle ? "°C" : "°F"}
                 </Text>
               </View>
-            </Animated.View>
+            </View>
           </TouchableWithoutFeedback>
         </View>
       </View>
