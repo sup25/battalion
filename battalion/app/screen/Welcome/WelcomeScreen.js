@@ -15,8 +15,16 @@ import { useAuth } from "../../utils/AuthProvider";
 import FetchUserProfile from "../../Hooks/UserProfile";
 import colors from "../../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useDeviceSettingsContext } from "../../utils/DeviceSettingsProvider";
 
 const WelcomeScreen = ({ navigation }) => {
+  const {
+    isLocked,
+    setDeviceIsLocked,
+    setTempValue,
+    setTempUnit,
+    setDeviceIsLightsOn,
+  } = useDeviceSettingsContext();
   const { currentUser } = useAuth();
 
   const [userName, setUserName] = useState();
@@ -69,7 +77,11 @@ const WelcomeScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.unlockedImageContainer}
           onPress={() => {
-            navigation.navigate("devicedetails");
+            setDeviceIsLocked(!isLocked);
+            setTempValue(35);
+            setTempUnit("f");
+            setDeviceIsLightsOn(true);
+            // navigation.navigate("devicedetails");
           }}
         >
           <Image
@@ -81,6 +93,7 @@ const WelcomeScreen = ({ navigation }) => {
               <MaterialCommunityIcons name="lock" size={20} color="#B0B0B0" />
             </View>
             <Text style={styles.lockedTxt}>Device Locked</Text>
+            <Text style={styles.lockedTxt}>{isLocked ? "yes" : "no"}</Text>
           </View>
         </TouchableOpacity>
         <View style={styles.unlockedTempContainer}>
@@ -91,7 +104,13 @@ const WelcomeScreen = ({ navigation }) => {
           <View style={styles.TempConatinerBg}>
             <Text style={styles.degree}>-- °F</Text>
             <View style={styles.setTextContainer}>
-              <Text style={styles.setText}>Set the box Temperature</Text>
+              <TouchableOpacity
+                onPress={() => {
+                  navigation.navigate("testSlider");
+                }}
+              >
+                <Text style={styles.setText}>Set the box Temperature</Text>
+              </TouchableOpacity>
               <MaterialCommunityIcons
                 name="arrow-right"
                 size={20}

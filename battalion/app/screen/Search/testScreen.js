@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Animated, Text } from "react-native";
 import Svg, { Circle, G } from "react-native-svg";
 import Slider from "@react-native-community/slider";
+import { useDeviceSettingsContext } from "../../utils/DeviceSettingsProvider";
 
 const HalfCircleSlider = () => {
-  const [fillAnimation] = useState(new Animated.Value(0));
-  const [sliderValue, setSliderValue] = useState(0);
+  const { temp, setTempValue, getTempValueAndUnit } =
+    useDeviceSettingsContext();
+  const [sliderValue, setSliderValue] = useState(temp.value);
 
   const handleValueChange = (value) => {
     setSliderValue(value);
@@ -37,7 +39,9 @@ const HalfCircleSlider = () => {
           />
         </G>
       </Svg>
-      <Text>{sliderValue}℃</Text>
+      <Text>
+        {getTempValueAndUnit({ value: sliderValue, unit: temp.unit })}
+      </Text>
       <Slider
         circleColor="red"
         style={styles.slider}
@@ -47,6 +51,7 @@ const HalfCircleSlider = () => {
         maximumValue={100}
         step={1}
         onValueChange={(value) => handleValueChange(value)}
+        onSlidingComplete={(value) => setTempValue(value)} // handles the context + asyncStorage change.
       />
     </View>
   );
