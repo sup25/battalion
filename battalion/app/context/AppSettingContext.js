@@ -6,6 +6,11 @@ const AppSettingContext = createContext();
 export const useAppSettingContext = () => useContext(AppSettingContext);
 
 export const AppSettingProvider = ({ children }) => {
+  const [boxTemp, setBoxTemp] = useState(22);
+  const [boxPassword, setBevicePassword] = useState([1, 2, 3, 4]);
+  const [boxLights, setBeviceLights] = useState(false);
+  const [boxLocked, setBeviceLocked] = useState(false);
+
   const [temp, setTemp] = useState({ value: 0, unit: "c" });
   const [password, setPassword] = useState([1, 2, 3, 4]);
   const [isLocked, setIsLocked] = useState(false);
@@ -108,6 +113,10 @@ export const AppSettingProvider = ({ children }) => {
     setDeviceIsLocked,
     setDeviceIsLightsOn,
     getTempValueAndUnit,
+    boxTemp,
+    boxPassword,
+    boxLights,
+    boxLocked,
   };
 
   return (

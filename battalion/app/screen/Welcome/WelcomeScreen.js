@@ -21,7 +21,8 @@ const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
 
   const [userName, setUserName] = useState();
-  const { isLocked, getTempValueAndUnit, temp } = useAppSettingContext();
+  const { isLocked, getTempValueAndUnit, temp, boxTemp } =
+    useAppSettingContext();
   const userData = FetchUserProfile(currentUser);
 
   useEffect(() => {
@@ -88,7 +89,7 @@ const WelcomeScreen = ({ navigation }) => {
         <View style={styles.unlockedTempContainer}>
           <View style={styles.TempConatinerBg}>
             <Text style={styles.degree}>
-              {getTempValueAndUnit({ value: 22, unit: "f" })}
+              {getTempValueAndUnit({ value: boxTemp, unit: temp.unit })}
             </Text>
             <Text style={styles.actualTxt}>Actual box temperature</Text>
           </View>

@@ -12,13 +12,13 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../../config/colors";
 
 import { useAppSettingContext } from "../../context/AppSettingContext";
+import FourDigitsCode from "../../component/FourDigitsCode";
 
 const DeviceSetting = ({ navigation }) => {
   const [show, setShow] = useState(false);
-  const { temp, setTempUnit, password } = useAppSettingContext();
+  const { temp, setTempUnit, password, setDevicePassword } =
+    useAppSettingContext();
   const [temperatureToggle, setTemperatureToggle] = useState(false);
-
-  console.log("password type:", typeof password);
 
   const handleShowPassword = () => {
     setShow(!show);
@@ -76,16 +76,11 @@ const DeviceSetting = ({ navigation }) => {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.boxContainer}>
-          {password.map((value, index) => (
-            <TextInput
-              key={index}
-              value={show ? value.toString() : "*"}
-              placeholder="*"
-              placeholderTextColor="white"
-              style={styles.textInput}
-              editable={false}
-            />
-          ))}
+          <FourDigitsCode
+            submitHandler={setDevicePassword}
+            defaultValue={password}
+            isVisible={show}
+          />
         </View>
       </View>
     </View>
