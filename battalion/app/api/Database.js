@@ -43,7 +43,10 @@ const AddUserData = async (data) => {
       serialNum,
       combinedSerialNum: remaining,
       fourDigitCode,
-      owner: ownerUserData,
+      owner: {
+        id: data.owner,
+        ...ownerUserData,
+      },
       users: [],
       teamType,
     });

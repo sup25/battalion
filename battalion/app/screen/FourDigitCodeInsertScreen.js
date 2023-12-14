@@ -35,20 +35,26 @@ export default function FourDigitCodeInsertScreen({ route }) {
   }, []);
 
   const handleDigitChange = (index, value) => {
+    // Ensure the value is a number
+    const numericValue = value !== "" ? parseInt(value, 10) : null;
+
     const newDigitValues = [...digitValues];
-    newDigitValues[index] = value;
+    newDigitValues[index] = numericValue;
     setDigitValues(newDigitValues);
   };
 
   const handleConfirm = async () => {
-    const fourDigitCode = digitValues.join("");
+    const fourDigitCode = digitValues
+      .map((value) => (value !== null ? value.toString() : ""))
+      .join("");
+
     if (fourDigitCode.length !== 4) {
       console.log("Enter valid digit");
       return;
     }
 
-    // Update the context with the new password
-    setDevicePassword(fourDigitCode);
+    // Update the context with the new password //array of digits
+    setDevicePassword(digitValues);
 
     // Update the Firestore document with the new password
     try {
