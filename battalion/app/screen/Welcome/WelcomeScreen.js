@@ -15,47 +15,21 @@ import { useAuth } from "../../utils/AuthProvider";
 import FetchUserProfile from "../../Hooks/UserProfile";
 import colors from "../../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useTempContext } from "../../context/TempContex";
+import { useAppSettingContext } from "../../context/AppSettingContext";
 
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
 
   const [userName, setUserName] = useState();
-  const { updateDegreesType } = useTempContext();
+  const { isLocked, getTempValueAndUnit, temp } = useAppSettingContext();
   const userData = FetchUserProfile(currentUser);
-  const [degree, setDegree] = useState({ value: "--", sign: "°F" });
-
-  const Degree_c = 30;
 
   useEffect(() => {
     // Set the user's display name from currentUser
     if (userData) {
       setUserName(userData?.name || "");
     }
-    const fetchSettings = async () => {
-      try {
-        // Retrieve the settings from AsyncStorage
-        const settingsString = await AsyncStorage.getItem("settings");
-        const settings = settingsString ? JSON.parse(settingsString) : {};
-        // If degrees_type exists in settings, update the context
-        if (settings.degrees_type) {
-          updateDegreesType(settings.degrees_type);
-          // Additional logic based on degrees_type
-          if (settings.degrees_type === "c") {
-            setDegree({ value: Degree_c, sign: "°C" });
-          } else if (settings.degrees_type === "f") {
-            const degreeValue = Math.round(Degree_c * 1.8 + 32);
-            const degreeF = degreeValue;
-            setDegree({ value: degreeF, sign: "°F" });
-          }
-        }
-      } catch (error) {
-        console.error("Error fetching settings:", error);
-      }
-    };
-
-    fetchSettings();
-  }, [userData, updateDegreesType]);
+  }, [userData]);
 
   return (
     <View style={styles.container}>
@@ -108,17 +82,23 @@ const WelcomeScreen = ({ navigation }) => {
               <MaterialCommunityIcons name="lock" size={20} color="#B0B0B0" />
             </View>
             <Text style={styles.lockedTxt}>Device Locked</Text>
+            <Text style={styles.lockedTxt}>{isLocked ? "yes" : "no"}</Text>
           </View>
         </TouchableOpacity>
         <View style={styles.unlockedTempContainer}>
           <View style={styles.TempConatinerBg}>
-            <Text
-              style={styles.degree}
-            >{`${degree.value} ${degree.sign}`}</Text>
+            <Text style={styles.degree}>
+              {getTempValueAndUnit({ value: 22, unit: "f" })}
+            </Text>
             <Text style={styles.actualTxt}>Actual box temperature</Text>
           </View>
-          <View style={styles.TempConatinerBg}>
-            <Text style={styles.degree}>-- {`${degree.sign}`}</Text>
+          <TouchableOpacity
+            style={styles.TempConatinerBg}
+            onPress={() => {
+              navigation.navigate("halfcircle");
+            }}
+          >
+            <Text style={styles.degree}>{getTempValueAndUnit(temp)}</Text>
             <View style={styles.setTextContainer}>
               <Text style={styles.setText}>Set the box Temperature</Text>
               <MaterialCommunityIcons
@@ -127,13 +107,18 @@ const WelcomeScreen = ({ navigation }) => {
                 color="white"
               />
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.perTxtContainer}>
-          <View style={styles.percentageText}>
+          <TouchableOpacity
+            style={styles.percentageText}
+            onPress={() => {
+              navigation.navigate("addDevice");
+            }}
+          >
             <Text style={styles.textOne}>--%</Text>
             <Text style={styles.textTwo}>Plug your Device</Text>
-          </View>
+          </TouchableOpacity>
           <MaterialCommunityIcons
             name="loading"
             size={20}

@@ -32,13 +32,18 @@ const AddUserData = async (data) => {
       return;
     }
     const ownerUser = await getDoc(doc(collection(db, "users"), data.owner));
+    if (!ownerUser.exists()) {
+      throw new Error("Owner user not found.");
+    }
+
+    const ownerUserData = ownerUser.data();
     await setDoc(deviceRef, {
       modelNum,
       prodDate,
       serialNum,
       combinedSerialNum: remaining,
       fourDigitCode,
-      owner: ownerUser,
+      owner: ownerUserData,
       users: [],
       teamType,
     });

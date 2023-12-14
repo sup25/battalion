@@ -2,16 +2,16 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AuthProvider } from "./app/utils/AuthProvider";
 import { AuthNavigator } from "./app/navigation/AuthNavigator";
 import { BleProvider } from "./app/utils/BLEProvider";
-import { TemperatureProvider } from "./app/context/TempContex";
+import { AppSettingProvider } from "./app/context/AppSettingContext";
 
 export default function App() {
   return (
     <NavigationContainer>
       <AuthProvider>
         <BleProvider>
-          <TemperatureProvider>
+          <AppSettingProvider>
             <AuthNavigator />
-          </TemperatureProvider>
+          </AppSettingProvider>
         </BleProvider>
       </AuthProvider>
     </NavigationContainer>

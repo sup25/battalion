@@ -1,14 +1,17 @@
-import React, { useEffect, useState } from "react";
-import { View, StyleSheet, Animated, Text } from "react-native";
+import React, { useEffect, useState, useContext } from "react";
+import { View, StyleSheet, Animated, Text, TextInput } from "react-native";
 import Svg, { Circle, G } from "react-native-svg";
 import Slider from "@react-native-community/slider";
+import { useAppSettingContext } from "../../context/AppSettingContext";
 
 const HalfCircleSlider = () => {
   const [fillAnimation] = useState(new Animated.Value(0));
-  const [sliderValue, setSliderValue] = useState(0);
+  const { temp, setTempValue, getTempValueAndUnit } = useAppSettingContext();
+  const [sliderValue, setSliderValue] = useState(temp.value);
 
   const handleValueChange = (value) => {
     setSliderValue(value);
+    setTempValue(value);
   };
 
   return (
@@ -36,8 +39,12 @@ const HalfCircleSlider = () => {
             transform="rotate(-90, 100, 50)" // Rotate by 45 degrees around the center (100, 50)
           />
         </G>
+        <Text>
+          {getTempValueAndUnit({ value: sliderValue, unit: temp.unit })}
+        </Text>
       </Svg>
       <Text>{sliderValue}℃</Text>
+
       <Slider
         circleColor="red"
         style={styles.slider}
@@ -60,6 +67,14 @@ const styles = StyleSheet.create({
   },
   slider: {
     width: 200,
+  },
+  input: {
+    height: 40,
+    borderColor: "gray",
+    borderWidth: 1,
+    marginTop: 10,
+    textAlign: "center",
+    padding: 10,
   },
 });
 
