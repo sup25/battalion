@@ -15,12 +15,13 @@ import { useAuth } from "../../utils/AuthProvider";
 import FetchUserProfile from "../../Hooks/UserProfile";
 import colors from "../../config/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useAppSettingContext } from "../../context/AppSettingContext";
 
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
 
   const [userName, setUserName] = useState();
-
+  const { isLocked, getTempValueAndUnit, temp } = useAppSettingContext();
   const userData = FetchUserProfile(currentUser);
 
   useEffect(() => {
@@ -81,15 +82,23 @@ const WelcomeScreen = ({ navigation }) => {
               <MaterialCommunityIcons name="lock" size={20} color="#B0B0B0" />
             </View>
             <Text style={styles.lockedTxt}>Device Locked</Text>
+            <Text style={styles.lockedTxt}>{isLocked ? "yes" : "no"}</Text>
           </View>
         </TouchableOpacity>
         <View style={styles.unlockedTempContainer}>
           <View style={styles.TempConatinerBg}>
-            <Text style={styles.degree}>-- °F</Text>
+            <Text style={styles.degree}>
+              {getTempValueAndUnit({ value: 22, unit: "f" })}
+            </Text>
             <Text style={styles.actualTxt}>Actual box temperature</Text>
           </View>
-          <View style={styles.TempConatinerBg}>
-            <Text style={styles.degree}>-- °F</Text>
+          <TouchableOpacity
+            style={styles.TempConatinerBg}
+            onPress={() => {
+              navigation.navigate("halfcircle");
+            }}
+          >
+            <Text style={styles.degree}>{getTempValueAndUnit(temp)}</Text>
             <View style={styles.setTextContainer}>
               <Text style={styles.setText}>Set the box Temperature</Text>
               <MaterialCommunityIcons
@@ -98,13 +107,18 @@ const WelcomeScreen = ({ navigation }) => {
                 color="white"
               />
             </View>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.perTxtContainer}>
-          <View style={styles.percentageText}>
+          <TouchableOpacity
+            style={styles.percentageText}
+            onPress={() => {
+              navigation.navigate("addDevice");
+            }}
+          >
             <Text style={styles.textOne}>--%</Text>
             <Text style={styles.textTwo}>Plug your Device</Text>
-          </View>
+          </TouchableOpacity>
           <MaterialCommunityIcons
             name="loading"
             size={20}

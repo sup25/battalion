@@ -4,71 +4,30 @@ import {
   View,
   TouchableWithoutFeedback,
   TextInput,
-  Animated,
-  Easing,
 } from "react-native";
 
-import React, { useState, useEffect } from "react";
-import { db } from "../../config/Firebase";
-import { doc, getDoc } from "firebase/firestore";
+import React, { useState } from "react";
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../../config/colors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+
+import { useAppSettingContext } from "../../context/AppSettingContext";
+
 const DeviceSetting = ({ navigation }) => {
-  const [fourDigitCode, setFourDigitCode] = useState("");
   const [show, setShow] = useState(false);
+  const { temp, setTempUnit, password } = useAppSettingContext();
   const [temperatureToggle, setTemperatureToggle] = useState(false);
 
-  let opacity = new Animated.Value(0);
-
-  const animate = (easing) => {
-    opacity.setValue(0);
-    Animated.timing(opacity, {
-      toValue: 1,
-      duration: 1200,
-      easing,
-      useNativeDriver: true,
-    }).start();
-  };
+  console.log("password type:", typeof password);
 
   const handleShowPassword = () => {
     setShow(!show);
   };
+
   const handleTemperatureChange = () => {
     setTemperatureToggle(!temperatureToggle);
-    animate(Easing.ease);
+    setTempUnit(temp.unit === "c" ? "f" : "c");
   };
-
-  useEffect(() => {
-    const fetchDocument = async () => {
-      try {
-        // Retrieve the combinedSerialNumber from AsyncStorage
-        const combinedSerialNumber = await AsyncStorage.getItem(
-          "combinedSerialNum"
-        );
-
-        if (combinedSerialNumber) {
-          const docRef = doc(db, "devices", combinedSerialNumber);
-
-          const docSnapshot = await getDoc(docRef);
-
-          if (docSnapshot.exists()) {
-            const code = docSnapshot.data().fourDigitCode;
-            setFourDigitCode(code);
-            console.log(code);
-          } else {
-            console.log("Document not found");
-          }
-        } else {
-          console.log("No combinedSerialNumber found in AsyncStorage");
-        }
-      } catch (error) {
-        console.log("Error:", error);
-      }
-    };
-
-    fetchDocument();
-  }, []);
 
   return (
     <View style={styles.container}>
@@ -90,7 +49,7 @@ const DeviceSetting = ({ navigation }) => {
         <View style={styles.temperatureContainer}>
           <Text style={styles.tempTxt}>Fahrenheit / Celsius</Text>
           <TouchableWithoutFeedback onPress={handleTemperatureChange}>
-            <Animated.View
+            <View
               style={[
                 styles.switchOnOff,
                 temperatureToggle ? styles.flexEnd : styles.flexStart,
@@ -98,10 +57,10 @@ const DeviceSetting = ({ navigation }) => {
             >
               <View style={styles.iconBackgroundContainer}>
                 <Text style={styles.temperatureIndicatortxt}>
-                  {temperatureToggle ? "°C" : "°F"}
+                  {temp.unit === "c" ? "°C" : "°F"}
                 </Text>
               </View>
-            </Animated.View>
+            </View>
           </TouchableWithoutFeedback>
         </View>
       </View>
@@ -117,16 +76,15 @@ const DeviceSetting = ({ navigation }) => {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.boxContainer}>
-          {fourDigitCode.split("").map((digit, index) => (
-            <View key={index} style={styles.box}>
-              <TextInput
-                value={show ? digit : "*"}
-                placeholder="*"
-                placeholderTextColor="white"
-                style={styles.textInput}
-                editable={false}
-              />
-            </View>
+          {password.map((value, index) => (
+            <TextInput
+              key={index}
+              value={show ? value.toString() : "*"}
+              placeholder="*"
+              placeholderTextColor="white"
+              style={styles.textInput}
+              editable={false}
+            />
           ))}
         </View>
       </View>
@@ -249,5 +207,10 @@ const styles = StyleSheet.create({
   textInput: {
     fontSize: 32,
     color: colors.white,
+    borderWidth: 1,
+    borderColor: "#1E1E1E6E",
+    padding: 15,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

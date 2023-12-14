@@ -1,8 +1,8 @@
 import { collection, doc, setDoc, getDoc } from "firebase/firestore";
-import { db } from "./Firebase";
+import { db } from "../config/Firebase";
 
 const AddUserData = async (data) => {
-  const { fourDigitCode, combinedSerialNum} = data;
+  const { fourDigitCode, combinedSerialNum } = data;
   try {
     // Validate the owner field
     if (!data.owner) {
@@ -31,16 +31,24 @@ const AddUserData = async (data) => {
       console.log("Device data already exists. Cannot update.");
       return;
     }
+    const ownerUser = await getDoc(doc(collection(db, "users"), data.owner));
+    if (!ownerUser.exists()) {
+      throw new Error("Owner user not found.");
+    }
 
+    const ownerUserData = ownerUser.data();
     await setDoc(deviceRef, {
       modelNum,
       prodDate,
       serialNum,
-      combinedSerialNum: remaining, 
+      combinedSerialNum: remaining,
       fourDigitCode,
-      owner: data.owner,
-      users: data.users,
-      teamType, 
+      owner: {
+        id: data.owner,
+        ...ownerUserData,
+      },
+      users: [],
+      teamType,
     });
 
     console.log("Device data saved successfully");

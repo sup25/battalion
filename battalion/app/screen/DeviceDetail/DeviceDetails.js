@@ -12,15 +12,19 @@ import {
   Image,
   ImageBackground,
   TouchableWithoutFeedback,
+  TouchableOpacity,
   Animated,
 } from "react-native";
+import { useAppSettingContext } from "../../context/AppSettingContext";
 const DeviceDetails = ({ navigation }) => {
-  const [switchLocked, setSwithLocked] = useState(true);
-  const [brightnessToggel, setBrightnessToggel] = useState(false);
-
-  const handleToggle = (Do) => {
-    Do((prevValue) => !prevValue);
-  };
+  const {
+    isLocked,
+    setDeviceIsLocked,
+    isLightsOn,
+    setDeviceIsLightsOn,
+    getTempValueAndUnit,
+    temp,
+  } = useAppSettingContext();
 
   return (
     <View style={styles.container}>
@@ -65,22 +69,24 @@ const DeviceDetails = ({ navigation }) => {
             source={require("../../assets/devicedetail.png")}
           />
 
-          <View style={{ display: "flex", gap: 18 }}>
+          <View style={{ display: "flex", gap: 25 }}>
             <View style={styles.deviceLocked}>
               <Text style={styles.lockedTxt}>
-                {switchLocked ? "Device Locked" : "Device Unlocked"}
+                {isLocked ? "Device Locked" : "Device Unlocked"}
               </Text>
               <View
                 style={[
                   styles.switchOnOff,
-                  switchLocked ? styles.flexEnd : styles.flexStart,
+                  isLocked ? styles.flexEnd : styles.flexStart,
                 ]}
               >
                 <View style={styles.iconBackgroundContainer}>
                   <TouchableWithoutFeedback
-                    onPress={() => handleToggle(setSwithLocked)}
+                    onPress={() => {
+                      setDeviceIsLocked(!isLocked);
+                    }}
                   >
-                    {switchLocked ? (
+                    {isLocked ? (
                       <MaterialCommunityIcons
                         name="lock"
                         size={20}
@@ -103,14 +109,16 @@ const DeviceDetails = ({ navigation }) => {
               <View
                 style={[
                   styles.switchOnOff,
-                  brightnessToggel ? styles.flexEnd : styles.flexStart,
+                  isLightsOn ? styles.flexEnd : styles.flexStart,
                 ]}
               >
                 <View style={styles.iconBackgroundContainer}>
                   <TouchableWithoutFeedback
-                    onPress={() => handleToggle(setBrightnessToggel)}
+                    onPress={() => {
+                      setDeviceIsLightsOn(!isLightsOn);
+                    }}
                   >
-                    {brightnessToggel ? (
+                    {isLightsOn ? (
                       <MaterialCommunityIcons
                         name="brightness-5"
                         size={20}
@@ -134,11 +142,14 @@ const DeviceDetails = ({ navigation }) => {
             <Text style={styles.degree}> 72°F</Text>
             <Text style={styles.actualTxt}>Actual box temperature</Text>
           </View>
-          <View style={styles.TempConatinerBg}>
-            <Text style={styles.degree}>83°F</Text>
-            <TouchableWithoutFeedback
-              onPress={() => navigation.navigate("setTemperatureScreen")}
-            >
+          <TouchableOpacity
+            style={styles.TempConatinerBg}
+            onPress={() => {
+              navigation.navigate("halfcircle");
+            }}
+          >
+            <Text style={styles.degree}>{getTempValueAndUnit(temp)}</Text>
+            <TouchableWithoutFeedback>
               <View style={styles.setTextContainer}>
                 <Text style={styles.setText}>Set the box Temperature</Text>
                 <MaterialCommunityIcons
@@ -148,7 +159,7 @@ const DeviceDetails = ({ navigation }) => {
                 />
               </View>
             </TouchableWithoutFeedback>
-          </View>
+          </TouchableOpacity>
         </View>
         <View style={styles.percentagetxtContainer}>
           <View style={styles.percentageText}>
@@ -212,11 +223,13 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingTop: 12,
   },
   brightnessTxt: {
     fontWeight: "500",
     fontSize: 14,
     color: "#B0B0B0",
+    paddingLeft: 2,
   },
 
   container: {
@@ -297,6 +310,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 14,
     color: "#B0B0B0",
+    paddingRight: 5,
   },
   percentageText: {
     flexDirection: "column",

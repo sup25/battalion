@@ -5,14 +5,12 @@ import CarthagosButton from "../component/CarthagosButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { collection, doc, updateDoc } from "firebase/firestore";
 import { db } from "../config/Firebase";
+import { useAppSettingContext } from "../context/AppSettingContext";
 
 export default function FourDigitCodeInsertScreen({ route }) {
   const [digitValues, setDigitValues] = useState(["", "", "", ""]);
 
-  /*   const combinedSerialNum = route.params?.combinedSerialNum || "";
- console.log("combinedSerialNum :",combinedSerialNum) */
-
-  /* const combinedSerialNumRef = useRef(""); */
+  const { setDevicePassword } = useAppSettingContext();
 
   const [combinedSerialNum, setCombinedSerialNum] = useState("");
 
@@ -37,21 +35,28 @@ export default function FourDigitCodeInsertScreen({ route }) {
   }, []);
 
   const handleDigitChange = (index, value) => {
+    // Ensure the value is a number
+    const numericValue = value !== "" ? parseInt(value, 10) : null;
+
     const newDigitValues = [...digitValues];
-    newDigitValues[index] = value;
+    newDigitValues[index] = numericValue;
     setDigitValues(newDigitValues);
   };
 
   const handleConfirm = async () => {
-    /*  const combinedSerialNum = combinedSerialNumRef.current;  */
+    const fourDigitCode = digitValues
+      .map((value) => (value !== null ? value.toString() : ""))
+      .join("");
 
-    const fourDigitCode = digitValues.join("");
     if (fourDigitCode.length !== 4) {
       console.log("Enter valid digit");
       return;
     }
 
-    // Update the Firestore document with the new fourDigitCode
+    // Update the context with the new password //array of digits
+    setDevicePassword(digitValues);
+
+    // Update the Firestore document with the new password
     try {
       console.log("combinedSerialNum:", combinedSerialNum);
       const deviceRef = doc(collection(db, "devices"), combinedSerialNum);
@@ -59,14 +64,15 @@ export default function FourDigitCodeInsertScreen({ route }) {
         fourDigitCode: fourDigitCode,
       });
 
-      console.log("Four-digit code updated successfully");
+      console.log("Password updated successfully");
     } catch (error) {
-      console.log("Error updating four-digit code:", error.message);
+      console.log("Error updating password:", error.message);
     }
 
     // Reset the digitValues
     setDigitValues(["", "", "", ""]);
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
