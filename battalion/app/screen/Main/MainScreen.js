@@ -7,8 +7,8 @@ import {
   ImageBackground,
 } from "react-native";
 
-import colors from "../../config/colors";
-import CarthagosButton from "../../component/CarthagosButton";
+import colors from "../../config/Colors/colors";
+import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 
 export default function MainScreen({ navigation }) {
   return (

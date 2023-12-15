@@ -9,7 +9,7 @@ import {
 
 import { useAuth } from "../../utils/AuthProvider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import colors from "../../config/colors";
+import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { db } from "../../config/Firebase";
 import { setDoc, doc } from "firebase/firestore";

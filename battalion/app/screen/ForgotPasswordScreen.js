@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import CarthagosButton from "../component/CarthagosButton";
+import CarthagosButton from "../component/CarthagosButton/CarthagosButton";
 import { StyleSheet, View, TextInput, Text } from "react-native";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../config/Firebase";
-import colors from "../config/colors";
+import colors from "../config/Colors/colors";
 import TextLogo from "../assets/TextLogo";
-import CarthagosScreen from "../component/CarthagosScreen";
-import CarthagosLinkButton from "../component/CarthagosLinkButton";
+import CarthagosScreen from "../component/CarthagosScreen/CarthagosScreen";
+import CarthagosLinkButton from "../component/CarthagosLinkButton/CarthagosLinkButton";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");

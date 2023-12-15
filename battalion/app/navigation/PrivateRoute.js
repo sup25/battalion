@@ -2,7 +2,7 @@ import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import colors from "../config/colors";
+import colors from "../config/Colors/colors";
 import ProfileScreen from "../screen/Profile/ProfileScreen";
 import WelcomeScreen from "../screen/Welcome/WelcomeScreen";
 import { useAuth } from "../utils/AuthProvider";
@@ -11,7 +11,7 @@ import ForgotPassword from "../screen/ForgetPasswordPrivate";
 import DeviceDetails from "../screen/DeviceDetail/DeviceDetails";
 import DeviceSetting from "../screen/DeviceSetting/DeviceSetting";
 import SetTemperatureScreen from "../screen/SetTemperatureScreen";
-import FourDigitCodeInsertScreen from "../screen/FourDigitCodeInsertScreen";
+import FourDigitCodeInsertScreen from "../screen/FourDigitPassword/FourDigitCodeInsertScreen";
 
 import AddDevice from "../screen/AddDevice/AddDevice";
 import SearchScreen from "../screen/Search/SearchScreen";

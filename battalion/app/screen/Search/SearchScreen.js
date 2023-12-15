@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import React, { useEffect } from "react";
-import colors from "../../config/colors";
+import colors from "../../config/Colors/colors";
 import TextLogo from "../../assets/TextLogo";
 import useBLE from "../../Hooks/UseBle";
 

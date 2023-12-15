@@ -6,8 +6,8 @@ import {
   updateProfile,
 } from "firebase/auth";
 import { auth } from "../../config/Firebase";
-import colors from "../../config/colors";
-import CarthagosButton from "../../component/CarthagosButton";
+import colors from "../../config/Colors/colors";
+import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import { useRoute } from "@react-navigation/native";
 import { useAuth } from "../../utils/AuthProvider";
 

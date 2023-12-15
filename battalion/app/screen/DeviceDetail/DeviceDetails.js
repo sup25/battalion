@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import colors from "../../config/colors";
+import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 
@@ -24,6 +24,7 @@ const DeviceDetails = ({ navigation }) => {
     setDeviceIsLightsOn,
     getTempValueAndUnit,
     temp,
+    boxTemp,
   } = useAppSettingContext();
 
   return (
@@ -139,7 +140,9 @@ const DeviceDetails = ({ navigation }) => {
         </View>
         <View style={styles.unlockedTempContainer}>
           <View style={styles.TempConatinerBg}>
-            <Text style={styles.degree}> 72°F</Text>
+            <Text style={styles.degree}>
+              {getTempValueAndUnit({ value: boxTemp, unit: temp.unit })}
+            </Text>
             <Text style={styles.actualTxt}>Actual box temperature</Text>
           </View>
           <TouchableOpacity

@@ -9,7 +9,7 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CarthagosButton from "../../component/CarthagosButton";
-import colors from "../../config/colors";
+import colors from "../config/Colors/colors";
 
 const FoundDevices = ({ navigation }) => {
   const [clicks, setClicks] = useState([false, false]);

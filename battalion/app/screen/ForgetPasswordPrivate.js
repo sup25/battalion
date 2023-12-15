@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import CarthagosButton from "../component/CarthagosButton";
+import CarthagosButton from "../component/CarthagosButton/CarthagosButton";
 import { StyleSheet, View, TextInput, Text } from "react-native";
 import { sendPasswordResetEmail } from "firebase/auth";
 import { auth } from "../config/Firebase";
-import colors from "../config/colors";
+import colors from "../config/Colors/colors";
 import TextLogo from "../assets/TextLogo";
 import { useAuth } from "../utils/AuthProvider";
 

@@ -3,10 +3,11 @@ import React, { useRef, useEffect, useState } from "react";
 import { auth } from "../config/Firebase";
 import { addUserToFirestore } from "../config/UsersCollection";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import colors from "../config/colors";
-import CarthagosButton from "../component/CarthagosButton";
+import colors from "../config/Colors/colors";
+import CarthagosButton from "../component/CarthagosButton/CarthagosButton";
 import { PhoneAuthProvider } from "firebase/auth";
 import { useAuth } from "../utils/AuthProvider";
+
 const VerifyPhoneOne = ({ navigation, setPhoneNum }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("+1");

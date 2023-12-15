@@ -13,7 +13,7 @@ import {
 
 import { useAuth } from "../../utils/AuthProvider";
 import FetchUserProfile from "../../Hooks/UserProfile";
-import colors from "../../config/colors";
+import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAppSettingContext } from "../../context/AppSettingContext";
 
@@ -111,12 +111,7 @@ const WelcomeScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.perTxtContainer}>
-          <TouchableOpacity
-            style={styles.percentageText}
-            onPress={() => {
-              navigation.navigate("addDevice");
-            }}
-          >
+          <TouchableOpacity style={styles.percentageText}>
             <Text style={styles.textOne}>--%</Text>
             <Text style={styles.textTwo}>Plug your Device</Text>
           </TouchableOpacity>

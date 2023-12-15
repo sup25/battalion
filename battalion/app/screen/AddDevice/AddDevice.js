@@ -1,7 +1,7 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
-import colors from "../../config/colors";
-import CarthagosButton from "../../component/CarthagosButton";
+import colors from "../../config/Colors/colors";
+import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import AddUserData from "../../api/Database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import FetchUserProfile from "../../Hooks/UserProfile";
@@ -9,57 +9,61 @@ import { useAuth } from "../../utils/AuthProvider";
 
 const AddDevice = ({ navigation }) => {
   const { currentUser } = useAuth();
-  const [userName, setUserName] = useState();
-  const Data = FetchUserProfile(currentUser);
   const combinedSerialNumRef = useRef("");
-
-  useEffect(() => {
-    if (Data) {
-      setUserName(Data?.name || "");
-    }
-  }, [Data]);
+  const existingData = FetchUserProfile(currentUser);
   const [displayMessage, setDisplayMessage] = useState("");
-
   const [userData, setUserData] = useState({
     combinedSerialNum: "",
   });
 
   const handleConfirm = async () => {
-    const { combinedSerialNum } = userData;
+    try {
+      const { combinedSerialNum } = userData;
 
-    // Validate the combinedSerialNum field
-    if (!combinedSerialNum || combinedSerialNum.length !== 12) {
-      const message =
-        "Invalid combinedSerialNum. Please enter a 12-digit value.";
-      setDisplayMessage(message);
-      return;
+      // Validate the combinedSerialNum field
+      if (!combinedSerialNum || combinedSerialNum.length !== 12) {
+        const message =
+          "Invalid combinedSerialNum. Please enter a 12-digit value.";
+        setDisplayMessage(message);
+        return;
+      }
+
+      if (existingData) {
+        // Display an error message if the data already exists
+        const errorMessage = "Device data already exists. Cannot update.";
+        setDisplayMessage(errorMessage);
+        return;
+      }
+
+      // Determine if the combinedSerialNum contains letters or numbers
+      const isLetters = /^[A-Za-z]+$/.test(combinedSerialNum);
+      const isNumbers = /^[0-9]+$/.test(combinedSerialNum);
+
+      // Set the owner and users values in userData
+      const updatedUserData = {
+        ...userData,
+        owner: currentUser.uid,
+        users: [],
+        fourDigitCode: "",
+        teamType: isLetters ? "Team A" : isNumbers ? "Team B" : "Uncategorized",
+      };
+
+      // Call AddUserData to send combinedSerialNum
+      await AddUserData(updatedUserData);
+
+      // Show success message
+      const successMessage = "Data saved successfully!";
+      setDisplayMessage(successMessage);
+
+      // Clear the text input field
+      setUserData({
+        combinedSerialNum: "",
+      });
+    } catch (error) {
+      console.error("Error updating device data:", error);
     }
-
-    // Determine if the combinedSerialNum contains letters or numbers
-    const isLetters = /^[A-Za-z]+$/.test(combinedSerialNum);
-    const isNumbers = /^[0-9]+$/.test(combinedSerialNum);
-
-    // Set the owner and users values in userData
-    const updatedUserData = {
-      ...userData,
-      owner: currentUser.uid,
-      users: { userName },
-      fourDigitCode: "",
-      teamType: isLetters ? "Team A" : isNumbers ? "Team B" : "Uncategorized",
-    };
-
-    // Call AddUserData to send combinedSerialNum
-    await AddUserData(updatedUserData);
-
-    // Show success message
-    const successMessage = "Data saved successfully!";
-    setDisplayMessage(successMessage);
-
-    // Clear the text input field
-    setUserData({
-      combinedSerialNum: "",
-    });
   };
+
   const handleNavigation = async () => {
     const combinedSerialNum = combinedSerialNumRef.current;
     if (!combinedSerialNum || combinedSerialNum.length !== 12) {
