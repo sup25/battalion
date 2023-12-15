@@ -1,8 +1,8 @@
 import { StyleSheet, Platform } from "react-native";
 
-export const CELL_SIZE = 70;
+export const CELL_SIZE = 80;
 export const CELL_BORDER_RADIUS = 8;
-export const DEFAULT_CELL_BG_COLOR = "#000000";
+export const DEFAULT_CELL_BG_COLOR = "#1E1E1E6E";
 export const NOT_EMPTY_CELL_BG_COLOR = "#3557b7";
 export const ACTIVE_CELL_BG_COLOR = "#000000";
 

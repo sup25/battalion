@@ -9,8 +9,8 @@ import {
 } from "react-native";
 import { auth } from "../../config/Firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import colors from "../../config/colors";
-import CarthagosLinkButton from "../../component/CarthagosLinkButton";
+import colors from "../../config/Colors/colors";
+import CarthagosLinkButton from "../../component/CarthagosLinkButton/CarthagosLinkButton";
 import TextLogo from "../../assets/TextLogo";
 import { useRoute } from "@react-navigation/native";
 import handleClearMessage from "../../utils/HandleClearMessage";

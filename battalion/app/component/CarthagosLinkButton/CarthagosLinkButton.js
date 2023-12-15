@@ -1,7 +1,7 @@
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
-import colors from "../config/colors";
-import CarthagosButton from "./CarthagosButton";
+import colors from "../../config/Colors/colors";
+import CarthagosButton from "../CarthagosButton/CarthagosButton";
 
 function CarthagosLinkButton({
   navigation,

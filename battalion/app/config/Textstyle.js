@@ -1,5 +1,5 @@
 import { Platform } from "react-native";
-import colors from "./colors";
+import colors from "./Colors/colors";
 export default {
   colors,
   text: {

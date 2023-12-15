@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, TextInput } from "react-native";
 import React from "react";
 import CarthagosLinkButton from "../../component/CarthagosLinkButton";
 import Screen from "../component/Screen";
-import colors from "../../config/colors";
+import colors from "../../config/Colors/colors";
 import TextLogo from "../../assets/TextLogo";
 
 const Occupation = ({ navigation }) => {

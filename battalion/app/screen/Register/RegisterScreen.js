@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { View, Text, TextInput, StyleSheet, StatusBar } from "react-native";
-import colors from "../../config/colors";
+import colors from "../../config/Colors/colors";
 import TextLogo from "../../assets/TextLogo";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../config/Firebase";
-import CarthagosLinkButton from "../../component/CarthagosLinkButton";
+import CarthagosLinkButton from "../../component/CarthagosLinkButton/CarthagosLinkButton";
 import { useAuth } from "../../utils/AuthProvider";
 import handleClearMessage from "../../utils/HandleClearMessage";
 import { addUserToFirestore } from "../../config/UsersCollection";

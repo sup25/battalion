@@ -1,18 +1,26 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+  TouchableWithoutFeedback,
+} from "react-native";
 import React, { useState, useRef, useEffect } from "react";
-import colors from "../config/colors";
-import CarthagosButton from "../component/CarthagosButton";
+import colors from "../../config/Colors/colors";
+import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { collection, doc, updateDoc } from "firebase/firestore";
-import { db } from "../config/Firebase";
-import { useAppSettingContext } from "../context/AppSettingContext";
+import { db } from "../../config/Firebase";
+import { useAppSettingContext } from "../../context/AppSettingContext";
+import FourDigitsCode from "../../component/FourDigitsCode";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 export default function FourDigitCodeInsertScreen({ route }) {
   const [digitValues, setDigitValues] = useState(["", "", "", ""]);
-
-  const { setDevicePassword } = useAppSettingContext();
-
+  const { password, setDevicePassword } = useAppSettingContext();
   const [combinedSerialNum, setCombinedSerialNum] = useState("");
+  const [show, setShow] = useState(false);
 
   useEffect(() => {
     const fetchCombinedSerialNum = async () => {
@@ -34,34 +42,25 @@ export default function FourDigitCodeInsertScreen({ route }) {
     fetchCombinedSerialNum();
   }, []);
 
-  const handleDigitChange = (index, value) => {
-    // Ensure the value is a number
-    const numericValue = value !== "" ? parseInt(value, 10) : null;
-
-    const newDigitValues = [...digitValues];
-    newDigitValues[index] = numericValue;
-    setDigitValues(newDigitValues);
-  };
-
   const handleConfirm = async () => {
-    const fourDigitCode = digitValues
-      .map((value) => (value !== null ? value.toString() : ""))
-      .join("");
-
-    if (fourDigitCode.length !== 4) {
+    if (!digitValues.every((value) => value !== null && value !== "")) {
       console.log("Enter valid digit");
       return;
     }
 
-    // Update the context with the new password //array of digits
-    setDevicePassword(digitValues);
-
-    // Update the Firestore document with the new password
     try {
-      console.log("combinedSerialNum:", combinedSerialNum);
+      // Convert digitValues to an array of numbers
+      const digitValuesAsNumbers = digitValues.map((value) =>
+        parseInt(value, 10)
+      );
+
+      // Update the context and AsyncStorage
+      setDevicePassword(digitValuesAsNumbers);
+
+      // Update the Firestore document with the new password
       const deviceRef = doc(collection(db, "devices"), combinedSerialNum);
       await updateDoc(deviceRef, {
-        fourDigitCode: fourDigitCode,
+        fourDigitCode: digitValuesAsNumbers,
       });
 
       console.log("Password updated successfully");
@@ -81,18 +80,23 @@ export default function FourDigitCodeInsertScreen({ route }) {
           Input the password to unlock the box in the digital display, you can
           change this password later in the settings.
         </Text>
-        <View style={styles.textInputContainer}>
-          {digitValues.map((value, index) => (
-            <TextInput
-              key={index}
-              style={styles.textInput}
-              keyboardType="phone-pad"
-              maxLength={1}
-              value={value}
-              onChangeText={(text) => handleDigitChange(index, text)}
+        <TouchableWithoutFeedback
+          onPress={() => setShow((prevShow) => !prevShow)}
+        >
+          <View style={styles.icon}>
+            <MaterialCommunityIcons
+              name={show ? "eye" : "eye-off"}
+              size={30}
+              color={colors.white}
             />
-          ))}
-        </View>
+          </View>
+        </TouchableWithoutFeedback>
+        <FourDigitsCode
+          submitHandler={(value) => setDigitValues(value)}
+          defaultValue={password}
+          isVisible={show}
+        />
+
         <View style={styles.button}>
           <CarthagosButton
             title="confirm"
@@ -108,19 +112,21 @@ export default function FourDigitCodeInsertScreen({ route }) {
 
 const styles = StyleSheet.create({
   button: {
+    position: "absolute",
     alignSelf: "center",
-    top: 247,
   },
   container: {
     flex: 1,
     backgroundColor: colors.black,
     paddingHorizontal: 20,
+    alignItems: "center",
+    paddingTop: 75,
   },
   heading: {
     fontSize: 24,
     fontWeight: "500",
     lineHeight: 29,
-    letterSpacing: -0.02,
+    letterSpacing: 0.02,
     textAlign: "center",
     color: colors.white,
   },
@@ -129,9 +135,15 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     lineHeight: 19,
     color: "#8F8F8F",
-    maxWidth: 300,
+    width: 300,
     textAlign: "center",
     marginTop: 8,
+    alignSelf: "center",
+  },
+  icon: {
+    alignSelf: "flex-end",
+    paddingTop: 33,
+    paddingRight: 49,
   },
   textInput: {
     height: 65,
@@ -155,6 +167,6 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     justifyContent: "center",
-    marginTop: 75,
+    marginTop: 115,
   },
 });

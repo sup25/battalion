@@ -1,6 +1,6 @@
 import { StyleSheet, Text, Image, TouchableOpacity, View } from "react-native";
 import React from "react";
-import colors from "../../config/colors";
+import colors from "../../config/Colors/colors";
 
 import CarthagosButton from "../../component/CarthagosButton";
 

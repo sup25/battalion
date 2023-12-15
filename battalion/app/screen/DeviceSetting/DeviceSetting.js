@@ -9,7 +9,7 @@ import {
 import React, { useState } from "react";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import colors from "../../config/colors";
+import colors from "../../config/Colors/colors";
 
 import { useAppSettingContext } from "../../context/AppSettingContext";
 import FourDigitsCode from "../../component/FourDigitsCode";
@@ -102,8 +102,9 @@ const styles = StyleSheet.create({
   },
   boxContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 29,
+    justifyContent: "center",
+    gap: 5,
+    marginTop: 5,
   },
 
   container: {
