@@ -10,7 +10,7 @@ const styles = StyleSheet.create({
   codeFieldRoot: {
     height: CELL_SIZE,
     marginTop: 30,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     justifyContent: "center",
   },
   cell: {

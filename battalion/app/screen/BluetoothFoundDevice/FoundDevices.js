@@ -95,7 +95,7 @@ const styles = StyleSheet.create({
     maxWidth: 120,
   },
   btn: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     marginTop: 200,
     alignItems: "center",
     width: "100%",

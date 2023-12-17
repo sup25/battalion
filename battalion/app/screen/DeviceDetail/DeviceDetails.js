@@ -35,14 +35,22 @@ const DeviceDetails = ({ navigation }) => {
         source={require("../../assets/background.png")}
       >
         <View style={styles.headingContainer}>
-          <TouchableWithoutFeedback onPress={() => navigation.navigate("Home")}>
-            <MaterialCommunityIcons
-              name="arrow-left"
-              size={30}
-              color="#B0B0B0"
-            />
-          </TouchableWithoutFeedback>
-          <Text style={styles.texHeading}>device details</Text>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <TouchableWithoutFeedback onPress={() => navigation.goBack(null)}>
+              <MaterialCommunityIcons
+                name="arrow-left"
+                size={24}
+                color="#B0B0B0"
+              />
+            </TouchableWithoutFeedback>
+            <Text style={styles.texHeading}>device details</Text>
+          </View>
           <TouchableWithoutFeedback
             onPress={() => navigation.navigate("devicesetting")}
           >
@@ -216,7 +224,7 @@ const styles = StyleSheet.create({
   },
 
   battalionId: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     alignSelf: "center",
     backgroundColor: "#000000a8",
     width: "100%",
@@ -259,7 +267,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000a8",
     justifyContent: "space-between",
     flexDirection: "row",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     paddingVertical: 20,
     alignItems: "center",
     width: "100%",
@@ -277,9 +285,9 @@ const styles = StyleSheet.create({
     backgroundColor: "#424242",
   },
   headingContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     width: "100%",
-    marginTop: 37,
+    marginTop: 55,
     display: "flex",
     alignItems: "center",
     flexDirection: "row",
@@ -328,7 +336,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#2626266E",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     paddingVertical: 20,
   },
   setText: {
@@ -373,7 +381,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: colors.white,
     fontWeight: "900",
-    maxWidth: 196,
+    marginLeft: 10,
     alignItems: "flex-start",
   },
   BatteryPercentagetextOne: {
@@ -394,7 +402,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
   unlockedTempContainer: {
     paddingVertical: 10,
@@ -405,7 +413,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     backgroundColor: colors.black,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     height: "100%",
   },
 });

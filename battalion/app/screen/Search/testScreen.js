@@ -5,7 +5,6 @@ import Slider from "@react-native-community/slider";
 import { useAppSettingContext } from "../../context/AppSettingContext";
 
 const HalfCircleSlider = () => {
-  const [fillAnimation] = useState(new Animated.Value(0));
   const { temp, setTempValue, getTempValueAndUnit } = useAppSettingContext();
   const [sliderValue, setSliderValue] = useState(temp.value);
 

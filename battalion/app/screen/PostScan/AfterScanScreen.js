@@ -42,7 +42,7 @@ const styles = StyleSheet.create({
   },
 
   btn: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     marginTop: 200,
     alignItems: "center",
     width: "100%",
@@ -71,7 +71,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
   txtFirst: {
     color: colors.white,

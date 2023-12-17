@@ -5,24 +5,26 @@ import {
   ImageBackground,
   View,
   TouchableOpacity,
+  SafeAreaView,
 } from "react-native";
 import React, { useEffect } from "react";
 import colors from "../../config/Colors/colors";
 import TextLogo from "../../assets/TextLogo";
 import useBLE from "../../Hooks/UseBle";
+import { useBleContext } from "../../utils/BLEProvider";
+import PulseAnimation from "./PulseAnimation";
 
 const SearchScreen = ({ navigation }) => {
   const {
-    scanForPeripherals,
     requestPermissions,
+    scanForPeripherals,
     connectToDevice,
-    allDevices,
-    connectedDevice,
-    disconnectFromDevice,
-    heartRate,
-    scanning,
+
     stopScanning,
-  } = useBLE();
+
+    scan,
+    connectedDevice,
+  } = useBleContext();
 
   const init = async () => {
     let isPermitted = await requestPermissions();
@@ -34,32 +36,49 @@ const SearchScreen = ({ navigation }) => {
     init();
   }, []);
   return (
-    <View style={styles.container}>
-      {scanning ? (
-        <Text>Scanning...</Text>
+    <SafeAreaView style={styles.container}>
+      <View
+        style={{
+          position: "absolute",
+          left: 0,
+          top: 0,
+          flex: 1,
+          width: "100%",
+          height: "100%",
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          zIndex: 2,
+        }}
+      >
+        <View style={styles.circle}>
+          <View style={styles.logo}>
+            <TextLogo />
+          </View>
+        </View>
+      </View>
+      {scan.scanning ? (
+        <PulseAnimation />
       ) : (
         <View>
           <View style={styles.Text}>
             <Text style={styles.txtFirst}>Searching for devices</Text>
           </View>
-          <View style={styles.circle}>
-            <View style={styles.logo}>
-              <TextLogo />
-            </View>
-          </View>
+
           <View>
-            {allDevices &&
-              allDevices.map((device, index) => {
+            {scan.devices &&
+              scan.devices.map((device, index) => {
                 return (
                   <TouchableOpacity
                     style={styles.button}
                     onPress={async () => {
+                      if (connectedDevice.connecting) {
+                        return false;
+                      }
+                      stopScanning();
                       try {
-                        stopScanning();
-
                         const res = await connectToDevice(device);
-                        navigation.navigate("testingBLE");
-                        console.log(res);
+                        navigation.navigate("Home");
                       } catch (err) {
                         console.log("err to connect", err);
                       }
@@ -67,7 +86,9 @@ const SearchScreen = ({ navigation }) => {
                     key={index}
                   >
                     <Text style={styles.buttonText}>
-                      {device?.name || "no name"}
+                      {connectedDevice.connecting
+                        ? "connecting..."
+                        : device?.name || "no name"}
                     </Text>
                   </TouchableOpacity>
                 );
@@ -75,7 +96,7 @@ const SearchScreen = ({ navigation }) => {
           </View>
         </View>
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -87,9 +108,8 @@ const styles = StyleSheet.create({
     height: 210,
     display: "flex",
     alignSelf: "center",
-    backgroundColor: colors.white,
+    backgroundColor: colors.black,
     borderRadius: 999,
-    top: 100,
     alignItems: "center",
     justifyContent: "center",
   },

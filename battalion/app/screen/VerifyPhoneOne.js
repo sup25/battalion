@@ -104,7 +104,7 @@ export default VerifyPhoneOne;
 
 const styles = StyleSheet.create({
   btn: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     marginTop: 300,
     alignItems: "center",
   },
@@ -149,7 +149,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
   txtFirst: {
     color: colors.white,

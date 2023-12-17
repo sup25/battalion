@@ -118,7 +118,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.black,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     alignItems: "center",
     paddingTop: 75,
   },
@@ -162,7 +162,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     marginTop: 33,
   },
   wrapper: {

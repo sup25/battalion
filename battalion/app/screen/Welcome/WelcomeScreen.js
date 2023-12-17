@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import {
   StyleSheet,
   Text,
@@ -9,7 +8,9 @@ import {
   Image,
   ImageBackground,
   TouchableOpacity,
+  TouchableWithoutFeedback,
 } from "react-native";
+import { AntDesign } from "@expo/vector-icons";
 
 import { useAuth } from "../../utils/AuthProvider";
 import FetchUserProfile from "../../Hooks/UserProfile";
@@ -21,8 +22,14 @@ const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
 
   const [userName, setUserName] = useState();
-  const { isLocked, getTempValueAndUnit, temp, boxTemp } =
-    useAppSettingContext();
+  const {
+    isLocked,
+    getTempValueAndUnit,
+    temp,
+    boxTemp,
+    boxBatteryLevel,
+    boxIsCharging,
+  } = useAppSettingContext();
   const userData = FetchUserProfile(currentUser);
 
   useEffect(() => {
@@ -39,8 +46,25 @@ const WelcomeScreen = ({ navigation }) => {
         style={styles.background}
         source={require("../../assets/background.png")}
       >
-        <View style={{ paddingHorizontal: 20, width: "100%" }}>
+        <View
+          style={{
+            paddingHorizontal: 15,
+            width: "100%",
+            marginTop: 55,
+            borderBottomColor: colors.white,
+            borderBottomWidth: 1,
+            paddingBottom: 10,
+            display: "flex",
+            justifyContent: "space-between",
+            flexDirection: "row",
+          }}
+        >
           <Text style={styles.textEmail}>Welcome, {userName}</Text>
+          <TouchableWithoutFeedback
+            onPress={() => navigation.navigate("devicesetting")}
+          >
+            <AntDesign name="setting" size={30} color="#fff" />
+          </TouchableWithoutFeedback>
         </View>
         <View style={styles.deviceContainer}>
           <Text style={styles.connDevice}>Devices Connected</Text>
@@ -112,8 +136,10 @@ const WelcomeScreen = ({ navigation }) => {
         </View>
         <View style={styles.perTxtContainer}>
           <TouchableOpacity style={styles.percentageText}>
-            <Text style={styles.textOne}>--%</Text>
-            <Text style={styles.textTwo}>Plug your Device</Text>
+            <Text style={styles.textOne}>{boxBatteryLevel}%</Text>
+            <Text style={styles.textTwo}>
+              {boxIsCharging ? "Charging" : "Plug your Device"}
+            </Text>
           </TouchableOpacity>
           <MaterialCommunityIcons
             name="loading"
@@ -146,14 +172,14 @@ const styles = StyleSheet.create({
   },
 
   battalionId: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     alignSelf: "center",
     backgroundColor: "#000000a8",
     width: "100%",
   },
   button: {
     backgroundColor: "blue",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     paddingVertical: 10,
     borderRadius: 5,
     marginVertical: 10,
@@ -180,7 +206,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#000000a8",
     justifyContent: "space-between",
     flexDirection: "row",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     paddingVertical: 20,
     alignItems: "center",
     width: "100%",
@@ -239,7 +265,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#2626266E",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     paddingVertical: 20,
   },
   setText: {
@@ -270,16 +296,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   textEmail: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "800",
     textTransform: "uppercase",
     color: colors.white,
     fontWeight: "900",
-    marginTop: 37,
-    borderBottomColor: colors.white,
-    borderBottomWidth: 1,
-    paddingBottom: 10,
-    width: "100%",
+
     alignItems: "flex-start",
   },
   textOne: {
@@ -300,7 +322,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
   unlockedTempContainer: {
     paddingVertical: 10,
@@ -311,7 +333,7 @@ const styles = StyleSheet.create({
   },
   wrapper: {
     backgroundColor: colors.black,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     height: "100%",
   },
 });
