@@ -6,16 +6,16 @@ const AppSettingContext = createContext();
 export const useAppSettingContext = () => useContext(AppSettingContext);
 
 export const AppSettingProvider = ({ children }) => {
-  const [boxTemp, setBoxTemp] = useState(22);
-  const [boxBatteryLevel, setBoxBatteryLevel] = useState(0);
+  const [boxTemp, setBoxTemp] = useState(-1);
+  const [boxBatteryLevel, setBoxBatteryLevel] = useState(-1);
   const [boxIsCharging, setBoxIsCharging] = useState(false);
 
-  const [boxPassword, setBoxPassword] = useState([1, 2, 3, 4]);
+  const [boxPassword, setBoxPassword] = useState([]);
   const [boxLights, setBoxLights] = useState(false);
   const [boxLocked, setBoxLocked] = useState(false);
 
-  const [temp, setTemp] = useState({ value: 0, unit: "c" });
-  const [password, setPassword] = useState([1, 2, 3, 4]);
+  const [temp, setTemp] = useState({ value: -1, unit: "c" });
+  const [password, setPassword] = useState([]);
   const [isLocked, setIsLocked] = useState(false);
   const [isLightsOn, setIsLightsOn] = useState(false);
   const [batteryLevel, setBatteryLevel] = useState(false);

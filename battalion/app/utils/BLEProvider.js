@@ -28,7 +28,10 @@ const BleProvider = ({ children }) => {
   const [device, setDevice] = useState(null);
   const [scan, setScan] = useState({
     scanning: true,
-    devices: [],
+    devices: [
+      { name: "test", id: "test" },
+      { name: "test2", id: "test2" },
+    ],
     error: null,
   });
   const [connectedDevice, setConnectedDevice] = useState({
@@ -103,19 +106,21 @@ const BleProvider = ({ children }) => {
     return devices.findIndex((device) => nextDevice.id === device.id) > -1;
   };
 
-  const getStartTime = () => new Date();
-
-  const scanForPeripherals = () => {
+  const scanForPeripherals = (setError = false, startTime = false) => {
     bleManager.startDeviceScan(
-      [SPS_SERVICE_UUID],
+      null,
+      // [SPS_SERVICE_UUID],
       { allowDuplicates: false },
       (error, device) => {
-        endTime = new Date();
-        var timeDiff = endTime - getStartTime(); //in ms
-        // strip the ms
-        timeDiff /= 1000;
-        // get seconds
-        var seconds = Math.round(timeDiff);
+        setError();
+        if (startTime) {
+          endTime = new Date();
+          var timeDiff = endTime - startTime; //in ms
+          // strip the ms
+          timeDiff /= 1000;
+          // get seconds
+          var seconds = Math.round(timeDiff);
+        }
 
         if (error) {
           setScan((prev) => ({
@@ -123,11 +128,14 @@ const BleProvider = ({ children }) => {
             error: error.message,
             scanning: false,
           }));
+
+          setError(error.message);
           bleManager.stopDeviceScan();
-          seconds = 16;
+          seconds = 19;
           return { error };
         }
         if (device) {
+          setError();
           setScan((prev) => {
             if (!isDuplicteDevice(prev.devices, device)) {
               return {
@@ -138,10 +146,13 @@ const BleProvider = ({ children }) => {
             return prev;
           });
         }
-        console.log(seconds);
-        if (seconds > 15) {
-          setScan((prev) => ({ ...prev, scanning: false }));
-          bleManager.stopDeviceScan(); //stop scanning if more than 5 secs passed
+
+        if (startTime) {
+          if (seconds > 18) {
+            setError();
+            setScan((prev) => ({ ...prev, scanning: false }));
+            bleManager.stopDeviceScan(); //stop scanning if more than 5 secs passed
+          }
         }
       }
     );
@@ -194,16 +205,21 @@ const BleProvider = ({ children }) => {
   };
 
   const stopScanning = () => {
+    setScan((prev) => ({ ...prev, scanning: false }));
     bleManager.stopDeviceScan();
   };
 
   const writePasswordToDevice = async (data = false) => {
     const prefix = [55, 5];
-    const passwordWithHeader = Buffer.from(
-      convertedArrayToHex(prefix.concat([1, 2, 3, 4]))
+    let passwordWithHeader = Buffer.from(
+      convertedArrayToHex([55, 5, 5, 9, 7, 6, 15, 0, 65, 0, 1])
     );
     if (data) {
-      passwordWithHeader = Buffer.from(prefix.concat(data));
+      if (data.length < 4) throw new Error("Password must be 4 digits");
+
+      passwordWithHeader = Buffer.from(
+        convertedArrayToHex(prefix.concat(data))
+      );
     }
 
     try {
@@ -308,6 +324,15 @@ const BleProvider = ({ children }) => {
         setDeviceIsLightsOn(lightStatus);
         setBoxBatteryLevel(batteryLevel);
         setBoxIsCharging(chargerStatus);
+
+        console.log({
+          password: passwordArray,
+          temperature,
+          deviceStatus,
+          batteryLevel,
+          chargerStatus,
+          lightStatus,
+        });
       }
     );
   };

@@ -38,6 +38,8 @@ const LoginScreen = ({ navigation }) => {
         await signInWithEmailAndPassword(auth, email, password);
         navigation.navigate("MainTabs");
       } else {
+        await signInWithEmailAndPassword(auth, email, password);
+        navigation.navigate("MainTabs");
         console.log("Biometric authentication failed");
       }
     } catch (error) {

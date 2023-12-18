@@ -36,7 +36,7 @@ const DeviceSetting = ({ navigation }) => {
     setPasswordError();
     if (connectedDevice.device) {
       try {
-        await writePasswordToDevice(pass);
+        await writePasswordToDevice();
         setDevicePassword(pass);
         setPasswordError();
       } catch (error) {
@@ -44,6 +44,7 @@ const DeviceSetting = ({ navigation }) => {
         setPasswordError(
           "Error writing password to device, please check device connection."
         );
+        throw error;
       }
     } else {
       setPasswordError(

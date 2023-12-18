@@ -149,7 +149,9 @@ const DeviceDetails = ({ navigation }) => {
         <View style={styles.unlockedTempContainer}>
           <View style={styles.TempConatinerBg}>
             <Text style={styles.degree}>
-              {getTempValueAndUnit({ value: boxTemp, unit: temp.unit })}
+              {boxTemp < 0
+                ? "--"
+                : getTempValueAndUnit({ value: boxTemp, unit: temp.unit })}
             </Text>
             <Text style={styles.actualTxt}>Actual box temperature</Text>
           </View>

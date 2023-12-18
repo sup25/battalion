@@ -15,12 +15,15 @@ import { db } from "../../config/Firebase";
 import { useAppSettingContext } from "../../context/AppSettingContext";
 import FourDigitsCode from "../../component/FourDigitsCode";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useBleContext } from "../../utils/BLEProvider";
 
 export default function FourDigitCodeInsertScreen({ route }) {
-  const [digitValues, setDigitValues] = useState(["", "", "", ""]);
   const { password, setDevicePassword } = useAppSettingContext();
+  const { writePasswordToDevice } = useBleContext();
+  const [digitValues, setDigitValues] = useState(password);
   const [combinedSerialNum, setCombinedSerialNum] = useState("");
   const [show, setShow] = useState(false);
+  const [passwordError, setPasswordError] = useState();
 
   useEffect(() => {
     const fetchCombinedSerialNum = async () => {
@@ -42,12 +45,7 @@ export default function FourDigitCodeInsertScreen({ route }) {
     fetchCombinedSerialNum();
   }, []);
 
-  const handleConfirm = async () => {
-    if (!digitValues.every((value) => value !== null && value !== "")) {
-      console.log("Enter valid digit");
-      return;
-    }
-
+  const storeFourDigitsToTheDb = async (fourDigits) => {
     try {
       // Convert digitValues to an array of numbers
       const digitValuesAsNumbers = digitValues.map((value) =>
@@ -66,10 +64,39 @@ export default function FourDigitCodeInsertScreen({ route }) {
       console.log("Password updated successfully");
     } catch (error) {
       console.log("Error updating password:", error.message);
+      throw error;
+    }
+  };
+
+  const handleConfirm = async () => {
+    if (digitValues.length < 4) {
+      console.log("Please enter 4 digits");
+      throw new Error("Please enter 4 digits");
+    }
+
+    setPasswordError();
+    if (connectedDevice.device) {
+      try {
+        await writePasswordToDevice(pass); // set to ble device
+        setDevicePassword(pass); //set to the state + async
+        storeFourDigitsToTheDb(pass); // set to the database
+        setPasswordError(); // reset error handling
+      } catch (error) {
+        console.log("Error writing password to device:", error);
+        setPasswordError(
+          "Error writing password to device, please check device connection."
+        );
+        throw error;
+      }
+    } else {
+      setPasswordError(
+        "Error writing password to device, please check device connection."
+      );
+      throw new Error("No device connected");
     }
 
     // Reset the digitValues
-    setDigitValues(["", "", "", ""]);
+    setDigitValues([]);
   };
 
   return (
@@ -91,11 +118,8 @@ export default function FourDigitCodeInsertScreen({ route }) {
             />
           </View>
         </TouchableWithoutFeedback>
-        <FourDigitsCode
-          submitHandler={(value) => setDigitValues(value)}
-          defaultValue={password}
-          isVisible={show}
-        />
+        <FourDigitsCode defaultValue={digitValues} isVisible={show} />
+        {passwordError && <Text style={styles.paragraph}>{passwordError}</Text>}
 
         <View style={styles.button}>
           <CarthagosButton

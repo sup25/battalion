@@ -41,7 +41,7 @@ const CELL_COUNT = 4;
 
 const FourDigitsCode = ({
   defaultValue,
-  submitHandler,
+  submitHandler = false,
   isVisible,
   passwordError = false,
 }) => {
@@ -65,9 +65,11 @@ const FourDigitsCode = ({
           if (val.length < 4) setIsSaved(false);
           if (val.length === CELL_COUNT) {
             const valAsArr = val.split("").map(Number);
-            let res = await submitHandler(valAsArr);
-            console.log("inner res", res);
-            setIsSaved(true);
+            if (submitHandler) {
+              let res = await submitHandler(valAsArr);
+              console.log("inner res", res);
+              setIsSaved(true);
+            }
           }
         }}
         cellCount={CELL_COUNT}
