@@ -17,6 +17,7 @@ import FetchUserProfile from "../../Hooks/UserProfile";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAppSettingContext } from "../../context/AppSettingContext";
+import ChargingProgressCircle from "../../component/ChargingProgressCircle";
 
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
@@ -29,6 +30,7 @@ const WelcomeScreen = ({ navigation }) => {
     boxTemp,
     boxBatteryLevel,
     boxIsCharging,
+    isLightsOn,
   } = useAppSettingContext();
   const userData = FetchUserProfile(currentUser);
 
@@ -92,28 +94,86 @@ const WelcomeScreen = ({ navigation }) => {
         </View>
       </ImageBackground>
       <View style={styles.wrapper}>
-        <TouchableOpacity
-          style={styles.unlockedImageContainer}
-          onPress={() => {
-            navigation.navigate("devicedetails");
-          }}
-        >
+        <View style={styles.unlockedImageContainer}>
           <Image
             style={styles.productImage}
             source={require("../../assets/devicedetail.png")}
           />
-          <View style={styles.lockedConatiner}>
-            <View style={styles.iconEllipse}>
-              <MaterialCommunityIcons name="lock" size={20} color="#B0B0B0" />
+
+          <View style={{ display: "flex", gap: 25 }}>
+            <View style={styles.deviceLocked}>
+              <Text style={styles.lockedTxt}>
+                {isLocked ? "Device Locked" : "Device Unlocked"}
+              </Text>
+              <View
+                style={[
+                  styles.switchOnOff,
+                  isLocked ? styles.flexEnd : styles.flexStart,
+                ]}
+              >
+                <View style={styles.iconBackgroundContainer}>
+                  <TouchableWithoutFeedback
+                    onPress={() => {
+                      setDeviceIsLocked(!isLocked);
+                    }}
+                  >
+                    {isLocked ? (
+                      <MaterialCommunityIcons
+                        name="lock"
+                        size={20}
+                        color="#B0B0B0"
+                      />
+                    ) : (
+                      <MaterialCommunityIcons
+                        name="lock-open"
+                        size={20}
+                        color="black"
+                      />
+                    )}
+                  </TouchableWithoutFeedback>
+                </View>
+              </View>
             </View>
-            <Text style={styles.lockedTxt}>Device Locked</Text>
-            <Text style={styles.lockedTxt}>{isLocked ? "yes" : "no"}</Text>
+
+            <View style={styles.brightness}>
+              <Text style={styles.brightnessTxt}>Light Auto</Text>
+              <View
+                style={[
+                  styles.switchOnOff,
+                  isLightsOn ? styles.flexEnd : styles.flexStart,
+                ]}
+              >
+                <View style={styles.iconBackgroundContainer}>
+                  <TouchableWithoutFeedback
+                    onPress={() => {
+                      setDeviceIsLightsOn(!isLightsOn);
+                    }}
+                  >
+                    {isLightsOn ? (
+                      <MaterialCommunityIcons
+                        name="brightness-5"
+                        size={20}
+                        color="#B0B0B0"
+                      />
+                    ) : (
+                      <MaterialCommunityIcons
+                        name="brightness-5"
+                        size={20}
+                        color="black"
+                      />
+                    )}
+                  </TouchableWithoutFeedback>
+                </View>
+              </View>
+            </View>
           </View>
-        </TouchableOpacity>
+        </View>
         <View style={styles.unlockedTempContainer}>
           <View style={styles.TempConatinerBg}>
             <Text style={styles.degree}>
-              {getTempValueAndUnit({ value: boxTemp, unit: temp.unit })}
+              {boxTemp < 0
+                ? "--"
+                : getTempValueAndUnit({ value: boxTemp, unit: temp.unit })}
             </Text>
             <Text style={styles.actualTxt}>Actual box temperature</Text>
           </View>
@@ -135,17 +195,15 @@ const WelcomeScreen = ({ navigation }) => {
           </TouchableOpacity>
         </View>
         <View style={styles.perTxtContainer}>
-          <TouchableOpacity style={styles.percentageText}>
-            <Text style={styles.textOne}>{boxBatteryLevel}%</Text>
+          <View style={styles.percentageText}>
+            <Text style={styles.textOne}>
+              {boxBatteryLevel < 0 ? "--" : boxBatteryLevel}%
+            </Text>
             <Text style={styles.textTwo}>
               {boxIsCharging ? "Charging" : "Plug your Device"}
             </Text>
-          </TouchableOpacity>
-          <MaterialCommunityIcons
-            name="loading"
-            size={20}
-            color={colors.primary}
-          />
+          </View>
+          <ChargingProgressCircle percents={boxBatteryLevel} />
         </View>
       </View>
     </View>
@@ -155,6 +213,71 @@ const WelcomeScreen = ({ navigation }) => {
 export default WelcomeScreen;
 
 const styles = StyleSheet.create({
+  unlockedImageContainer: {
+    backgroundColor: "#131313",
+    paddingVertical: 10,
+    width: "100%",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 15,
+  },
+  productImage: {
+    width: 87,
+    height: 74,
+    opacity: 0.5,
+  },
+  deviceLocked: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    gap: 10,
+    alignItems: "center",
+  },
+  lockedTxt: {
+    fontWeight: "500",
+    fontSize: 14,
+    color: "#B0B0B0",
+    paddingRight: 5,
+  },
+  switchOnOff: {
+    width: 60,
+    height: 24,
+    borderRadius: 18,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+  },
+  flexEnd: {
+    justifyContent: "flex-end",
+    backgroundColor: colors.primary,
+  },
+  flexStart: {
+    justifyContent: "flex-start",
+    backgroundColor: "#424242",
+  },
+  iconBackgroundContainer: {
+    width: 34,
+    height: 34,
+    backgroundColor: colors.white,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 50,
+  },
+  brightness: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingTop: 12,
+  },
+  brightnessTxt: {
+    fontWeight: "500",
+    fontSize: 14,
+    color: "#B0B0B0",
+    paddingLeft: 2,
+  },
   actualTxt: {
     maxWidth: 124,
     fontWeight: "500",
@@ -265,6 +388,7 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "#2626266E",
     justifyContent: "space-between",
+    alignItems: "flex-start",
     paddingHorizontal: 15,
     paddingVertical: 20,
   },

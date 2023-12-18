@@ -7,7 +7,7 @@ import {
   TouchableOpacity,
   SafeAreaView,
 } from "react-native";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import colors from "../../config/Colors/colors";
 import TextLogo from "../../assets/TextLogo";
 import useBLE from "../../Hooks/UseBle";
@@ -15,6 +15,7 @@ import { useBleContext } from "../../utils/BLEProvider";
 import PulseAnimation from "./PulseAnimation";
 
 const SearchScreen = ({ navigation }) => {
+  const [error, setError] = useState();
   const {
     requestPermissions,
     scanForPeripherals,
@@ -26,10 +27,17 @@ const SearchScreen = ({ navigation }) => {
     connectedDevice,
   } = useBleContext();
 
+  useEffect(() => {
+    console.log("scan ble error", error);
+  }, [error]);
   const init = async () => {
     let isPermitted = await requestPermissions();
     if (isPermitted) {
-      scanForPeripherals();
+      scanForPeripherals(setError, new Date());
+      let timer = setTimeout(() => {
+        stopScanning();
+        clearTimeout(timer);
+      }, 18750);
     }
   };
   useEffect(() => {
@@ -57,45 +65,44 @@ const SearchScreen = ({ navigation }) => {
           </View>
         </View>
       </View>
-      {scan.scanning ? (
-        <PulseAnimation />
-      ) : (
-        <View>
-          <View style={styles.Text}>
-            <Text style={styles.txtFirst}>Searching for devices</Text>
-          </View>
-
-          <View>
-            {scan.devices &&
-              scan.devices.map((device, index) => {
-                return (
-                  <TouchableOpacity
-                    style={styles.button}
-                    onPress={async () => {
-                      if (connectedDevice.connecting) {
-                        return false;
-                      }
-                      stopScanning();
-                      try {
-                        const res = await connectToDevice(device);
-                        navigation.navigate("Home");
-                      } catch (err) {
-                        console.log("err to connect", err);
-                      }
-                    }}
-                    key={index}
-                  >
-                    <Text style={styles.buttonText}>
-                      {connectedDevice.connecting
-                        ? "connecting..."
-                        : device?.name || "no name"}
-                    </Text>
-                  </TouchableOpacity>
-                );
-              })}
-          </View>
+      {scan.scanning && <PulseAnimation />}
+      <View>
+        <View style={styles.Text}>
+          <Text style={styles.txtFirst}>Searching for devices</Text>
         </View>
-      )}
+
+        <View style={{ zIndex: 99 }}>
+          {scan.devices &&
+            scan.devices.map((device, index) => {
+              return (
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={async () => {
+                    if (connectedDevice.connecting) {
+                      return false;
+                    }
+                    stopScanning();
+                    try {
+                      const res = await connectToDevice(device);
+                      navigation.navigate("Home");
+                    } catch (err) {
+                      console.log("err to connect", err);
+                    }
+                  }}
+                  key={index}
+                >
+                  <Text style={styles.buttonText}>
+                    {connectedDevice.connecting
+                      ? "connecting..."
+                      : device?.name || "no name"}
+                  </Text>
+                </TouchableOpacity>
+              );
+            })}
+        </View>
+      </View>
+
+      {error && <Text>{error}</Text>}
     </SafeAreaView>
   );
 };
@@ -108,14 +115,14 @@ const styles = StyleSheet.create({
     height: 210,
     display: "flex",
     alignSelf: "center",
-    backgroundColor: colors.black,
+    backgroundColor: colors.white,
     borderRadius: 999,
     alignItems: "center",
     justifyContent: "center",
   },
   container: {
     flex: 1,
-    backgroundColor: colors.white,
+    backgroundColor: colors.dark,
   },
 
   Text: {
