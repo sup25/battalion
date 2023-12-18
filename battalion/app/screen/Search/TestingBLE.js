@@ -9,15 +9,20 @@ import {
 } from "react-native";
 import React, { useEffect, useState } from "react";
 
-import {
-  getStatusFromDevice,
-  setPasswordToDevice,
-  setTimeToDevice,
-} from "../../BLEfunctions";
+import { setPasswordToDevice, setTimeToDevice } from "../../BLEfunctions";
 import useBLE from "../../Hooks/UseBle";
+import { useBleContext } from "../../utils/BLEProvider";
+import { useAppSettingContext } from "../../context/AppSettingContext";
 
 const TestingBLE = ({ navigation }) => {
-  const { connectedDevice } = useBLE();
+  const { getStatusFromDevice, writePasswordToDevice, disconnectFromDevice } =
+    useBleContext();
+  const {
+    setBoxTemp,
+    setDevicePassword,
+    setDeviceIsLocked,
+    setDeviceIsLightsOn,
+  } = useAppSettingContext();
   const [popupVisible, setPopupVisible] = useState(false);
   const [popupMessage, setPopupMessage] = useState("");
 
@@ -25,89 +30,33 @@ const TestingBLE = ({ navigation }) => {
     setPopupVisible(false);
   };
 
-  const setPassword = async (password) => {
-    try {
-      const result = await setPasswordToDevice(connectedDevice, password);
-      setPopupMessage(result);
-      console.log(JSON.stringify(result)); // Output: "Password set successfully."
-    } catch (error) {
-      setPopupMessage(
-        "Error setting password: " +
-          error.message +
-          " " +
-          error.code +
-          " " +
-          error.name +
-          " " +
-          JSON.stringify(error)
-      );
-      console.error("Error setting password:", error);
-    } finally {
-      setPopupVisible(true);
-    }
-  };
-
-  const getStatus = async () => {
-    try {
-      const result = await getStatusFromDevice(ble);
-      setPopupMessage(JSON.stringify(result));
-      console.log(result); // Output: "Password set successfully."
-    } catch (error) {
-      setPopupMessage(
-        "Error getting status: " +
-          error.message +
-          " " +
-          error.code +
-          " " +
-          error.name +
-          " " +
-          JSON.stringify(error)
-      );
-      console.error("Error getting status:", error);
-    } finally {
-      setPopupVisible(true);
-    }
-  };
-
-  const setTime = async (timeData) => {
-    try {
-      const result = await setTimeToDevice(connectedDevice, timeData);
-      setPopupMessage(JSON.stringify(result));
-      console.log(result); // Output: "Password set successfully."
-    } catch (error) {
-      setPopupMessage(
-        "Error getting status: " +
-          error.message +
-          " " +
-          error.code +
-          " " +
-          error.name +
-          " " +
-          JSON.stringify(error)
-      );
-      console.error("Error getting status:", error);
-    } finally {
-      setPopupVisible(true);
-    }
-  };
   return (
     <View style={styles.container}>
       <TouchableOpacity
-        onPress={() => setPassword([0x01, 0x02, 0x03, 0x04])}
+        onPress={() => writePasswordToDevice()}
         style={styles.button}
       >
         <Text style={styles.buttonText}>Set Password</Text>
       </TouchableOpacity>
-      <TouchableOpacity onPress={() => getStatus()} style={styles.button}>
-        <Text style={styles.buttonText}>Get status</Text>
-      </TouchableOpacity>
       <TouchableOpacity
         onPress={() =>
-          setTime(0x01, 0x04, 0x04, 0x04, [0x01, 0x02, 0x03, 0x04])
+          getStatusFromDevice({
+            setBoxTemp,
+            setDevicePassword,
+            setDeviceIsLocked,
+            setDeviceIsLightsOn,
+          })
         }
         style={styles.button}
       >
-        <Text style={styles.buttonText}>Set time</Text>
+        <Text style={styles.buttonText}>Get status</Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        onPress={() => disconnectFromDevice()}
+        style={styles.button}
+      >
+        <Text style={styles.buttonText}>Disconnect</Text>
       </TouchableOpacity>
 
       <Popup

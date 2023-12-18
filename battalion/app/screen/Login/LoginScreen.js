@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
     bottom: 100,
   },
   inputTextContainer: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     alignItems: "center",
     bottom: 150,
   },

@@ -120,7 +120,7 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 34,
     marginBottom: 20,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
   otherText: {
     backgroundColor: "#2D2D2D",

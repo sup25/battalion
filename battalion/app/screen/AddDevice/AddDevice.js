@@ -125,7 +125,7 @@ export default AddDevice;
 
 const styles = StyleSheet.create({
   btn: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
     marginTop: 337,
     alignItems: "center",
   },

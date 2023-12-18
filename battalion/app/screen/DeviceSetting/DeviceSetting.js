@@ -13,11 +13,14 @@ import colors from "../../config/Colors/colors";
 
 import { useAppSettingContext } from "../../context/AppSettingContext";
 import FourDigitsCode from "../../component/FourDigitsCode";
+import { useBleContext } from "../../utils/BLEProvider";
 
 const DeviceSetting = ({ navigation }) => {
   const [show, setShow] = useState(false);
+  const [passwordError, setPasswordError] = useState();
   const { temp, setTempUnit, password, setDevicePassword } =
     useAppSettingContext();
+  const { connectedDevice, writePasswordToDevice } = useBleContext();
   const [temperatureToggle, setTemperatureToggle] = useState(false);
 
   const handleShowPassword = () => {
@@ -29,12 +32,31 @@ const DeviceSetting = ({ navigation }) => {
     setTempUnit(temp.unit === "c" ? "f" : "c");
   };
 
+  const submitPassword = async (pass) => {
+    setPasswordError();
+    if (connectedDevice.device) {
+      try {
+        await writePasswordToDevice(pass);
+        setDevicePassword(pass);
+        setPasswordError();
+      } catch (error) {
+        console.log("Error writing password to device:", error);
+        setPasswordError(
+          "Error writing password to device, please check device connection."
+        );
+      }
+    } else {
+      setPasswordError(
+        "Error writing password to device, please check device connection."
+      );
+      throw new Error("No device connected");
+    }
+  };
+
   return (
     <View style={styles.container}>
       <View style={styles.heading}>
-        <TouchableWithoutFeedback
-          onPress={() => navigation.navigate("devicedetails")}
-        >
+        <TouchableWithoutFeedback onPress={() => navigation.goBack(null)}>
           <MaterialCommunityIcons
             name="arrow-left"
             size={30}
@@ -77,9 +99,10 @@ const DeviceSetting = ({ navigation }) => {
         </View>
         <View style={styles.boxContainer}>
           <FourDigitsCode
-            submitHandler={setDevicePassword}
+            submitHandler={submitPassword}
             defaultValue={password}
             isVisible={show}
+            passwordError={passwordError}
           />
         </View>
       </View>
@@ -126,8 +149,8 @@ const styles = StyleSheet.create({
   },
   heading: {
     flexDirection: "row",
-    paddingHorizontal: 20,
-    marginTop: 37,
+    paddingHorizontal: 15,
+    marginTop: 55,
     alignItems: "center",
   },
   iconBackgroundContainer: {

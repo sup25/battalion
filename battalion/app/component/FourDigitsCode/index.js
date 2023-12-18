@@ -1,6 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Animated, Image, SafeAreaView, Text, View } from "react-native";
-
+import {
+  Animated,
+  Image,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import { FontAwesome } from "@expo/vector-icons";
 import {
   CodeField,
   Cursor,
@@ -8,110 +15,91 @@ import {
   useClearByFocusCell,
 } from "react-native-confirmation-code-field";
 
-import styles, {
-  ACTIVE_CELL_BG_COLOR,
-  CELL_BORDER_RADIUS,
-  CELL_SIZE,
-  DEFAULT_CELL_BG_COLOR,
-  NOT_EMPTY_CELL_BG_COLOR,
-} from "./styles";
-import { FontAwesome } from "@expo/vector-icons";
+import colors from "../../config/Colors/colors";
 
-const { Value, Text: AnimatedText } = Animated;
-const cellCount = 4;
-//   Animations init
-const animationsColor = [...new Array(cellCount)].map(() => new Value(0));
-const animationsScale = [...new Array(cellCount)].map(() => new Value(1));
-const animateCell = ({ hasValue, index, isFocused }) => {
-  Animated.parallel([
-    Animated.timing(animationsColor[index], {
-      useNativeDriver: false,
-      toValue: isFocused ? 1 : 0,
-      duration: 250,
-    }),
-    Animated.spring(animationsScale[index], {
-      useNativeDriver: false,
-      toValue: hasValue ? 0 : 1,
-      duration: hasValue ? 300 : 250,
-    }),
-  ]).start();
-};
+const styles = StyleSheet.create({
+  root: { flex: 1, padding: 20 },
+  title: { textAlign: "center", fontSize: 30 },
 
-const FourDigitsCode = ({ defaultValue, submitHandler, isVisible }) => {
+  cell: {
+    width: 40,
+    height: 40,
+    lineHeight: 38,
+    fontSize: 24,
+    borderWidth: 2,
+    borderColor: "#00000030",
+    textAlign: "center",
+    color: colors.white,
+    backgroundColor: "#000000",
+  },
+  focusCell: {
+    borderColor: "#000",
+  },
+});
+
+const CELL_COUNT = 4;
+
+const FourDigitsCode = ({
+  defaultValue,
+  submitHandler,
+  isVisible,
+  passwordError = false,
+}) => {
   const [value, setValue] = useState(defaultValue.join(""));
-  const ref = useBlurOnFulfill({ value, cellCount: cellCount });
+  const [isSaved, setIsSaved] = useState(false);
+  const ref = useBlurOnFulfill({ value, cellCount: CELL_COUNT });
   const [props, getCellOnLayoutHandler] = useClearByFocusCell({
     value,
     setValue,
   });
-
-  useEffect(() => {
-    if (value.length === cellCount) {
-      console.log("value", value);
-      const valAsArr = value.split("").map(Number);
-      console.log("value", valAsArr);
-      submitHandler(valAsArr);
-    }
-  }, [value]);
-
-  const renderCell = ({ index, symbol, isFocused }) => {
-    const hasValue = Boolean(symbol);
-    const animatedCellStyle = {
-      backgroundColor: hasValue
-        ? animationsScale[index].interpolate({
-            inputRange: [0, 1],
-            outputRange: [NOT_EMPTY_CELL_BG_COLOR, ACTIVE_CELL_BG_COLOR],
-          })
-        : animationsColor[index].interpolate({
-            inputRange: [0, 1],
-            outputRange: [DEFAULT_CELL_BG_COLOR, ACTIVE_CELL_BG_COLOR],
-          }),
-      borderRadius: animationsScale[index].interpolate({
-        inputRange: [0, 1],
-        outputRange: [CELL_SIZE, CELL_BORDER_RADIUS],
-      }),
-      transform: [
-        {
-          scale: animationsScale[index].interpolate({
-            inputRange: [0, 1],
-            outputRange: [0.2, 1],
-          }),
-        },
-      ],
-    };
-
-    // Run animation on next event loop tik
-    // Because we need first return new style prop and then animate this value
-    setTimeout(() => {
-      animateCell({ hasValue, index, isFocused });
-    }, 0);
-
-    return (
-      <AnimatedText
-        key={index}
-        style={[styles.cell, animatedCellStyle]}
-        onLayout={getCellOnLayoutHandler(index)}
-      >
-        {isVisible || isFocused
-          ? symbol
-          : <FontAwesome name="circle" size={70} color="white" /> || null}
-      </AnimatedText>
-    );
-  };
 
   return (
     <SafeAreaView style={styles.root}>
       <CodeField
         ref={ref}
         {...props}
+        // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear
         value={value}
-        onChangeText={setValue}
-        cellCount={cellCount}
+        onChangeText={async (val) => {
+          setValue(val);
+          if (val.length < 4) setIsSaved(false);
+          if (val.length === CELL_COUNT) {
+            const valAsArr = val.split("").map(Number);
+            let res = await submitHandler(valAsArr);
+            console.log("inner res", res);
+            setIsSaved(true);
+          }
+        }}
+        cellCount={CELL_COUNT}
         rootStyle={styles.codeFieldRoot}
         keyboardType="number-pad"
-        textContentType="password"
-        renderCell={renderCell}
+        textContentType="oneTimeCode"
+        renderCell={({ index, symbol, isFocused }) => (
+          <Text
+            key={index}
+            style={[styles.cell]}
+            onLayout={getCellOnLayoutHandler(index)}
+          >
+            {isVisible ? (
+              isFocused ? (
+                <Cursor />
+              ) : (
+                symbol
+              )
+            ) : isFocused ? (
+              <Cursor />
+            ) : (
+              <FontAwesome name="circle" size={24} color="white" /> || null
+            )}
+          </Text>
+        )}
       />
+      {passwordError && (
+        <Text style={{ color: "white", fontSize: 14 }}>{passwordError}</Text>
+      )}
+      {isSaved && !passwordError && (
+        <Text style={{ color: "white", fontSize: 14 }}>Saved!</Text>
+      )}
     </SafeAreaView>
   );
 };

@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.black,
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
   errorText: {
     color: colors.primary,

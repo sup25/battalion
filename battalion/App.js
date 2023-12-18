@@ -8,11 +8,11 @@ export default function App() {
   return (
     <NavigationContainer>
       <AuthProvider>
-        <BleProvider>
-          <AppSettingProvider>
+        <AppSettingProvider>
+          <BleProvider>
             <AuthNavigator />
-          </AppSettingProvider>
-        </BleProvider>
+          </BleProvider>
+        </AppSettingProvider>
       </AuthProvider>
     </NavigationContainer>
   );

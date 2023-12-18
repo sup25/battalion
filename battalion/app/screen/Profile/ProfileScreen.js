@@ -315,8 +315,8 @@ const styles = StyleSheet.create({
     color: colors.white,
   },
   wrapper: {
-    marginTop: 37,
+    marginTop: 55,
     alignItems: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
 });

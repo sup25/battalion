@@ -7,14 +7,19 @@ export const useAppSettingContext = () => useContext(AppSettingContext);
 
 export const AppSettingProvider = ({ children }) => {
   const [boxTemp, setBoxTemp] = useState(22);
-  const [boxPassword, setBevicePassword] = useState([1, 2, 3, 4]);
-  const [boxLights, setBeviceLights] = useState(false);
-  const [boxLocked, setBeviceLocked] = useState(false);
+  const [boxBatteryLevel, setBoxBatteryLevel] = useState(0);
+  const [boxIsCharging, setBoxIsCharging] = useState(false);
+
+  const [boxPassword, setBoxPassword] = useState([1, 2, 3, 4]);
+  const [boxLights, setBoxLights] = useState(false);
+  const [boxLocked, setBoxLocked] = useState(false);
 
   const [temp, setTemp] = useState({ value: 0, unit: "c" });
   const [password, setPassword] = useState([1, 2, 3, 4]);
   const [isLocked, setIsLocked] = useState(false);
   const [isLightsOn, setIsLightsOn] = useState(false);
+  const [batteryLevel, setBatteryLevel] = useState(false);
+  const [isCharging, setIsCharging] = useState(false);
 
   const getItemFromAsyncStorage = async (itemName) => {
     try {
@@ -107,16 +112,23 @@ export const AppSettingProvider = ({ children }) => {
     password,
     isLocked,
     isLightsOn,
+
     setTempValue,
     setTempUnit,
     setDevicePassword,
     setDeviceIsLocked,
     setDeviceIsLightsOn,
     getTempValueAndUnit,
+
     boxTemp,
+    setBoxTemp,
     boxPassword,
     boxLights,
     boxLocked,
+    boxBatteryLevel,
+    setBoxBatteryLevel,
+    boxIsCharging,
+    setBoxIsCharging,
   };
 
   return (
