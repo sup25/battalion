@@ -2,7 +2,8 @@ import React, { useState } from "react";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-
+import DeviceLockedUnlockded from "../../component/DeviceLockedUnlocked";
+import LightToggle from "../../component/LightToggle";
 import {
   StyleSheet,
   Text,
@@ -12,21 +13,13 @@ import {
   Image,
   ImageBackground,
   TouchableWithoutFeedback,
-  TouchableOpacity,
-  Animated,
 } from "react-native";
-import { useAppSettingContext } from "../../context/AppSettingContext";
-const DeviceDetails = ({ navigation }) => {
-  const {
-    isLocked,
-    setDeviceIsLocked,
-    isLightsOn,
-    setDeviceIsLightsOn,
-    getTempValueAndUnit,
-    temp,
-    boxTemp,
-  } = useAppSettingContext();
 
+import ActualBoxTemp from "../../component/ActualBoxTemp";
+import BoxTemperature from "../../component/BoxTemperature";
+import BatteryPercentText from "../../component/BatteryPercentText";
+
+const DeviceDetails = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
@@ -77,130 +70,16 @@ const DeviceDetails = ({ navigation }) => {
             style={styles.productImage}
             source={require("../../assets/devicedetail.png")}
           />
-
           <View style={{ display: "flex", gap: 25 }}>
-            <View style={styles.deviceLocked}>
-              <Text style={styles.lockedTxt}>
-                {isLocked ? "Device Locked" : "Device Unlocked"}
-              </Text>
-              <View
-                style={[
-                  styles.switchOnOff,
-                  isLocked ? styles.flexEnd : styles.flexStart,
-                ]}
-              >
-                <View style={styles.iconBackgroundContainer}>
-                  <TouchableWithoutFeedback
-                    onPress={() => {
-                      setDeviceIsLocked(!isLocked);
-                    }}
-                  >
-                    {isLocked ? (
-                      <MaterialCommunityIcons
-                        name="lock"
-                        size={20}
-                        color="#B0B0B0"
-                      />
-                    ) : (
-                      <MaterialCommunityIcons
-                        name="lock-open"
-                        size={20}
-                        color="black"
-                      />
-                    )}
-                  </TouchableWithoutFeedback>
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.brightness}>
-              <Text style={styles.brightnessTxt}>Light Auto</Text>
-              <View
-                style={[
-                  styles.switchOnOff,
-                  isLightsOn ? styles.flexEnd : styles.flexStart,
-                ]}
-              >
-                <View style={styles.iconBackgroundContainer}>
-                  <TouchableWithoutFeedback
-                    onPress={() => {
-                      setDeviceIsLightsOn(!isLightsOn);
-                    }}
-                  >
-                    {isLightsOn ? (
-                      <MaterialCommunityIcons
-                        name="brightness-5"
-                        size={20}
-                        color="#B0B0B0"
-                      />
-                    ) : (
-                      <MaterialCommunityIcons
-                        name="brightness-5"
-                        size={20}
-                        color="black"
-                      />
-                    )}
-                  </TouchableWithoutFeedback>
-                </View>
-              </View>
-            </View>
+            <DeviceLockedUnlockded />
+            <LightToggle />
           </View>
         </View>
         <View style={styles.unlockedTempContainer}>
-          <View style={styles.TempConatinerBg}>
-            <Text style={styles.degree}>
-              {boxTemp < 0
-                ? "--"
-                : getTempValueAndUnit({ value: boxTemp, unit: temp.unit })}
-            </Text>
-            <Text style={styles.actualTxt}>Actual box temperature</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.TempConatinerBg}
-            onPress={() => {
-              navigation.navigate("halfcircle");
-            }}
-          >
-            <Text style={styles.degree}>{getTempValueAndUnit(temp)}</Text>
-            <TouchableWithoutFeedback>
-              <View style={styles.setTextContainer}>
-                <Text style={styles.setText}>Set the box Temperature</Text>
-                <MaterialCommunityIcons
-                  name="arrow-right"
-                  size={20}
-                  color="white"
-                />
-              </View>
-            </TouchableWithoutFeedback>
-          </TouchableOpacity>
+          <ActualBoxTemp />
+          <BoxTemperature />
         </View>
-        <View style={styles.percentagetxtContainer}>
-          <View style={styles.percentageText}>
-            <Text style={styles.BatteryPercentagetextOne}>33%</Text>
-
-            <Text style={styles.BatteryPercentagetextTwo}>
-              Plug your Device
-            </Text>
-          </View>
-          <View
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <MaterialCommunityIcons
-              name="battery-outline"
-              color={colors.white}
-              size={20}
-            />
-            <MaterialCommunityIcons
-              name="loading"
-              size={20}
-              color={colors.primary}
-            />
-          </View>
-        </View>
+        <BatteryPercentText />
       </View>
     </View>
   );

@@ -13,8 +13,10 @@ import TextLogo from "../../assets/TextLogo";
 import useBLE from "../../Hooks/UseBle";
 import { useBleContext } from "../../utils/BLEProvider";
 import PulseAnimation from "./PulseAnimation";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const SearchScreen = ({ navigation }) => {
+  const [selectedDeviceIndex, setSelectedDeviceIndex] = useState(null);
   const [error, setError] = useState();
   const {
     requestPermissions,
@@ -43,6 +45,7 @@ const SearchScreen = ({ navigation }) => {
   useEffect(() => {
     init();
   }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <View
@@ -66,24 +69,30 @@ const SearchScreen = ({ navigation }) => {
         </View>
       </View>
       {scan.scanning && <PulseAnimation />}
-      <View>
-        <View style={styles.Text}>
-          <Text style={styles.txtFirst}>Searching for devices</Text>
-        </View>
+      <View style={styles.FoundDeviceAndTxtWrapper}>
+        <Text style={styles.TitleTxt}>Searching for devices</Text>
 
-        <View style={{ zIndex: 99 }}>
+        <View style={styles.FoundDevice}>
           {scan.devices &&
             scan.devices.map((device, index) => {
+              const isSelected = selectedDeviceIndex === index;
+              console.log(
+                `Device at index ${index} - isSelected: ${isSelected}`
+              );
               return (
                 <TouchableOpacity
-                  style={styles.button}
+                  style={[styles.button]}
                   onPress={async () => {
+                    console.log("Clicked on device:", device);
                     if (connectedDevice.connecting) {
                       return false;
                     }
                     stopScanning();
                     try {
                       const res = await connectToDevice(device);
+                      setSelectedDeviceIndex((prevIndex) =>
+                        prevIndex === index ? null : index
+                      );
                       navigation.navigate("Home");
                     } catch (err) {
                       console.log("err to connect", err);
@@ -91,11 +100,24 @@ const SearchScreen = ({ navigation }) => {
                   }}
                   key={index}
                 >
+                  <Image
+                    source={require("../../assets/product.png")}
+                    style={{ width: 71, height: 60 }}
+                  />
                   <Text style={styles.buttonText}>
                     {connectedDevice.connecting
                       ? "connecting..."
                       : device?.name || "no name"}
                   </Text>
+
+                  {isSelected && (
+                    <MaterialCommunityIcons
+                      name="check-circle"
+                      color="white"
+                      size={20}
+                      style={{ zIndex: 999, marginLeft: 5 }}
+                    />
+                  )}
                 </TouchableOpacity>
               );
             })}
@@ -124,27 +146,31 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.dark,
   },
-
-  Text: {
-    width: "100%",
-    marginTop: 76,
-    alignItems: "center",
+  FoundDeviceAndTxtWrapper: {
+    justifyContent: "space-between",
+  },
+  FoundDevice: {
+    zIndex: 99,
+    paddingTop: 80,
   },
 
-  txtFirst: {
+  TitleTxt: {
     color: colors.white,
     fontSize: 24,
     fontWeight: "500",
     textAlign: "center",
-    maxWidth: 181,
+    width: 171,
+    paddingTop: 63,
     alignItems: "center",
+    alignSelf: "center",
   },
   button: {
-    backgroundColor: "#3498db",
+    backgroundColor: "#131313",
     padding: 10,
     margin: 10,
     borderRadius: 5,
     alignItems: "center",
+    flexDirection: "row",
   },
   buttonText: {
     color: "white",

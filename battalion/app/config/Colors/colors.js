@@ -7,4 +7,6 @@ export default {
   light: "#f8f4f4",
   dark: "#0c0c0c",
   soft: "#131313",
+  icon: "#3D3D3D",
+  background: "#2B2B2B",
 };

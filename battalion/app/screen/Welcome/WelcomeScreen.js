@@ -16,22 +16,23 @@ import { useAuth } from "../../utils/AuthProvider";
 import FetchUserProfile from "../../Hooks/UserProfile";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAppSettingContext } from "../../context/AppSettingContext";
-import ChargingProgressCircle from "../../component/ChargingProgressCircle";
+
+import DeviceLockedUnlockded from "../../component/DeviceLockedUnlocked";
+import LightToggle from "../../component/LightToggle";
+import BoxTemperature from "../../component/BoxTemperature";
+import ActualBoxTemp from "../../component/ActualBoxTemp";
+import BatteryPercentText from "../../component/BatteryPercentText";
 
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleEdit = () => {
+    setIsEditing((prevState) => !prevState);
+  };
 
   const [userName, setUserName] = useState();
-  const {
-    isLocked,
-    getTempValueAndUnit,
-    temp,
-    boxTemp,
-    boxBatteryLevel,
-    boxIsCharging,
-    isLightsOn,
-  } = useAppSettingContext();
+
   const userData = FetchUserProfile(currentUser);
 
   useEffect(() => {
@@ -85,12 +86,22 @@ const WelcomeScreen = ({ navigation }) => {
             placeholder="Battalion Device #23456"
             placeholderTextColor="#656565"
           />
-          <MaterialCommunityIcons
-            name="pencil"
-            color="#5A5A5A"
-            size={30}
-            style={styles.icon}
-          />
+          {isEditing ? (
+            <MaterialCommunityIcons
+              name="check"
+              color="#5A5A5A"
+              size={30}
+              style={styles.icon}
+            />
+          ) : (
+            <MaterialCommunityIcons
+              name="pencil"
+              color="#5A5A5A"
+              size={30}
+              style={styles.icon}
+              onPress={handleEdit}
+            />
+          )}
         </View>
       </ImageBackground>
       <View style={styles.wrapper}>
@@ -100,111 +111,21 @@ const WelcomeScreen = ({ navigation }) => {
             source={require("../../assets/devicedetail.png")}
           />
 
-          <View style={{ display: "flex", gap: 25 }}>
-            <View style={styles.deviceLocked}>
-              <Text style={styles.lockedTxt}>
-                {isLocked ? "Device Locked" : "Device Unlocked"}
-              </Text>
-              <View
-                style={[
-                  styles.switchOnOff,
-                  isLocked ? styles.flexEnd : styles.flexStart,
-                ]}
-              >
-                <View style={styles.iconBackgroundContainer}>
-                  <TouchableWithoutFeedback
-                    onPress={() => {
-                      setDeviceIsLocked(!isLocked);
-                    }}
-                  >
-                    {isLocked ? (
-                      <MaterialCommunityIcons
-                        name="lock"
-                        size={20}
-                        color="#B0B0B0"
-                      />
-                    ) : (
-                      <MaterialCommunityIcons
-                        name="lock-open"
-                        size={20}
-                        color="black"
-                      />
-                    )}
-                  </TouchableWithoutFeedback>
-                </View>
-              </View>
-            </View>
-
-            <View style={styles.brightness}>
-              <Text style={styles.brightnessTxt}>Light Auto</Text>
-              <View
-                style={[
-                  styles.switchOnOff,
-                  isLightsOn ? styles.flexEnd : styles.flexStart,
-                ]}
-              >
-                <View style={styles.iconBackgroundContainer}>
-                  <TouchableWithoutFeedback
-                    onPress={() => {
-                      setDeviceIsLightsOn(!isLightsOn);
-                    }}
-                  >
-                    {isLightsOn ? (
-                      <MaterialCommunityIcons
-                        name="brightness-5"
-                        size={20}
-                        color="#B0B0B0"
-                      />
-                    ) : (
-                      <MaterialCommunityIcons
-                        name="brightness-5"
-                        size={20}
-                        color="black"
-                      />
-                    )}
-                  </TouchableWithoutFeedback>
-                </View>
-              </View>
-            </View>
+          <View style={{ display: "flex" }}>
+            <DeviceLockedUnlockded />
+            <LightToggle />
           </View>
         </View>
-        <View style={styles.unlockedTempContainer}>
-          <View style={styles.TempConatinerBg}>
-            <Text style={styles.degree}>
-              {boxTemp < 0
-                ? "--"
-                : getTempValueAndUnit({ value: boxTemp, unit: temp.unit })}
-            </Text>
-            <Text style={styles.actualTxt}>Actual box temperature</Text>
-          </View>
-          <TouchableOpacity
-            style={styles.TempConatinerBg}
-            onPress={() => {
-              navigation.navigate("halfcircle");
-            }}
-          >
-            <Text style={styles.degree}>{getTempValueAndUnit(temp)}</Text>
-            <View style={styles.setTextContainer}>
-              <Text style={styles.setText}>Set the box Temperature</Text>
-              <MaterialCommunityIcons
-                name="arrow-right"
-                size={20}
-                color="white"
-              />
-            </View>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.perTxtContainer}>
-          <View style={styles.percentageText}>
-            <Text style={styles.textOne}>
-              {boxBatteryLevel < 0 ? "--" : boxBatteryLevel}%
-            </Text>
-            <Text style={styles.textTwo}>
-              {boxIsCharging ? "Charging" : "Plug your Device"}
-            </Text>
-          </View>
-          <ChargingProgressCircle percents={boxBatteryLevel} />
-        </View>
+        <TouchableOpacity
+          style={styles.unlockedTempContainer}
+          onPress={() => {
+            navigation.navigate("devicedetails");
+          }}
+        >
+          <ActualBoxTemp />
+          <BoxTemperature />
+        </TouchableOpacity>
+        <BatteryPercentText />
       </View>
     </View>
   );
@@ -231,59 +152,16 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: 10,
+    gap: 11,
     alignItems: "center",
   },
   lockedTxt: {
     fontWeight: "500",
     fontSize: 14,
     color: "#B0B0B0",
-    paddingRight: 5,
+    paddingRight: 11,
   },
-  switchOnOff: {
-    width: 60,
-    height: 24,
-    borderRadius: 18,
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "flex-end",
-  },
-  flexEnd: {
-    justifyContent: "flex-end",
-    backgroundColor: colors.primary,
-  },
-  flexStart: {
-    justifyContent: "flex-start",
-    backgroundColor: "#424242",
-  },
-  iconBackgroundContainer: {
-    width: 34,
-    height: 34,
-    backgroundColor: colors.white,
-    alignItems: "center",
-    justifyContent: "center",
-    borderRadius: 50,
-  },
-  brightness: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingTop: 12,
-  },
-  brightnessTxt: {
-    fontWeight: "500",
-    fontSize: 14,
-    color: "#B0B0B0",
-    paddingLeft: 2,
-  },
-  actualTxt: {
-    maxWidth: 124,
-    fontWeight: "500",
-    fontSize: 15,
-    color: "#5A5A5A",
-  },
+
   addDevice: {
     backgroundColor: colors.primary,
     color: colors.white,
@@ -314,6 +192,11 @@ const styles = StyleSheet.create({
   },
   container: {
     flex: 1,
+  },
+  TemptextIconWrapper: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
   },
   connDevice: {
     fontSize: 15,
@@ -375,38 +258,13 @@ const styles = StyleSheet.create({
     fontSize: 14,
     color: "#B0B0B0",
   },
-  percentageText: {
-    flexDirection: "column",
-  },
+
   productImage: {
     width: 87,
     height: 74,
     opacity: 0.5,
   },
-  perTxtContainer: {
-    flexDirection: "row",
-    width: "100%",
-    backgroundColor: "#2626266E",
-    justifyContent: "space-between",
-    alignItems: "flex-start",
-    paddingHorizontal: 15,
-    paddingVertical: 20,
-  },
-  setText: {
-    maxWidth: 124,
-    fontWeight: "500",
-    fontSize: 15,
-    color: colors.white,
-  },
-  setTextContainer: {
-    backgroundColor: colors.primary,
-    padding: 5,
-    borderRadius: 5,
-    opacity: 0.5,
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-  },
+
   successMessage: {
     color: "green",
     marginTop: 10,
@@ -428,16 +286,6 @@ const styles = StyleSheet.create({
 
     alignItems: "flex-start",
   },
-  textOne: {
-    fontSize: 36,
-    fontWeight: "800",
-    color: "#5A5A5A",
-  },
-  textTwo: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#5A5A5A",
-  },
 
   unlockedImageContainer: {
     backgroundColor: "#131313",
@@ -454,6 +302,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+  },
+  ChargeTxtAndIcon: {
+    justifyContent: "space-between",
+    flexDirection: "row",
+    alignItems: "center",
   },
   wrapper: {
     backgroundColor: colors.black,
