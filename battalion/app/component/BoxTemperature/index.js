@@ -4,19 +4,36 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAppSettingContext } from "../../context/AppSettingContext";
 import colors from "../../config/Colors/colors";
 import { useNavigation } from "@react-navigation/native";
+import { useToast } from "react-native-toast-notifications";
+import { useBleContext } from "../../utils/BLEProvider";
 
 const BoxTemperature = () => {
+  const toast = useToast();
+  const { connectedDevice } = useBleContext();
   const { getTempValueAndUnit, temp } = useAppSettingContext();
   const navigation = useNavigation();
   return (
     <TouchableOpacity
       style={styles.TempConatinerBg}
       onPress={() => {
-        navigation.navigate("halfcircle");
+        if (connectedDevice.device) {
+          navigation.navigate("halfcircle");
+        } else {
+          toast.show("Please connect to a device.", {
+            type: "normal",
+          });
+        }
       }}
     >
       <View style={styles.TemptextIconWrapper}>
-        <Text style={styles.degree}>{getTempValueAndUnit(temp)}</Text>
+        <Text
+          style={[
+            styles.degree,
+            { color: connectedDevice.device ? "white" : "grey" },
+          ]}
+        >
+          {getTempValueAndUnit(temp)}
+        </Text>
         <MaterialCommunityIcons
           name="thermometer"
           size={32}
@@ -24,7 +41,14 @@ const BoxTemperature = () => {
         />
       </View>
       <View style={styles.setTextContainer}>
-        <Text style={styles.setText}>Set the box Temperature</Text>
+        <Text
+          style={[
+            styles.setText,
+            { color: connectedDevice.device ? "white" : "grey" },
+          ]}
+        >
+          Set the box Temperature
+        </Text>
         <MaterialCommunityIcons name="arrow-right" size={20} color="white" />
       </View>
     </TouchableOpacity>

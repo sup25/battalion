@@ -6,14 +6,16 @@ import { useAppSettingContext } from "../../context/AppSettingContext";
 import colors from "../../config/Colors/colors";
 import CarthagosScreen from "../../component/CarthagosScreen/CarthagosScreen";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useBleContext } from "../../utils/BLEProvider";
 
 const HalfCircleSlider = ({ navigation }) => {
+  const tost = useToast();
   const { temp, setTempValue, getTempValueAndUnit } = useAppSettingContext();
+  const { writeTempToDevice } = useBleContext();
   const [sliderValue, setSliderValue] = useState(temp.value);
 
   const handleValueChange = (value) => {
     setSliderValue(value);
-    setTempValue(value);
   };
 
   return (
@@ -46,7 +48,7 @@ const HalfCircleSlider = ({ navigation }) => {
               cy={-50}
               r={50}
               fill="transparent"
-              stroke="red"
+              stroke={colors.primary}
               strokeWidth={10}
               strokeLinecap="round"
               strokeDasharray={`${(Math.PI * 100) / 2}, ${Math.PI * 100}`}
@@ -63,14 +65,25 @@ const HalfCircleSlider = ({ navigation }) => {
       <View style={styles.SliderTxtWrapper}>
         <Text style={styles.SliderTxt}>{sliderValue}℃</Text>
         <Slider
-          circleColor="red"
+          circleColor={colors.primary}
           style={styles.slider}
           value={sliderValue}
-          minimumTrackTintColor="red"
+          minimumTrackTintColor={colors.primary}
           minimumValue={0}
           maximumValue={100}
           step={1}
           onValueChange={(value) => handleValueChange(value)}
+          onSlidingComplete={async () => {
+            try {
+              await writeTempToDevice([sliderValue]);
+              setTempValue(sliderValue);
+            } catch (error) {
+              console.log(error);
+              tost.show("Error writing temperature to device", {
+                type: "normal",
+              });
+            }
+          }}
         />
       </View>
     </CarthagosScreen>

@@ -3,13 +3,21 @@ import { View, StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
 import { useAppSettingContext } from "../../context/AppSettingContext";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useBleContext } from "../../utils/BLEProvider";
+import { useToast } from "react-native-toast-notifications";
 
 const DeviceLockedUnlocked = () => {
+  const toast = useToast();
   const { isLocked, setDeviceIsLocked } = useAppSettingContext();
-
+  const { writeLockToDevice, connectedDevice } = useBleContext();
   return (
     <View style={styles.deviceLocked}>
-      <Text style={styles.lockedTxt}>
+      <Text
+        style={[
+          styles.lockedTxt,
+          { color: connectedDevice.device ? "white" : "grey" },
+        ]}
+      >
         {isLocked ? "Device Locked" : "Device Unlocked"}
       </Text>
       <View
@@ -20,17 +28,34 @@ const DeviceLockedUnlocked = () => {
       >
         <View style={styles.iconBackgroundContainer}>
           <TouchableWithoutFeedback
-            onPress={() => {
-              setDeviceIsLocked(!isLocked);
+            onPress={async () => {
+              if (connectedDevice.device) {
+                try {
+                  await writeLockToDevice([!isLocked === false ? 0 : 1]);
+                  setDeviceIsLocked(!isLocked);
+                } catch (err) {
+                  toast.show("Error writing to device, try to reconnect", {
+                    type: "normal",
+                  });
+                }
+              } else {
+                toast.show("Please connect to a device.", {
+                  type: "normal",
+                });
+              }
             }}
           >
             {isLocked ? (
-              <MaterialCommunityIcons name="lock" size={20} color="#B0B0B0" />
+              <MaterialCommunityIcons
+                name="lock"
+                size={20}
+                color={connectedDevice.device ? "black" : "#B0B0B0"}
+              />
             ) : (
               <MaterialCommunityIcons
                 name="lock-open"
                 size={20}
-                color="black"
+                color={connectedDevice.device ? "black" : "#B0B0B0"}
               />
             )}
           </TouchableWithoutFeedback>

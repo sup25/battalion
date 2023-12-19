@@ -3,13 +3,21 @@ import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAppSettingContext } from "../../context/AppSettingContext";
 import colors from "../../config/Colors/colors";
+import { useBleContext } from "../../utils/BLEProvider";
+
 const ActualBoxTemp = () => {
   const { getTempValueAndUnit, temp, boxTemp } = useAppSettingContext();
+  const { connectedDevice } = useBleContext();
   return (
     <View>
       <View style={styles.TempConatinerBg}>
         <View style={styles.TemptextIconWrapper}>
-          <Text style={styles.degree}>
+          <Text
+            style={[
+              styles.degree,
+              { color: connectedDevice.device ? "white" : "grey" },
+            ]}
+          >
             {boxTemp < 0
               ? "--"
               : getTempValueAndUnit({ value: boxTemp, unit: temp.unit })}
@@ -21,7 +29,14 @@ const ActualBoxTemp = () => {
           />
         </View>
 
-        <Text style={styles.actualTxt}>Actual box temperature</Text>
+        <Text
+          style={[
+            styles.actualTxt,
+            { color: connectedDevice.device ? "white" : "grey" },
+          ]}
+        >
+          Actual box temperature
+        </Text>
       </View>
     </View>
   );

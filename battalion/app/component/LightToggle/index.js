@@ -2,13 +2,23 @@ import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
 import { useAppSettingContext } from "../../context/AppSettingContext";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useBleContext } from "../../utils/BLEProvider";
+import { useToast } from "react-native-toast-notifications";
 
 const LightToggle = () => {
+  const toast = useToast();
   const { isLightsOn, setDeviceIsLightsOn } = useAppSettingContext();
-
+  const { writeLightsToDevice, connectedDevice } = useBleContext();
   return (
     <View style={styles.brightness}>
-      <Text style={styles.brightnessTxt}>Light Auto</Text>
+      <Text
+        style={[
+          styles.brightnessTxt,
+          { color: connectedDevice.device ? "white" : "grey" },
+        ]}
+      >
+        Light Auto
+      </Text>
       <View
         style={[
           styles.switchOnOff,
@@ -17,21 +27,34 @@ const LightToggle = () => {
       >
         <View style={styles.iconBackgroundContainer}>
           <TouchableWithoutFeedback
-            onPress={() => {
-              setDeviceIsLightsOn(!isLightsOn);
+            onPress={async () => {
+              if (connectedDevice.device) {
+                try {
+                  await writeLightsToDevice([!isLightsOn === false ? 0 : 1]);
+                  setDeviceIsLightsOn(!isLightsOn);
+                } catch (err) {
+                  toast.show("Error writing to device, try to reconnect.", {
+                    type: "normal",
+                  });
+                }
+              } else {
+                toast.show("Please connect to a device.", {
+                  type: "normal",
+                });
+              }
             }}
           >
             {isLightsOn ? (
               <MaterialCommunityIcons
                 name="brightness-5"
                 size={20}
-                color="#B0B0B0"
+                color={connectedDevice.device ? "black" : "#B0B0B0"}
               />
             ) : (
               <MaterialCommunityIcons
                 name="brightness-5"
                 size={20}
-                color="black"
+                color={connectedDevice.device ? "black" : "#B0B0B0"}
               />
             )}
           </TouchableWithoutFeedback>
