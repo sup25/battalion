@@ -65,7 +65,7 @@ const styles = StyleSheet.create({
     top: 160,
   },
   headingText: {
-    maxWidth: 300,
+    width: 300,
     textTransform: "uppercase",
     fontWeight: "900",
     color: colors.white,
@@ -88,7 +88,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     fontSize: 16,
     color: "#8F8F8F",
-    maxWidth: 300,
+    width: 300,
     textAlign: "center",
   },
   textWelcome: {

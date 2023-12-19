@@ -8,8 +8,8 @@ import {
   View,
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import CarthagosButton from "../../component/CarthagosButton";
-import colors from "../config/Colors/colors";
+import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
+import colors from "../../config/Colors/colors";
 
 const FoundDevices = ({ navigation }) => {
   const [clicks, setClicks] = useState([false, false]);
@@ -23,7 +23,7 @@ const FoundDevices = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <ImageBackground
-        source={require("../assets/Groupcircle.png")}
+        source={require("../../assets/Groupcircle.png")}
         style={styles.background}
       >
         <View style={styles.containerSmall}>
@@ -92,7 +92,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: colors.white,
     marginBottom: 20,
-    maxWidth: 120,
+    width: 120,
   },
   btn: {
     paddingHorizontal: 15,

@@ -175,8 +175,9 @@ const styles = StyleSheet.create({
     color: colors.white,
     textAlign: "center",
     opacity: 0.5,
-    width: "100%",
+    width: 401,
     marginTop: 62,
+    alignSelf: "center",
   },
 });
 
