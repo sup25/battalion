@@ -36,7 +36,7 @@ const DeviceSetting = ({ navigation }) => {
     setPasswordError();
     if (connectedDevice.device) {
       try {
-        await writePasswordToDevice();
+        await writePasswordToDevice(pass);
         setDevicePassword(pass);
         setPasswordError();
       } catch (error) {

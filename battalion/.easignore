@@ -1,0 +1,14 @@
+# Exclude large build artifacts
+
+/build
+
+# Exclude development-specific files or directories
+
+/.vscode
+/node_modules
+/.idea
+
+# Exclude unnecessary files
+
+_.log
+_.tmp

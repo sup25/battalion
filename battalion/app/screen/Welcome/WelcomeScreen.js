@@ -12,6 +12,8 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
+import { useToast } from "react-native-toast-notifications";
+
 import { useAuth } from "../../utils/AuthProvider";
 import FetchUserProfile from "../../Hooks/UserProfile";
 import colors from "../../config/Colors/colors";
@@ -24,6 +26,7 @@ import ActualBoxTemp from "../../component/ActualBoxTemp";
 import BatteryPercentText from "../../component/BatteryPercentText";
 
 const WelcomeScreen = ({ navigation }) => {
+  const toast = useToast();
   const { currentUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
 
