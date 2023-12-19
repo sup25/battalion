@@ -9,6 +9,29 @@ import { useBleContext } from "../../utils/BLEProvider";
 const BatteryPercentText = () => {
   const { connectedDevice } = useBleContext();
   const { boxBatteryLevel, boxIsCharging } = useAppSettingContext();
+
+  const getIconBasedOnBatteryLevel = () => {
+    if (!boxBatteryLevel) return "battery-10-bluetooth";
+    if (boxBatteryLevel > 0 && boxBatteryLevel < 10)
+      return "battery-10-bluetooth";
+    if (boxBatteryLevel > 10 && boxBatteryLevel < 20)
+      return "battery-20-bluetooth";
+    if (boxBatteryLevel > 20 && boxBatteryLevel < 30)
+      return "battery-30-bluetooth";
+    if (boxBatteryLevel > 30 && boxBatteryLevel < 40)
+      return "battery-40-bluetooth";
+    if (boxBatteryLevel > 40 && boxBatteryLevel < 50)
+      return "battery-50-bluetooth";
+    if (boxBatteryLevel > 50 && boxBatteryLevel < 60)
+      return "battery-60-bluetooth";
+    if (boxBatteryLevel > 60 && boxBatteryLevel < 70)
+      return "battery-70-bluetooth";
+    if (boxBatteryLevel > 70 && boxBatteryLevel < 80)
+      return "battery-80-bluetooth";
+    if (boxBatteryLevel > 80 && boxBatteryLevel < 90)
+      return "battery-90-bluetooth";
+    if (boxBatteryLevel > 90) return "battery-bluetooth";
+  };
   return (
     <View style={styles.perTxtContainer}>
       <View style={styles.percentageText}>
@@ -31,9 +54,9 @@ const BatteryPercentText = () => {
       </View>
       <View style={styles.BatteryTxtPercent}>
         <MaterialCommunityIcons
-          name="battery-outline"
+          name={getIconBasedOnBatteryLevel()}
           size={32}
-          color={connectedDevice.device ? colors.icon : "#B0B0B0"}
+          color={colors.icon}
         />
         <ChargingProgressCircle percents={boxBatteryLevel} />
       </View>

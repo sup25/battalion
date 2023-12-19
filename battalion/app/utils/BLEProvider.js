@@ -12,9 +12,11 @@ import { Buffer } from "buffer";
 import base64 from "react-native-base64";
 import convertedArrayToHex from "./convertArrayToHex";
 import { useAppSettingContext } from "../context/AppSettingContext";
+import appConfig from "../config/app";
 const BleContext = createContext();
 
 const BleProvider = ({ children }) => {
+  const devices = appConfig.env === "dev" ? appConfig.testDevices : [];
   const {
     setBoxTemp,
     setBoxBatteryLevel,
@@ -30,8 +32,8 @@ const BleProvider = ({ children }) => {
 
   const [device, setDevice] = useState(null);
   const [scan, setScan] = useState({
-    scanning: true,
-    devices: [],
+    scanning: false,
+    devices,
     error: null,
   });
   const [connectedDevice, setConnectedDevice] = useState({
@@ -39,12 +41,12 @@ const BleProvider = ({ children }) => {
     error: null,
     connecting: false,
   });
-  // const SPS_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
-  // const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
-  // const SPS_SERVER_RX_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
-  const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
+  const SPS_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
   const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
-  const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
+  const SPS_SERVER_RX_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
+  // const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
+  // const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
+  // const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
 
   const requestAndroid31Permissions = async () => {
     const bluetoothScanPermission = await PermissionsAndroid.request(
@@ -106,14 +108,18 @@ const BleProvider = ({ children }) => {
     return devices.findIndex((device) => nextDevice.id === device.id) > -1;
   };
 
-  const scanForPeripherals = (setError = false, startTime = false) => {
+  const scanForPeripherals = async (toast = false, startTime = false) => {
+    setScan((prev) => ({
+      ...prev,
+      scanning: true,
+    }));
     bleManager.startDeviceScan(
-      [SPS_SERVICE_UUID],
+      // [SPS_SERVICE_UUID],
+      null,
       { allowDuplicates: false },
       (error, device) => {
-        setError();
         if (startTime) {
-          endTime = new Date();
+          let endTime = new Date();
           var timeDiff = endTime - startTime; //in ms
           // strip the ms
           timeDiff /= 1000;
@@ -128,13 +134,15 @@ const BleProvider = ({ children }) => {
             scanning: false,
           }));
 
-          setError(error.message);
           bleManager.stopDeviceScan();
           seconds = 19;
-          return { error };
+          toast.show("Error scanning for devices, check if blutooth is on.", {
+            type: "normal",
+            placement: "bottom",
+          });
+          return error;
         }
         if (device) {
-          setError();
           setScan((prev) => {
             if (!isDuplicteDevice(prev.devices, device)) {
               return {
@@ -148,7 +156,6 @@ const BleProvider = ({ children }) => {
 
         if (startTime) {
           if (seconds > 18) {
-            setError();
             setScan((prev) => ({ ...prev, scanning: false }));
             bleManager.stopDeviceScan(); //stop scanning if more than 5 secs passed
           }
@@ -391,6 +398,7 @@ const BleProvider = ({ children }) => {
       value={{
         device,
         setDevice,
+        setScan,
 
         SPS_SERVICE_UUID,
         SPS_SERVER_TX_UUID,

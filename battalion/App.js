@@ -10,7 +10,7 @@ export default function App() {
     <NavigationContainer>
       <ToastProvider
         placement="top"
-        duration={3000}
+        duration={5000}
         offset={100}
         animationType="slide-in"
       >

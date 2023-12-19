@@ -6,6 +6,8 @@ import {
   View,
   TouchableOpacity,
   SafeAreaView,
+  TouchableWithoutFeedback,
+  BackHandler,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import colors from "../../config/Colors/colors";
@@ -14,11 +16,18 @@ import useBLE from "../../Hooks/UseBle";
 import { useBleContext } from "../../utils/BLEProvider";
 import PulseAnimation from "./PulseAnimation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { useToast } from "react-native-toast-notifications";
 
 const SearchScreen = ({ navigation }) => {
-  const [selectedDeviceIndex, setSelectedDeviceIndex] = useState(null);
-  const [error, setError] = useState();
+  const toast = useToast();
+  const [selectedDevice, setSelectedDevice] = useState({
+    device: null,
+    index: null,
+  });
+
   const {
+    setScan,
+
     requestPermissions,
     scanForPeripherals,
     connectToDevice,
@@ -29,21 +38,38 @@ const SearchScreen = ({ navigation }) => {
     connectedDevice,
   } = useBleContext();
 
-  useEffect(() => {
-    console.log("scan ble error", error);
-  }, [error]);
+  let timer = null;
+
   const init = async () => {
     let isPermitted = await requestPermissions();
     if (isPermitted) {
-      scanForPeripherals(setError, new Date());
-      let timer = setTimeout(() => {
+      scanForPeripherals(toast, new Date());
+      timer = setTimeout(() => {
         stopScanning();
         clearTimeout(timer);
       }, 18750);
     }
   };
+
   useEffect(() => {
-    init();
+    if (!timer) {
+      init();
+    }
+    const backAction = () => {
+      clearTimeout(timer);
+      stopScanning();
+      setScan((prev) => ({ ...prev, devices: [] }));
+      return false; // Prevent default back button behavior
+    };
+
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      backAction
+    );
+
+    return () => backHandler.remove(); // Clean up the event listener
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -69,62 +95,105 @@ const SearchScreen = ({ navigation }) => {
         </View>
       </View>
       {scan.scanning && <PulseAnimation />}
-      <View style={styles.FoundDeviceAndTxtWrapper}>
-        <Text style={styles.TitleTxt}>Searching for devices</Text>
 
+      <View style={styles.FoundDeviceAndTxtWrapper}>
         <View style={styles.FoundDevice}>
+          <Text style={styles.TitleTxt}>
+            {scan.scanning
+              ? "Searching for devices"
+              : scan?.devices?.length > 0
+              ? "Found devices"
+              : "No devices found"}
+          </Text>
           {scan.devices &&
             scan.devices.map((device, index) => {
-              const isSelected = selectedDeviceIndex === index;
-              console.log(
-                `Device at index ${index} - isSelected: ${isSelected}`
-              );
               return (
-                <TouchableOpacity
-                  style={[styles.button]}
-                  onPress={async () => {
-                    console.log("Clicked on device:", device);
-                    if (connectedDevice.connecting) {
-                      return false;
-                    }
-                    stopScanning();
-                    try {
-                      const res = await connectToDevice(device);
-                      setSelectedDeviceIndex((prevIndex) =>
-                        prevIndex === index ? null : index
-                      );
-                      navigation.navigate("Home");
-                    } catch (err) {
-                      console.log("err to connect", err);
-                    }
+                <TouchableWithoutFeedback
+                  onPress={() => {
+                    setSelectedDevice({ index, device });
                   }}
                   key={index}
                 >
-                  <Image
-                    source={require("../../assets/product.png")}
-                    style={{ width: 71, height: 60 }}
-                  />
-                  <Text style={styles.buttonText}>
-                    {connectedDevice.connecting
-                      ? "connecting..."
-                      : device?.name || "no name"}
-                  </Text>
-
-                  {isSelected && (
+                  <View
+                    style={[
+                      styles.button,
+                      {
+                        borderColor:
+                          selectedDevice.index === index
+                            ? "white"
+                            : "transparent",
+                        borderWidth: 1,
+                      },
+                    ]}
+                  >
+                    <View
+                      style={{ flexDirection: "row", alignItems: "center" }}
+                    >
+                      <Image
+                        source={require("../../assets/product.png")}
+                        style={{ width: 71, height: 60 }}
+                      />
+                      <Text style={styles.buttonText}>
+                        {device?.name || "no name"}
+                      </Text>
+                    </View>
                     <MaterialCommunityIcons
                       name="check-circle"
                       color="white"
                       size={20}
-                      style={{ zIndex: 999, marginLeft: 5 }}
+                      style={{
+                        zIndex: 999,
+                        marginLeft: 5,
+                        opacity: selectedDevice.index === index ? 1 : 0,
+                      }}
                     />
-                  )}
-                </TouchableOpacity>
+                  </View>
+                </TouchableWithoutFeedback>
               );
             })}
         </View>
-      </View>
+        <View>
+          {selectedDevice.device && (
+            <TouchableOpacity
+              onPress={async () => {
+                if (connectedDevice.connecting || !selectedDevice.device) {
+                  return false;
+                }
+                stopScanning();
+                try {
+                  console.log("device id", selectedDevice.device.id);
+                  await connectToDevice(selectedDevice.device);
 
-      {error && <Text style={{ color: colors.white }}>{error}</Text>}
+                  navigation.navigate("Home");
+                } catch (err) {
+                  console.log("err to connect", err);
+                  toast.show(
+                    "Couldn't connect to the device, please try again.",
+                    {
+                      type: "normal",
+                    }
+                  );
+                }
+              }}
+              style={{
+                backgroundColor: colors.primary,
+                width: 277,
+                height: 60,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 5,
+                fontSize: 20,
+              }}
+            >
+              <Text style={{ color: "white" }}>
+                {connectedDevice.connecting
+                  ? "CONNECTING..."
+                  : "CONNECT DEVICE"}
+              </Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </View>
     </SafeAreaView>
   );
 };
@@ -147,11 +216,17 @@ const styles = StyleSheet.create({
     backgroundColor: colors.dark,
   },
   FoundDeviceAndTxtWrapper: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
     justifyContent: "space-between",
+    alignItems: "center",
+    paddingTop: 60,
+    paddingBottom: 60,
+    zIndex: 99,
   },
   FoundDevice: {
     zIndex: 99,
-    paddingTop: 80,
   },
 
   TitleTxt: {
@@ -160,19 +235,23 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textAlign: "center",
     width: 171,
-    paddingTop: 63,
+    marginBottom: 30,
     alignItems: "center",
     alignSelf: "center",
   },
   button: {
     backgroundColor: "#131313",
-    padding: 10,
+    padding: 20,
     margin: 10,
     borderRadius: 5,
     alignItems: "center",
+    display: "flex",
     flexDirection: "row",
+    justifyContent: "space-between",
+    width: 355,
   },
   buttonText: {
     color: "white",
+    marginLeft: 10,
   },
 });

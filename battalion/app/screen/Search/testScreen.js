@@ -7,6 +7,7 @@ import colors from "../../config/Colors/colors";
 import CarthagosScreen from "../../component/CarthagosScreen/CarthagosScreen";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useBleContext } from "../../utils/BLEProvider";
+import { useToast } from "react-native-toast-notifications";
 
 const HalfCircleSlider = ({ navigation }) => {
   const tost = useToast();
@@ -33,7 +34,7 @@ const HalfCircleSlider = ({ navigation }) => {
       </View>
 
       <View style={styles.IconAndTemp}>
-        <Svg width={300} height={400}>
+        <Svg width={353} height={353}>
           <G>
             {/*  <Circle
               cx={100}
@@ -44,16 +45,16 @@ const HalfCircleSlider = ({ navigation }) => {
               strokeWidth={10}
             /> */}
             <Circle
-              cx={50}
-              cy={-50}
-              r={50}
-              fill="transparent"
+              cx={0}
+              cy={0}
+              r={171.5}
+              fill="green"
               stroke={colors.primary}
               strokeWidth={10}
               strokeLinecap="round"
               strokeDasharray={`${(Math.PI * 100) / 2}, ${Math.PI * 100}`}
               strokeDashoffset={Math.PI * ((100 - sliderValue) / 2)}
-              transform="rotate(270, 100, 50)" // Rotate by 45 degrees around the center (100, 50)
+              transform="rotate(270, 171.5, 171.5)" // Rotate by 45 degrees around the center (100, 50)
             />
           </G>
           <Text style={styles.Temptext}>

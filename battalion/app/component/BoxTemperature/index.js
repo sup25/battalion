@@ -40,7 +40,12 @@ const BoxTemperature = () => {
           color={colors.icon}
         />
       </View>
-      <View style={styles.setTextContainer}>
+      <View
+        style={[
+          styles.setTextContainer,
+          { opacity: connectedDevice.device ? 1 : 0.5 },
+        ]}
+      >
         <Text
           style={[
             styles.setText,
