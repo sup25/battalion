@@ -9,7 +9,7 @@ const ConnectedDevice = () => {
   const { getTempValueAndUnit, temp, boxBatteryLevel, isLocked } =
     useAppSettingContext();
   return (
-    <View style={styles.container}>
+    <View style={styles.Container}>
       <View style={styles.DeviceInfoWrapper}>
         <View style={styles.IconTxtWrapper}>
           <Image
@@ -25,10 +25,10 @@ const ConnectedDevice = () => {
               size={32}
               color={colors.icon}
             />
-            <Text style={styles.degree}>{getTempValueAndUnit(temp)}</Text>
+            <Text style={styles.Degree}>{getTempValueAndUnit(temp)}</Text>
           </View>
           <View style={styles.Wrapper}>
-            <Text style={styles.textOne}>
+            <Text style={styles.BatteryAndPercents}>
               {boxBatteryLevel < 0 ? "--" : boxBatteryLevel}%
             </Text>
             <ChargingProgressCircle percents={boxBatteryLevel} />
@@ -37,15 +37,17 @@ const ConnectedDevice = () => {
             <Text style={styles.lockedTxt}>
               {isLocked ? "Device Locked" : "Device Unlocked"}
             </Text>
-            {isLocked ? (
-              <MaterialCommunityIcons name="lock" size={20} color="#B0B0B0" />
-            ) : (
-              <MaterialCommunityIcons
-                name="lock-open"
-                size={20}
-                color="black"
-              />
-            )}
+            <View style={styles.IconWrapper}>
+              {isLocked ? (
+                <MaterialCommunityIcons name="lock" size={20} color="#B0B0B0" />
+              ) : (
+                <MaterialCommunityIcons
+                  name="lock-open"
+                  size={20}
+                  color="black"
+                />
+              )}
+            </View>
           </View>
         </View>
       </View>
@@ -56,11 +58,12 @@ const ConnectedDevice = () => {
 export default ConnectedDevice;
 
 const styles = StyleSheet.create({
-  container: {
+  Container: {
     flex: 1,
     backgroundColor: colors.background,
-    alignItems: "center",
     justifyContent: "center",
+    alignItems: "center",
+    padding: 5,
   },
   DeviceInfoWrapper: {
     flexDirection: "column",
@@ -100,13 +103,26 @@ const styles = StyleSheet.create({
     paddingHorizontal: 8,
     paddingVertical: 8,
   },
-  degree: {
-    fontWeight: "800",
-    fontSize: 36,
-    color: "#5A5A5A",
+  Degree: {
+    fontWeight: "900",
+    fontSize: 28,
+    color: colors.white,
+  },
+  BatteryAndPercents: {
+    fontWeight: "900",
+    fontSize: 28,
+    color: colors.white,
   },
   lockedTxt: {
     width: 48,
     color: colors.white,
+  },
+  IconWrapper: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: "#282828",
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
