@@ -13,9 +13,12 @@ import base64 from "react-native-base64";
 import convertedArrayToHex from "./convertArrayToHex";
 import { useAppSettingContext } from "../context/AppSettingContext";
 import appConfig from "../config/app";
+
+import { useToast } from "react-native-toast-notifications";
 const BleContext = createContext();
 
 const BleProvider = ({ children }) => {
+  const Toast = useToast();
   const devices = appConfig.env === "dev" ? appConfig.testDevices : [];
   const {
     setBoxTemp,
@@ -390,6 +393,12 @@ const BleProvider = ({ children }) => {
     if (connectedDevice.device && !connectedDevice.connecting) {
       getStatusFromDevice();
       startMonitoringDevice();
+      connectedDevice.device.onDisconnected((error, disconnectedDevice) => {
+        setConnectedDevice((prev) => ({ ...prev, device: null }));
+        Toast.show("Device disconnected, please reconnect.", {
+          type: "normal",
+        });
+      });
     }
   }, [connectedDevice]);
 

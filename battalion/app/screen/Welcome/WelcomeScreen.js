@@ -22,10 +22,12 @@ import LightToggle from "../../component/LightToggle";
 import BoxTemperature from "../../component/BoxTemperature";
 import ActualBoxTemp from "../../component/ActualBoxTemp";
 import BatteryPercentText from "../../component/BatteryPercentText";
+import { useBleContext } from "../../utils/BLEProvider";
 
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+  const { connectedDevice } = useBleContext();
 
   const handleEdit = () => {
     setIsEditing((prevState) => !prevState);
@@ -45,6 +47,7 @@ const WelcomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
+
       <ImageBackground
         style={styles.background}
         source={require("../../assets/background.png")}
@@ -70,15 +73,25 @@ const WelcomeScreen = ({ navigation }) => {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.deviceContainer}>
-          <Text style={styles.connDevice}>Devices Connected</Text>
-          <Text
-            style={styles.addDevice}
-            onPress={() => {
-              navigation.navigate("searchscreen");
-            }}
-          >
-            Add Device +
-          </Text>
+          {!connectedDevice.device && (
+            <View
+              style={{
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={styles.connDevice}>Devices Connected</Text>
+              <Text
+                style={styles.addDevice}
+                onPress={() => {
+                  navigation.navigate("searchscreen");
+                }}
+              >
+                Add Device +
+              </Text>
+            </View>
+          )}
         </View>
         <View style={styles.battalionId}>
           <TextInput
@@ -209,7 +222,7 @@ const styles = StyleSheet.create({
     color: "#5A5A5A",
   },
   deviceContainer: {
-    backgroundColor: "#000000a8",
+    position: "relative",
     justifyContent: "space-between",
     flexDirection: "row",
     paddingHorizontal: 15,

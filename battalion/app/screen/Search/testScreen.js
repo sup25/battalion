@@ -8,6 +8,8 @@ import CarthagosScreen from "../../component/CarthagosScreen/CarthagosScreen";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useBleContext } from "../../utils/BLEProvider";
 import { useToast } from "react-native-toast-notifications";
+import TempOuterCircle from "../../component/TempCircleProgress/comps/OuterCircle";
+import TempInnerCircle from "../../component/TempCircleProgress/comps/InnerCircle";
 
 const HalfCircleSlider = ({ navigation }) => {
   const tost = useToast();
@@ -19,6 +21,15 @@ const HalfCircleSlider = ({ navigation }) => {
     setSliderValue(value);
   };
 
+  const radius = 171.5;
+  const circumference = 2 * Math.PI * radius;
+  const halfCircumference = circumference / 2; // Half of the circle's circumference
+
+  // Use half of the circumference as the strokeDasharray
+  const strokeDasharray = `${halfCircumference},${circumference}`;
+
+  const strokeDashoffset =
+    halfCircumference - (sliderValue / 100) * halfCircumference;
   return (
     <CarthagosScreen style={styles.container}>
       <View style={styles.IconAndHeadingTxt}>
@@ -32,29 +43,22 @@ const HalfCircleSlider = ({ navigation }) => {
         </TouchableWithoutFeedback>
         <Text style={styles.Heading}>Temperature</Text>
       </View>
-
+      <TempOuterCircle />
+      <TempInnerCircle />
       <View style={styles.IconAndTemp}>
-        <Svg width={353} height={353}>
+        <Svg width={353} height={375}>
           <G>
-            {/*  <Circle
-              cx={100}
-              cy={50}
-              r={50}
-              fill="transparent"
-              stroke="grey"
-              strokeWidth={10}
-            /> */}
             <Circle
-              cx={0}
-              cy={0}
-              r={171.5}
-              fill="green"
+              cx={156.5}
+              cy={-14.5}
+              r={radius}
+              fill="transparent"
               stroke={colors.primary}
-              strokeWidth={10}
+              strokeWidth={30}
               strokeLinecap="round"
-              strokeDasharray={`${(Math.PI * 100) / 2}, ${Math.PI * 100}`}
-              strokeDashoffset={Math.PI * ((100 - sliderValue) / 2)}
-              transform="rotate(270, 171.5, 171.5)" // Rotate by 45 degrees around the center (100, 50)
+              strokeDasharray={strokeDasharray}
+              strokeDashoffset={-strokeDashoffset}
+              transform="rotate(270, 171.5, 171.5)"
             />
           </G>
           <Text style={styles.Temptext}>
@@ -64,12 +68,12 @@ const HalfCircleSlider = ({ navigation }) => {
       </View>
 
       <View style={styles.SliderTxtWrapper}>
-        <Text style={styles.SliderTxt}>{sliderValue}℃</Text>
         <Slider
-          circleColor={colors.primary}
+          maximumTrackTintColor="white"
           style={styles.slider}
           value={sliderValue}
           minimumTrackTintColor={colors.primary}
+          thumbTintColor={colors.primary}
           minimumValue={0}
           maximumValue={100}
           step={1}
@@ -95,7 +99,7 @@ const styles = StyleSheet.create({
   container: {
     alignItems: "flex-start",
     justifyContent: "space-between",
-    backgroundColor: colors.background,
+    backgroundColor: colors.black,
     flex: 1,
   },
   IconAndHeadingTxt: {
@@ -115,6 +119,8 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
   },
   IconAndTemp: {
+    position: "absolute",
+    top: 206,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "flex-start",
