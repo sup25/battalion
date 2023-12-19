@@ -22,16 +22,16 @@ const BleProvider = ({ children }) => {
     setDevicePassword,
     setDeviceIsLocked,
     setDeviceIsLightsOn,
+    password,
+    temp,
+    isLightsOn,
   } = useAppSettingContext();
   const bleManager = useMemo(() => new BleManager(), []);
 
   const [device, setDevice] = useState(null);
   const [scan, setScan] = useState({
     scanning: true,
-    devices: [
-      { name: "test", id: "test" },
-      { name: "test2", id: "test2" },
-    ],
+    devices: [],
     error: null,
   });
   const [connectedDevice, setConnectedDevice] = useState({
@@ -39,12 +39,12 @@ const BleProvider = ({ children }) => {
     error: null,
     connecting: false,
   });
-  const SPS_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
-  const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
-  const SPS_SERVER_RX_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
-  // const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
+  // const SPS_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
   // const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
-  // const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
+  // const SPS_SERVER_RX_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
+  const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
+  const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
+  const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
 
   const requestAndroid31Permissions = async () => {
     const bluetoothScanPermission = await PermissionsAndroid.request(
@@ -108,8 +108,7 @@ const BleProvider = ({ children }) => {
 
   const scanForPeripherals = (setError = false, startTime = false) => {
     bleManager.startDeviceScan(
-      null,
-      // [SPS_SERVICE_UUID],
+      [SPS_SERVICE_UUID],
       { allowDuplicates: false },
       (error, device) => {
         setError();
@@ -173,11 +172,9 @@ const BleProvider = ({ children }) => {
       // Log the UUIDs of services
       services.forEach(async (service) => {
         // Log the UUIDs of characteristics
-        console.log(service);
+
         const characteristics = await service.characteristics();
-        characteristics.forEach((characteristic) => {
-          console.log(characteristic);
-        });
+        characteristics.forEach((characteristic) => {});
       });
       setConnectedDevice((prev) => ({
         ...prev,
@@ -210,10 +207,8 @@ const BleProvider = ({ children }) => {
   };
 
   const writePasswordToDevice = async (data = false) => {
-    const prefix = [55, 5];
-    let passwordWithHeader = Buffer.from(
-      convertedArrayToHex([55, 5, 5, 9, 7, 6, 15, 0, 65, 0, 1])
-    );
+    const prefix = [55, 1];
+    let passwordWithHeader = [];
     if (data) {
       if (data.length < 4) throw new Error("Password must be 4 digits");
 
@@ -221,6 +216,7 @@ const BleProvider = ({ children }) => {
         convertedArrayToHex(prefix.concat(data))
       );
     }
+    console.log("dsasdasd", passwordWithHeader);
 
     try {
       let res =
@@ -229,7 +225,7 @@ const BleProvider = ({ children }) => {
           SPS_SERVER_RX_UUID, // Use the appropriate UUID for writing
           passwordWithHeader.toString("base64")
         );
-      console.log("res", res);
+
       return res;
       // Password set successfully
     } catch (error) {
@@ -239,50 +235,128 @@ const BleProvider = ({ children }) => {
     }
   };
 
+  const writeLightsToDevice = async (data = false) => {
+    const prefix = [55, 3];
+    const prefixAndPass = prefix.concat(password);
+    const withTemp = prefixAndPass.concat([temp.value]);
+    let lightsWithPrefix = [];
+    if (data) {
+      lightsWithPrefix = Buffer.from(
+        convertedArrayToHex(withTemp.concat(data))
+      );
+    }
+
+    try {
+      let res =
+        await connectedDevice.device.writeCharacteristicWithResponseForService(
+          SPS_SERVICE_UUID,
+          SPS_SERVER_RX_UUID, // Use the appropriate UUID for writing
+          lightsWithPrefix.toString("base64")
+        );
+
+      return res;
+      // Password set successfully
+    } catch (error) {
+      console.log("err in write lights", error);
+      throw error;
+      // Handle error while setting password
+    }
+  };
+
+  const writeTempToDevice = async (data = false) => {
+    const prefix = [55, 3];
+    const prefixAndPass = prefix.concat(password);
+    const withTemp = prefixAndPass.concat([isLightsOn ? 1 : 0]);
+    let tempWithPrefix = [];
+    if (data) {
+      tempWithPrefix = Buffer.from(convertedArrayToHex(withTemp.concat(data)));
+    }
+
+    try {
+      let res =
+        await connectedDevice.device.writeCharacteristicWithResponseForService(
+          SPS_SERVICE_UUID,
+          SPS_SERVER_RX_UUID, // Use the appropriate UUID for writing
+          tempWithPrefix.toString("base64")
+        );
+
+      return res;
+      // Password set successfully
+    } catch (error) {
+      console.log("err in write temp", error);
+      throw error;
+      // Handle error while setting password
+    }
+  };
+
+  const writeLockToDevice = async (data = false) => {
+    const prefix = [55, 4];
+    const prefixAndPass = prefix.concat(password);
+    let lockWithPrefix = [];
+    if (data) {
+      lockWithPrefix = Buffer.from(
+        convertedArrayToHex(prefixAndPass.concat(data))
+      );
+    }
+
+    try {
+      let res =
+        await connectedDevice.device.writeCharacteristicWithResponseForService(
+          SPS_SERVICE_UUID,
+          SPS_SERVER_RX_UUID, // Use the appropriate UUID for writing
+          lockWithPrefix.toString("base64")
+        );
+
+      return res;
+      // Password set successfully
+    } catch (error) {
+      console.log("err in write temp", error);
+      throw error;
+      // Handle error while setting password
+    }
+  };
+
+  const getStatusFromBase64AndSetToState = (statusData) => {
+    const decodedBuffer = Buffer.from(statusData, "base64");
+
+    // Extract the array of numbers from the Buffer
+    const hexString = Array.from(decodedBuffer);
+    console.log("hexString", hexString);
+    const password = hexString.slice(2, 6);
+    const temperature = parseInt(hexString.slice(6, 8));
+    const deviceStatus = parseInt(hexString.slice(7, 9));
+    const batteryLevel = parseInt(hexString.slice(8, 10));
+    const chargerStatus = parseInt(hexString.slice(9, 11));
+    const lightStatus = parseInt(hexString.slice(10, 12));
+
+    setBoxTemp(temperature);
+    setDevicePassword(password);
+    setDeviceIsLocked(deviceStatus);
+    setDeviceIsLightsOn(lightStatus);
+    setBoxBatteryLevel(batteryLevel);
+    setBoxIsCharging(chargerStatus);
+
+    console.log({
+      password,
+      temperature,
+      deviceStatus,
+      batteryLevel,
+      chargerStatus,
+      lightStatus,
+    });
+  };
+
   const getStatusFromDevice = async () => {
-    console.log("connected device", connectedDevice.device);
+    console.log("getting status");
     try {
       const characteristic =
         await connectedDevice.device.readCharacteristicForService(
           SPS_SERVICE_UUID,
           SPS_SERVER_RX_UUID // Use the appropriate UUID for reading
         );
-      // characteristic.value coming from ble device is 0x5505010203040200640001
-      const statusData = characteristic.value;
-      console.log("data", statusData);
-      const hexString = Buffer.from(statusData, "base64").toString("hex");
-      console.log(hexString);
-      // Extract individual components from the original hex string directly
-      const prefix = hexString.slice(0, 4);
-      const password = hexString.slice(4, 12);
-      const temperature = parseInt(hexString.slice(12, 14));
-      const deviceStatus = parseInt(hexString.slice(14, 16));
-      const batteryLevel = parseInt(hexString.slice(16, 18));
-      const chargerStatus = parseInt(hexString.slice(18, 20));
-      const lightStatus = parseInt(hexString.slice(20, 22));
 
-      const passwordArray = [];
-      for (let i = 0; i < password.length; i += 2) {
-        const pair = password.substring(i, i + 2);
-        const number = parseInt(pair, 16); // Parse the pair as a hexadecimal number
-        passwordArray.push(number);
-      }
+      getStatusFromBase64AndSetToState(characteristic.value);
 
-      setBoxTemp(temperature);
-      setDevicePassword(passwordArray);
-      setDeviceIsLocked(deviceStatus);
-      setDeviceIsLightsOn(lightStatus);
-      setBoxBatteryLevel(batteryLevel);
-      setBoxIsCharging(chargerStatus);
-      console.log({
-        prefix,
-        password: passwordArray,
-        temperature,
-        deviceStatus,
-        batteryLevel,
-        chargerStatus,
-        lightStatus,
-      });
       return characteristic;
     } catch (error) {
       throw error;
@@ -298,49 +372,20 @@ const BleProvider = ({ children }) => {
       (error, characteristic) => {
         if (error) {
           console.error("Error reading characteristic:", error.message);
-          return;
+          throw error;
         }
-        const statusData = characteristic.value;
-        console.log("data", statusData);
-        const hexString = Buffer.from(statusData, "base64").toString("hex");
-
-        const password = hexString.slice(4, 12);
-        const temperature = parseInt(hexString.slice(12, 14));
-        const deviceStatus = parseInt(hexString.slice(14, 16));
-        const batteryLevel = parseInt(hexString.slice(16, 18));
-        const chargerStatus = parseInt(hexString.slice(18, 20));
-        const lightStatus = parseInt(hexString.slice(20, 22));
-
-        const passwordArray = [];
-        for (let i = 0; i < password.length; i += 2) {
-          const pair = password.substring(i, i + 2);
-          const number = parseInt(pair, 16); // Parse the pair as a hexadecimal number
-          passwordArray.push(number);
-        }
-
-        setBoxTemp(temperature);
-        setDevicePassword(passwordArray);
-        setDeviceIsLocked(deviceStatus);
-        setDeviceIsLightsOn(lightStatus);
-        setBoxBatteryLevel(batteryLevel);
-        setBoxIsCharging(chargerStatus);
-
-        console.log({
-          password: passwordArray,
-          temperature,
-          deviceStatus,
-          batteryLevel,
-          chargerStatus,
-          lightStatus,
-        });
+        getStatusFromBase64AndSetToState(characteristic.value);
       }
     );
   };
+
   useEffect(() => {
     if (connectedDevice.device && !connectedDevice.connecting) {
+      getStatusFromDevice();
       startMonitoringDevice();
     }
   }, [connectedDevice]);
+
   return (
     <BleContext.Provider
       value={{
@@ -361,6 +406,9 @@ const BleProvider = ({ children }) => {
         connectedDevice,
 
         writePasswordToDevice,
+        writeLightsToDevice,
+        writeTempToDevice,
+        writeLockToDevice,
         getStatusFromDevice,
         startMonitoringDevice,
       }}

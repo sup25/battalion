@@ -102,7 +102,7 @@ const SearchScreen = ({ navigation }) => {
         </View>
       </View>
 
-      {error && <Text>{error}</Text>}
+      {error && <Text style={{ color: colors.white }}>{error}</Text>}
     </SafeAreaView>
   );
 };

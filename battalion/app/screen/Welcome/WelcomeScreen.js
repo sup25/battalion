@@ -12,14 +12,18 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
+import { useToast } from "react-native-toast-notifications";
+
 import { useAuth } from "../../utils/AuthProvider";
 import FetchUserProfile from "../../Hooks/UserProfile";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAppSettingContext } from "../../context/AppSettingContext";
 import ChargingProgressCircle from "../../component/ChargingProgressCircle";
+import { useBleContext } from "../../utils/BLEProvider";
 
 const WelcomeScreen = ({ navigation }) => {
+  const toast = useToast();
   const { currentUser } = useAuth();
 
   const [userName, setUserName] = useState();
@@ -31,7 +35,12 @@ const WelcomeScreen = ({ navigation }) => {
     boxBatteryLevel,
     boxIsCharging,
     isLightsOn,
+    setDeviceIsLightsOn,
+    setDeviceIsLocked,
   } = useAppSettingContext();
+  const { writeLightsToDevice, writeLockToDevice, connectedDevice } =
+    useBleContext();
+
   const userData = FetchUserProfile(currentUser);
 
   useEffect(() => {
@@ -102,7 +111,12 @@ const WelcomeScreen = ({ navigation }) => {
 
           <View style={{ display: "flex", gap: 25 }}>
             <View style={styles.deviceLocked}>
-              <Text style={styles.lockedTxt}>
+              <Text
+                style={[
+                  styles.lockedTxt,
+                  { color: connectedDevice.device ? "white" : "grey" },
+                ]}
+              >
                 {isLocked ? "Device Locked" : "Device Unlocked"}
               </Text>
               <View
@@ -113,21 +127,39 @@ const WelcomeScreen = ({ navigation }) => {
               >
                 <View style={styles.iconBackgroundContainer}>
                   <TouchableWithoutFeedback
-                    onPress={() => {
-                      setDeviceIsLocked(!isLocked);
+                    onPress={async () => {
+                      if (connectedDevice.device) {
+                        try {
+                          await writeLockToDevice([
+                            !isLocked === false ? 0 : 1,
+                          ]);
+                          setDeviceIsLocked(!isLocked);
+                        } catch (err) {
+                          toast.show(
+                            "Error writing to device, try to reconnect",
+                            {
+                              type: "normal",
+                            }
+                          );
+                        }
+                      } else {
+                        toast.show("Please connect to a device.", {
+                          type: "normal",
+                        });
+                      }
                     }}
                   >
                     {isLocked ? (
                       <MaterialCommunityIcons
                         name="lock"
                         size={20}
-                        color="#B0B0B0"
+                        color={connectedDevice.device ? "black" : "#B0B0B0"}
                       />
                     ) : (
                       <MaterialCommunityIcons
                         name="lock-open"
                         size={20}
-                        color="black"
+                        color={connectedDevice.device ? "black" : "#B0B0B0"}
                       />
                     )}
                   </TouchableWithoutFeedback>
@@ -136,7 +168,14 @@ const WelcomeScreen = ({ navigation }) => {
             </View>
 
             <View style={styles.brightness}>
-              <Text style={styles.brightnessTxt}>Light Auto</Text>
+              <Text
+                style={[
+                  styles.brightnessTxt,
+                  { color: connectedDevice.device ? "white" : "grey" },
+                ]}
+              >
+                Light Auto
+              </Text>
               <View
                 style={[
                   styles.switchOnOff,
@@ -145,21 +184,39 @@ const WelcomeScreen = ({ navigation }) => {
               >
                 <View style={styles.iconBackgroundContainer}>
                   <TouchableWithoutFeedback
-                    onPress={() => {
-                      setDeviceIsLightsOn(!isLightsOn);
+                    onPress={async () => {
+                      if (connectedDevice.device) {
+                        try {
+                          await writeLightsToDevice([
+                            !isLightsOn === false ? 0 : 1,
+                          ]);
+                          setDeviceIsLightsOn(!isLightsOn);
+                        } catch (err) {
+                          toast.show(
+                            "Error writing to device, try to reconnect.",
+                            {
+                              type: "normal",
+                            }
+                          );
+                        }
+                      } else {
+                        toast.show("Please connect to a device.", {
+                          type: "normal",
+                        });
+                      }
                     }}
                   >
                     {isLightsOn ? (
                       <MaterialCommunityIcons
                         name="brightness-5"
                         size={20}
-                        color="#B0B0B0"
+                        color={connectedDevice.device ? "black" : "#B0B0B0"}
                       />
                     ) : (
                       <MaterialCommunityIcons
                         name="brightness-5"
                         size={20}
-                        color="black"
+                        color={connectedDevice.device ? "black" : "#B0B0B0"}
                       />
                     )}
                   </TouchableWithoutFeedback>
@@ -170,22 +227,54 @@ const WelcomeScreen = ({ navigation }) => {
         </View>
         <View style={styles.unlockedTempContainer}>
           <View style={styles.TempConatinerBg}>
-            <Text style={styles.degree}>
+            <Text
+              style={[
+                styles.degree,
+                { color: connectedDevice.device ? "white" : "grey" },
+              ]}
+            >
               {boxTemp < 0
                 ? "--"
                 : getTempValueAndUnit({ value: boxTemp, unit: temp.unit })}
             </Text>
-            <Text style={styles.actualTxt}>Actual box temperature</Text>
+            <Text
+              style={[
+                styles.actualTxt,
+                { color: connectedDevice.device ? "white" : "grey" },
+              ]}
+            >
+              Actual box temperature
+            </Text>
           </View>
           <TouchableOpacity
             style={styles.TempConatinerBg}
             onPress={() => {
-              navigation.navigate("halfcircle");
+              if (connectedDevice.device) {
+                navigation.navigate("halfcircle");
+              } else {
+                toast.show("Please connect to a device.", {
+                  type: "normal",
+                });
+              }
             }}
           >
-            <Text style={styles.degree}>{getTempValueAndUnit(temp)}</Text>
+            <Text
+              style={[
+                styles.degree,
+                { color: connectedDevice.device ? "white" : "grey" },
+              ]}
+            >
+              {getTempValueAndUnit(temp)}
+            </Text>
             <View style={styles.setTextContainer}>
-              <Text style={styles.setText}>Set the box Temperature</Text>
+              <Text
+                style={[
+                  styles.setText,
+                  { color: connectedDevice.device ? "white" : "grey" },
+                ]}
+              >
+                Set the box Temperature
+              </Text>
               <MaterialCommunityIcons
                 name="arrow-right"
                 size={20}
@@ -196,10 +285,20 @@ const WelcomeScreen = ({ navigation }) => {
         </View>
         <View style={styles.perTxtContainer}>
           <View style={styles.percentageText}>
-            <Text style={styles.textOne}>
+            <Text
+              style={[
+                styles.textOne,
+                { color: connectedDevice.device ? "white" : "grey" },
+              ]}
+            >
               {boxBatteryLevel < 0 ? "--" : boxBatteryLevel}%
             </Text>
-            <Text style={styles.textTwo}>
+            <Text
+              style={[
+                styles.textTwo,
+                { color: connectedDevice.device ? "white" : "grey" },
+              ]}
+            >
               {boxIsCharging ? "Charging" : "Plug your Device"}
             </Text>
           </View>

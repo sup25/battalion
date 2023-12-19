@@ -3,14 +3,18 @@ import { View, StyleSheet, Animated, Text, TextInput } from "react-native";
 import Svg, { Circle, G } from "react-native-svg";
 import Slider from "@react-native-community/slider";
 import { useAppSettingContext } from "../../context/AppSettingContext";
+import { useBleContext } from "../../utils/BLEProvider";
+
+import { useToast } from "react-native-toast-notifications";
 
 const HalfCircleSlider = () => {
+  const tost = useToast();
   const { temp, setTempValue, getTempValueAndUnit } = useAppSettingContext();
+  const { writeTempToDevice } = useBleContext();
   const [sliderValue, setSliderValue] = useState(temp.value);
 
   const handleValueChange = (value) => {
     setSliderValue(value);
-    setTempValue(value);
   };
 
   return (
@@ -53,6 +57,17 @@ const HalfCircleSlider = () => {
         maximumValue={100}
         step={1}
         onValueChange={(value) => handleValueChange(value)}
+        onSlidingComplete={async () => {
+          try {
+            await writeTempToDevice([sliderValue]);
+            setTempValue(sliderValue);
+          } catch (error) {
+            console.log(error);
+            tost.show("Error writing temperature to device", {
+              type: "normal",
+            });
+          }
+        }}
       />
     </View>
   );
