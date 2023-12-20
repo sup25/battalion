@@ -132,7 +132,7 @@ const WelcomeScreen = ({ navigation }) => {
         <TouchableOpacity
           style={styles.unlockedTempContainer}
           onPress={() => {
-            navigation.navigate("devicedetails");
+            navigation.navigate("home");
           }}
         >
           <BoxTemp />
@@ -296,7 +296,6 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: colors.white,
     fontWeight: "900",
-
     alignItems: "flex-start",
   },
 
