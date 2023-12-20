@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { db } from "../config/Firebase";
+import { db } from "../../config/Firebase/Firebase";
 import { doc, getDoc } from "firebase/firestore";
 
 function FetchUserProfile(currentUser) {

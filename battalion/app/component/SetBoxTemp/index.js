@@ -1,13 +1,13 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAppSettingContext } from "../../context/AppSettingContext";
+import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import colors from "../../config/Colors/colors";
 import { useNavigation } from "@react-navigation/native";
 import { useToast } from "react-native-toast-notifications";
-import { useBleContext } from "../../utils/BLEProvider";
+import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 
-const BoxTemperature = () => {
+const SetBoxTemp = () => {
   const toast = useToast();
   const { connectedDevice } = useBleContext();
   const { getTempValueAndUnit, temp } = useAppSettingContext();
@@ -60,7 +60,7 @@ const BoxTemperature = () => {
   );
 };
 
-export default BoxTemperature;
+export default SetBoxTemp;
 
 const styles = StyleSheet.create({
   TempConatinerBg: {

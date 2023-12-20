@@ -2,7 +2,7 @@ import React, { useEffect, useState, createContext, useContext } from "react";
 import { View, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { auth } from "../config/Firebase";
+import { auth } from "../../config/Firebase/Firebase";
 
 const AuthContext = createContext();
 

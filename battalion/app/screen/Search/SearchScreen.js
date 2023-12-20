@@ -12,9 +12,9 @@ import {
 import React, { useEffect, useState } from "react";
 import colors from "../../config/Colors/colors";
 import TextLogo from "../../assets/TextLogo";
-import useBLE from "../../Hooks/UseBle";
-import { useBleContext } from "../../utils/BLEProvider";
-import PulseAnimation from "./PulseAnimation";
+import useBLE from "../../Hooks/UseBle/UseBle";
+import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
+import PulseAnimation from "../PulseAnimation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useToast } from "react-native-toast-notifications";
 

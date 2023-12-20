@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAppSettingContext } from "../../context/AppSettingContext";
+import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import colors from "../../config/Colors/colors";
-import { useBleContext } from "../../utils/BLEProvider";
+import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 
-const ActualBoxTemp = () => {
+const BoxTemp = () => {
   const { getTempValueAndUnit, temp, boxTemp } = useAppSettingContext();
   const { connectedDevice } = useBleContext();
   return (
@@ -42,7 +42,7 @@ const ActualBoxTemp = () => {
   );
 };
 
-export default ActualBoxTemp;
+export default BoxTemp;
 
 const styles = StyleSheet.create({
   TempConatinerBg: {

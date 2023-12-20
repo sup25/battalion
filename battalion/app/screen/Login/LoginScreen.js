@@ -7,14 +7,14 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { auth } from "../../config/Firebase";
+import { auth } from "../../config/Firebase/Firebase";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import colors from "../../config/Colors/colors";
 import CarthagosLinkButton from "../../component/CarthagosLinkButton/CarthagosLinkButton";
-import TextLogo from "../../assets/TextLogo";
 import { useRoute } from "@react-navigation/native";
-import handleClearMessage from "../../utils/HandleClearMessage";
-import { UseBioMetric } from "../../Hooks/UseBioMetricAuth";
+import handleClearMessage from "../../utils/HandleClearMessage/HandleClearMessage";
+import { UseBioMetric } from "../../Hooks/UseBioMetric";
+import TextLogoWhite from "../../assets/TextLogoWhite";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
@@ -69,7 +69,7 @@ const LoginScreen = ({ navigation }) => {
         source={require("../../assets/device.png")}
       />
       <View style={styles.logoConatiner}>
-        <TextLogo />
+        <TextLogoWhite />
         <Text style={styles.title}>Welcome Back</Text>
       </View>
       <View style={styles.inputTextContainer}>

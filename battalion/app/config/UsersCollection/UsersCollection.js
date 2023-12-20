@@ -1,5 +1,5 @@
 import { doc, setDoc } from "firebase/firestore";
-import { db } from "./Firebase";
+import { db } from "../Firebase/Firebase";
 
 // Function to add user data to Firestore
 export const addUserToFirestore = async (userId, userData) => {

@@ -10,9 +10,9 @@ import {
 import React, { useEffect, useState } from "react";
 
 import { setPasswordToDevice, setTimeToDevice } from "../../BLEfunctions";
-import useBLE from "../../Hooks/UseBle";
-import { useBleContext } from "../../utils/BLEProvider";
-import { useAppSettingContext } from "../../context/AppSettingContext";
+import useBLE from "../../Hooks/UseBle/UseBle";
+import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
+import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 
 const TestingBLE = ({ navigation }) => {
   const { getStatusFromDevice, writePasswordToDevice, disconnectFromDevice } =

@@ -12,17 +12,17 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-import { useAuth } from "../../utils/AuthProvider";
-import FetchUserProfile from "../../Hooks/UserProfile";
+import { useAuth } from "../../utils/AuthProvider/AuthProvider";
+import FetchUserProfile from "../../Hooks/UserProfile/UserProfile";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import DeviceLockedUnlockded from "../../component/DeviceLockedUnlocked";
-import LightToggle from "../../component/LightToggle";
-import BoxTemperature from "../../component/BoxTemperature";
-import ActualBoxTemp from "../../component/ActualBoxTemp";
-import BatteryPercentText from "../../component/BatteryPercentText";
-import { useBleContext } from "../../utils/BLEProvider";
+import LocksToggle from "../../component/LocksToggle";
+import LightsToggle from "../../component/LightsToggle";
+import SetBoxTemp from "../../component/SetBoxTemp";
+import BoxTemp from "../../component/BoxTemp";
+import BatteryPercent from "../../component/BatteryPercent";
+import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
@@ -65,7 +65,7 @@ const WelcomeScreen = ({ navigation }) => {
             flexDirection: "row",
           }}
         >
-          <Text style={styles.textEmail}>Welcome, {userName}</Text>
+          <Text style={styles.textWelcome}>Welcome, {userName}</Text>
           <TouchableWithoutFeedback
             onPress={() => navigation.navigate("devicesetting")}
           >
@@ -125,8 +125,8 @@ const WelcomeScreen = ({ navigation }) => {
           />
 
           <View style={{ display: "flex" }}>
-            <DeviceLockedUnlockded />
-            <LightToggle />
+            <LocksToggle />
+            <LightsToggle />
           </View>
         </View>
         <TouchableOpacity
@@ -135,10 +135,10 @@ const WelcomeScreen = ({ navigation }) => {
             navigation.navigate("devicedetails");
           }}
         >
-          <ActualBoxTemp />
-          <BoxTemperature />
+          <BoxTemp />
+          <SetBoxTemp />
         </TouchableOpacity>
-        <BatteryPercentText />
+        <BatteryPercent />
       </View>
     </View>
   );
@@ -290,7 +290,7 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "space-between",
   },
-  textEmail: {
+  textWelcome: {
     fontSize: 28,
     fontWeight: "800",
     textTransform: "uppercase",

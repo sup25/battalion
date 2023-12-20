@@ -2,10 +2,10 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
-import AddUserData from "../../api/Database";
+import AddUserData from "../../api/Database/Database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import FetchUserProfile from "../../Hooks/UserProfile";
-import { useAuth } from "../../utils/AuthProvider";
+import FetchUserProfile from "../../Hooks/UserProfile/UserProfile";
+import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 
 const AddDevice = ({ navigation }) => {
   const { currentUser } = useAuth();

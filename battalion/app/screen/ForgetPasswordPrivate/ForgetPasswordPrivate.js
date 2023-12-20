@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import CarthagosButton from "../component/CarthagosButton/CarthagosButton";
+import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import { StyleSheet, View, TextInput, Text } from "react-native";
 import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../config/Firebase";
-import colors from "../config/Colors/colors";
-import TextLogo from "../assets/TextLogo";
-import { useAuth } from "../utils/AuthProvider";
+import { auth } from "../../config/Firebase/Firebase";
+import colors from "../../config/Colors/colors";
+import TextLogo from "../../assets/TextLogo";
+import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 
 const ForgotPasswordPrivate = ({ navigation }) => {
   const { currentUser, logout } = useAuth();

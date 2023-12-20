@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import colors from "../../config/Colors/colors";
-import { useAppSettingContext } from "../../context/AppSettingContext";
+import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import ChargingProgressCircle from "../ChargingProgressCircle";
 

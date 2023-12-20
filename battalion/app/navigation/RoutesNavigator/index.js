@@ -1,8 +1,8 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import PrivateRoute from "./PrivateRoute";
-import PublicRoute from "./PublicRoute";
+import PrivateRoute from "../PrivateRoute/PrivateRoute";
+import PublicRoute from "../PublicRoute/PublicRoute";
 const Stack = createNativeStackNavigator();
-export const AuthNavigator = () => {
+export const RoutesNavigator = () => {
   return (
     <Stack.Navigator>
       <Stack.Screen

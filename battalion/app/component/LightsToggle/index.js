@@ -1,11 +1,11 @@
 import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
-import { useAppSettingContext } from "../../context/AppSettingContext";
+import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useBleContext } from "../../utils/BLEProvider";
+import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { useToast } from "react-native-toast-notifications";
 
-const LightToggle = () => {
+const LightsToggle = () => {
   const toast = useToast();
   const { isLightsOn, setDeviceIsLightsOn } = useAppSettingContext();
   const { writeLightsToDevice, connectedDevice } = useBleContext();
@@ -64,7 +64,7 @@ const LightToggle = () => {
   );
 };
 
-export default LightToggle;
+export default LightsToggle;
 
 const styles = StyleSheet.create({
   brightness: {

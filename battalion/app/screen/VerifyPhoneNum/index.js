@@ -1,14 +1,14 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
-import { auth } from "../config/Firebase";
-import { addUserToFirestore } from "../config/UsersCollection";
+import { auth } from "../../config/Firebase/Firebase";
+import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import colors from "../config/Colors/colors";
-import CarthagosButton from "../component/CarthagosButton/CarthagosButton";
+import colors from "../../config/Colors/colors";
+import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import { PhoneAuthProvider } from "firebase/auth";
-import { useAuth } from "../utils/AuthProvider";
+import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 
-const VerifyPhoneOne = ({ navigation, setPhoneNum }) => {
+const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("+1");
   const { currentUser } = useAuth();
@@ -55,8 +55,6 @@ const VerifyPhoneOne = ({ navigation, setPhoneNum }) => {
         verificationId,
         phoneNumber: fullPhoneNumber,
       });
-
-      setPhoneNum(phoneNumber);
     } catch (error) {
       setInfo(`Error: ${error.message}`);
     }
@@ -100,7 +98,7 @@ const VerifyPhoneOne = ({ navigation, setPhoneNum }) => {
   );
 };
 
-export default VerifyPhoneOne;
+export default VerifyPhoneNum;
 
 const styles = StyleSheet.create({
   btn: {

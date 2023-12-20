@@ -1,12 +1,12 @@
 import React from "react";
 import { View, StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
-import { useAppSettingContext } from "../../context/AppSettingContext";
+import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useBleContext } from "../../utils/BLEProvider";
+import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { useToast } from "react-native-toast-notifications";
 
-const DeviceLockedUnlocked = () => {
+const LocksToggle = () => {
   const toast = useToast();
   const { isLocked, setDeviceIsLocked } = useAppSettingContext();
   const { writeLockToDevice, connectedDevice } = useBleContext();
@@ -64,7 +64,7 @@ const DeviceLockedUnlocked = () => {
     </View>
   );
 };
-export default DeviceLockedUnlocked;
+export default LocksToggle;
 
 const styles = StyleSheet.create({
   deviceLocked: {

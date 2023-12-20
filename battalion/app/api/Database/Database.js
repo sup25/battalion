@@ -1,5 +1,5 @@
 import { collection, doc, setDoc, getDoc } from "firebase/firestore";
-import { db } from "../config/Firebase";
+import { db } from "../../config/Firebase/Firebase";
 
 const AddUserData = async (data) => {
   const { fourDigitCode, combinedSerialNum } = data;

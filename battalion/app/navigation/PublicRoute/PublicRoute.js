@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import MainScreen from "../screen/Main/MainScreen";
-import LoginScreen from "../screen/Login/LoginScreen";
-import RegisterScreen from "../screen/Register/RegisterScreen";
-import ForgotPasswordScreen from "../screen/ForgotPasswordScreen";
-import InsertCode from "../screen/InsertCode/InsertCode";
-import VerifyPhoneOne from "../screen/VerifyPhoneOne";
+import MainScreen from "../../screen/Main/MainScreen";
+import LoginScreen from "../../screen/Login/LoginScreen";
+import RegisterScreen from "../../screen/Register/RegisterScreen";
+import ForgotPasswordScreen from "../../screen/ForgotPasswordScreen";
+import InsertCode from "../../screen/InsertCode/InsertCode";
+import VerifyPhoneNum from "../../screen/VerifyPhoneNum";
 
 const Stack = createNativeStackNavigator();
 const PublicRoute = () => {
@@ -29,7 +29,7 @@ const PublicRoute = () => {
       />
       <Stack.Screen
         name="Phoneverify"
-        component={VerifyPhoneOne}
+        component={VerifyPhoneNum}
         options={{ headerShown: false }}
       />
       <Stack.Screen

@@ -7,13 +7,13 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-import { useAuth } from "../../utils/AuthProvider";
+import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { db } from "../../config/Firebase";
+import { db } from "../../config/Firebase/Firebase";
 import { setDoc, doc } from "firebase/firestore";
-import FetchUserProfile from "../../Hooks/UserProfile";
+import FetchUserProfile from "../../Hooks/UserProfile/UserProfile";
 
 const ProfileScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
@@ -247,7 +247,7 @@ const styles = StyleSheet.create({
   },
   forgetText: {
     color: colors.white,
-    maxWidth: 80,
+    width: 80,
     fontSize: 18,
     fontWeight: "500",
   },
@@ -306,7 +306,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontWeight: "800",
     color: colors.white,
-    maxWidth: 80,
+    width: 126,
   },
 
   userName: {

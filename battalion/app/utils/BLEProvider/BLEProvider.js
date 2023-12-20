@@ -10,9 +10,9 @@ import * as ExpoDevice from "expo-device";
 import { PermissionsAndroid, Platform } from "react-native";
 import { Buffer } from "buffer";
 import base64 from "react-native-base64";
-import convertedArrayToHex from "./convertArrayToHex";
-import { useAppSettingContext } from "../context/AppSettingContext";
-import appConfig from "../config/app";
+import convertedArrayToHex from "../ConvertArrayToHex/convertArrayToHex";
+import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
+import appConfig from "../../config/app";
 
 import { useToast } from "react-native-toast-notifications";
 const BleContext = createContext();

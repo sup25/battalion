@@ -1,8 +1,8 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { AuthProvider } from "./app/utils/AuthProvider";
-import { AuthNavigator } from "./app/navigation/AuthNavigator";
-import { BleProvider } from "./app/utils/BLEProvider";
-import { AppSettingProvider } from "./app/context/AppSettingContext";
+import { AuthProvider } from "./app/utils/AuthProvider/AuthProvider";
+import { RoutesNavigator } from "./app/navigation/RoutesNavigator";
+import { BleProvider } from "./app/utils/BLEProvider/BLEProvider";
+import { AppSettingProvider } from "./app/context/AppSettingContext/AppSettingContext";
 import { ToastProvider } from "react-native-toast-notifications";
 
 export default function App() {
@@ -17,7 +17,7 @@ export default function App() {
         <AuthProvider>
           <AppSettingProvider>
             <BleProvider>
-              <AuthNavigator />
+              <RoutesNavigator />
             </BleProvider>
           </AppSettingProvider>
         </AuthProvider>

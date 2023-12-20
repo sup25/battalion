@@ -1,12 +1,12 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useAppSettingContext } from "../../context/AppSettingContext";
+import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import colors from "../../config/Colors/colors";
 import ChargingProgressCircle from "../ChargingProgressCircle";
-import { useBleContext } from "../../utils/BLEProvider";
+import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 
-const BatteryPercentText = () => {
+const BatteryPercent = () => {
   const { connectedDevice } = useBleContext();
   const { boxBatteryLevel, boxIsCharging } = useAppSettingContext();
 
@@ -64,7 +64,7 @@ const BatteryPercentText = () => {
   );
 };
 
-export default BatteryPercentText;
+export default BatteryPercent;
 
 const styles = StyleSheet.create({
   perTxtContainer: {
