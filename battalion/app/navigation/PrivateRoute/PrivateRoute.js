@@ -17,6 +17,7 @@ import AddDevice from "../../screen/AddDevice/AddDevice";
 import SearchScreen from "../../screen/Search/SearchScreen";
 import TestingBLE from "../../screen/Search/TestingBLE";
 import HalfCircleSlider from "../../screen/HalfCircleSlider";
+import Home from "../../screen/Home";
 
 const Tab = createBottomTabNavigator();
 
@@ -82,6 +83,11 @@ const PrivateStackNavigator = () => {
       <Stack.Screen
         name="halfcircle"
         component={HalfCircleSlider}
+        options={{ headerShown: false }}
+      />
+      <Stack.Screen
+        name="home"
+        component={Home}
         options={{ headerShown: false }}
       />
     </Stack.Navigator>
