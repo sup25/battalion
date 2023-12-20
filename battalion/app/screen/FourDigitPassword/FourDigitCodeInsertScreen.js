@@ -11,11 +11,11 @@ import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { collection, doc, updateDoc } from "firebase/firestore";
-import { db } from "../../config/Firebase";
-import { useAppSettingContext } from "../../context/AppSettingContext";
+import { db } from "../../config/Firebase/Firebase";
+import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import FourDigitsCode from "../../component/FourDigitsCode";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { useBleContext } from "../../utils/BLEProvider";
+import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 
 export default function FourDigitCodeInsertScreen({ route }) {
   const { password, setDevicePassword } = useAppSettingContext();

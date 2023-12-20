@@ -12,20 +12,22 @@ import {
 } from "react-native";
 import { AntDesign } from "@expo/vector-icons";
 
-import { useAuth } from "../../utils/AuthProvider";
-import FetchUserProfile from "../../Hooks/UserProfile";
+import { useAuth } from "../../utils/AuthProvider/AuthProvider";
+import FetchUserProfile from "../../Hooks/UserProfile/UserProfile";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
-import DeviceLockedUnlockded from "../../component/DeviceLockedUnlocked";
-import LightToggle from "../../component/LightToggle";
-import BoxTemperature from "../../component/BoxTemperature";
-import ActualBoxTemp from "../../component/ActualBoxTemp";
-import BatteryPercentText from "../../component/BatteryPercentText";
+import LocksToggle from "../../component/LocksToggle";
+import LightsToggle from "../../component/LightsToggle";
+import SetBoxTemp from "../../component/SetBoxTemp";
+import BoxTemp from "../../component/BoxTemp";
+import BatteryPercent from "../../component/BatteryPercent";
+import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
+  const { connectedDevice } = useBleContext();
 
   const handleEdit = () => {
     setIsEditing((prevState) => !prevState);
@@ -45,6 +47,7 @@ const WelcomeScreen = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
+
       <ImageBackground
         style={styles.background}
         source={require("../../assets/background.png")}
@@ -62,7 +65,7 @@ const WelcomeScreen = ({ navigation }) => {
             flexDirection: "row",
           }}
         >
-          <Text style={styles.textEmail}>Welcome, {userName}</Text>
+          <Text style={styles.textWelcome}>Welcome, {userName}</Text>
           <TouchableWithoutFeedback
             onPress={() => navigation.navigate("devicesetting")}
           >
@@ -70,15 +73,25 @@ const WelcomeScreen = ({ navigation }) => {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.deviceContainer}>
-          <Text style={styles.connDevice}>Devices Connected</Text>
-          <Text
-            style={styles.addDevice}
-            onPress={() => {
-              navigation.navigate("searchscreen");
-            }}
-          >
-            Add Device +
-          </Text>
+          {!connectedDevice.device && (
+            <View
+              style={{
+                flexDirection: "row",
+                width: "100%",
+                justifyContent: "space-between",
+              }}
+            >
+              <Text style={styles.connDevice}>Devices Connected</Text>
+              <Text
+                style={styles.addDevice}
+                onPress={() => {
+                  navigation.navigate("searchscreen");
+                }}
+              >
+                Add Device +
+              </Text>
+            </View>
+          )}
         </View>
         <View style={styles.battalionId}>
           <TextInput
@@ -112,8 +125,8 @@ const WelcomeScreen = ({ navigation }) => {
           />
 
           <View style={{ display: "flex" }}>
-            <DeviceLockedUnlockded />
-            <LightToggle />
+            <LocksToggle />
+            <LightsToggle />
           </View>
         </View>
         <TouchableOpacity
@@ -122,10 +135,10 @@ const WelcomeScreen = ({ navigation }) => {
             navigation.navigate("devicedetails");
           }}
         >
-          <ActualBoxTemp />
-          <BoxTemperature />
+          <BoxTemp />
+          <SetBoxTemp />
         </TouchableOpacity>
-        <BatteryPercentText />
+        <BatteryPercent />
       </View>
     </View>
   );
@@ -209,7 +222,7 @@ const styles = StyleSheet.create({
     color: "#5A5A5A",
   },
   deviceContainer: {
-    backgroundColor: "#000000a8",
+    position: "relative",
     justifyContent: "space-between",
     flexDirection: "row",
     paddingHorizontal: 15,
@@ -277,7 +290,7 @@ const styles = StyleSheet.create({
     padding: 10,
     justifyContent: "space-between",
   },
-  textEmail: {
+  textWelcome: {
     fontSize: 28,
     fontWeight: "800",
     textTransform: "uppercase",

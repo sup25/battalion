@@ -11,9 +11,9 @@ import React, { useState } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../../config/Colors/colors";
 
-import { useAppSettingContext } from "../../context/AppSettingContext";
+import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import FourDigitsCode from "../../component/FourDigitsCode";
-import { useBleContext } from "../../utils/BLEProvider";
+import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 
 const DeviceSetting = ({ navigation }) => {
   const [show, setShow] = useState(false);
@@ -36,7 +36,7 @@ const DeviceSetting = ({ navigation }) => {
     setPasswordError();
     if (connectedDevice.device) {
       try {
-        await writePasswordToDevice();
+        await writePasswordToDevice(pass);
         setDevicePassword(pass);
         setPasswordError();
       } catch (error) {

@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-import DeviceLockedUnlockded from "../../component/DeviceLockedUnlocked";
-import LightToggle from "../../component/LightToggle";
+
 import {
   StyleSheet,
   Text,
@@ -15,9 +14,11 @@ import {
   TouchableWithoutFeedback,
 } from "react-native";
 
-import ActualBoxTemp from "../../component/ActualBoxTemp";
-import BoxTemperature from "../../component/BoxTemperature";
-import BatteryPercentText from "../../component/BatteryPercentText";
+import LocksToggle from "../../component/LocksToggle";
+import LightsToggle from "../../component/LightsToggle";
+import SetBoxTemp from "../../component/SetBoxTemp";
+import BoxTemp from "../../component/BoxTemp";
+import BatteryPercent from "../../component/BatteryPercent";
 
 const DeviceDetails = ({ navigation }) => {
   return (
@@ -71,15 +72,15 @@ const DeviceDetails = ({ navigation }) => {
             source={require("../../assets/devicedetail.png")}
           />
           <View style={{ display: "flex", gap: 25 }}>
-            <DeviceLockedUnlockded />
-            <LightToggle />
+            <LocksToggle />
+            <LightsToggle />
           </View>
         </View>
         <View style={styles.unlockedTempContainer}>
-          <ActualBoxTemp />
-          <BoxTemperature />
+          <BoxTemp />
+          <SetBoxTemp />
         </View>
-        <BatteryPercentText />
+        <BatteryPercent />
       </View>
     </View>
   );

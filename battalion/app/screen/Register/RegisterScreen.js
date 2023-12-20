@@ -3,11 +3,11 @@ import { View, Text, TextInput, StyleSheet, StatusBar } from "react-native";
 import colors from "../../config/Colors/colors";
 import TextLogo from "../../assets/TextLogo";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../config/Firebase";
+import { auth } from "../../config/Firebase/Firebase";
 import CarthagosLinkButton from "../../component/CarthagosLinkButton/CarthagosLinkButton";
-import { useAuth } from "../../utils/AuthProvider";
-import handleClearMessage from "../../utils/HandleClearMessage";
-import { addUserToFirestore } from "../../config/UsersCollection";
+import { useAuth } from "../../utils/AuthProvider/AuthProvider";
+import handleClearMessage from "../../utils/HandleClearMessage/HandleClearMessage";
+import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection";
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");

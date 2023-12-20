@@ -4,14 +4,16 @@ import {
   PhoneAuthProvider,
   linkWithCredential,
   updateProfile,
+  signInWithPhoneNumber,
 } from "firebase/auth";
-import { auth } from "../../config/Firebase";
+import { auth } from "../../config/Firebase/Firebase";
 import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import { useRoute } from "@react-navigation/native";
-import { useAuth } from "../../utils/AuthProvider";
+import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 
 const InsertCode = ({ navigation }) => {
+  const recaptchaVerifier = useRef(null);
   const { currentUser } = useAuth();
   const [info, setInfo] = useState("");
   const [verificationId, setVerificationID] = useState("");
@@ -37,6 +39,8 @@ const InsertCode = ({ navigation }) => {
       setVerificationID(route.params.verificationId);
     }
   }, [route.params]);
+
+  const handleResendCode = async () => {};
 
   const handleVerifyVerificationCode = async () => {
     try {
@@ -102,6 +106,7 @@ const InsertCode = ({ navigation }) => {
           width={277}
           textColor={colors.black}
           color="white"
+          onPress={handleResendCode}
         />
       </View>
       <View style={styles.btn}>

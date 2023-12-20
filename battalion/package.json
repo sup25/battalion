@@ -7,6 +7,7 @@
     "ios": "expo run:ios",
     "web": "expo start --web"
   },
+  
   "dependencies": {
     "@config-plugins/react-native-ble-plx": "~5.0.0",
     "@expo/config-plugins": "~5.0.2",
@@ -41,6 +42,7 @@
     "react-native-screens": "~3.18.0",
     "react-native-sensitive-info": "~5.5.8",
     "react-native-svg": "13.4.0",
+    "react-native-toast-notifications": "^3.4.0",
     "react-native-web": "~0.18.9",
     "react-native-webview": "11.23.1",
     "react-navigation-switch": "~1.0.6"
