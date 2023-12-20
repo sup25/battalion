@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingTop: 12,
+    marginTop: 10,
   },
   brightnessTxt: {
     fontWeight: "500",

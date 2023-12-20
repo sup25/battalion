@@ -61,9 +61,11 @@ const HalfCircleSlider = ({ navigation }) => {
               transform="rotate(270, 171.5, 171.5)"
             />
           </G>
-          <Text style={styles.Temptext}>
-            {getTempValueAndUnit({ value: sliderValue, unit: temp.unit })}
-          </Text>
+          <View style={styles.tempTextWrapper}>
+            <Text style={styles.Temptext}>
+              {getTempValueAndUnit({ value: sliderValue, unit: temp.unit })}
+            </Text>
+          </View>
         </Svg>
       </View>
 
@@ -127,10 +129,20 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   Temptext: {
-    alignSelf: "flex-end",
-    fontSize: 50,
+    fontSize: 38,
     fontWeight: "900",
     color: colors.white,
+  },
+  tempTextWrapper: {
+    position: "absolute",
+    right: 0,
+    top: 150,
+    backgroundColor: "#1B1B1B",
+    justifyContent: "center",
+    alignItems: "center",
+    width: 160,
+    paddingVertical: 10,
+    borderRadius: 5,
   },
   SliderTxtWrapper: {
     flexDirection: "column",

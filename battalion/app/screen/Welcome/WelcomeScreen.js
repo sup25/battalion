@@ -102,7 +102,7 @@ const WelcomeScreen = ({ navigation }) => {
               <Text
                 style={styles.addDevice}
                 onPress={() => {
-                  navigation.navigate("addDevice");
+                  navigation.navigate("searchscreen", { isFirstTime: true });
                 }}
               >
                 Add Device +

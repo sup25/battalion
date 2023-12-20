@@ -118,6 +118,7 @@ const styles = StyleSheet.create({
   button: {
     position: "absolute",
     alignSelf: "center",
+    bottom: 20,
   },
   container: {
     flex: 1,
