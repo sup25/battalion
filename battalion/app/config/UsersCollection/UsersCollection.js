@@ -9,6 +9,6 @@ export const addUserToFirestore = async (userId, userData) => {
     return true; // Return true if the operation is successful
   } catch (error) {
     console.error("Error adding user to Firestore:", error);
-    return false; // Return false if there's an error
+    throw error; // Return false if there's an error
   }
 };

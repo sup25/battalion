@@ -40,9 +40,12 @@ const InsertCode = ({ navigation }) => {
     }
   }, [route.params]);
 
-  const handleResendCode = async () => {};
+  const handleResendCode = async (setIsLoading) => {
+    setIsLoading(true);
+  };
 
-  const handleVerifyVerificationCode = async () => {
+  const handleVerifyVerificationCode = async (setIsLoading) => {
+    setIsLoading(true);
     try {
       const code = verificationCode.join(""); // Join the digits to get the complete 6-digit code
       const credential = PhoneAuthProvider.credential(verificationId, code);
@@ -53,11 +56,11 @@ const InsertCode = ({ navigation }) => {
         email: currentUser?.email || "", // Update the email to the one from which the user signed up
         phoneNumber: currentUser?.phoneNumber || "", // Keep the existing phone number as it is already verified
       });
-      const message = "Success: Phone authentication successful";
-      setInfo(message);
-      console.log("Message", message);
+
+      setInfo("Success: Phone authentication successful");
       navigation.navigate("privateRoute", { screen: "MainTabs" });
     } catch (error) {
+      setIsLoading(false);
       setInfo(`Error: ${error.message}`);
     }
   };
@@ -106,7 +109,7 @@ const InsertCode = ({ navigation }) => {
           width={277}
           textColor={colors.black}
           color="white"
-          onPress={handleResendCode}
+          onPress={(setIsLoading) => handleResendCode(setIsLoading)}
         />
       </View>
       <View style={styles.btn}>
@@ -114,7 +117,7 @@ const InsertCode = ({ navigation }) => {
           title="confirm"
           width={277}
           textColor={colors.white}
-          onPress={handleVerifyVerificationCode}
+          onPress={(setIsLoading) => handleVerifyVerificationCode(setIsLoading)}
         />
       </View>
     </View>

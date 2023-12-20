@@ -16,7 +16,7 @@ const SetBoxTemp = () => {
     <TouchableOpacity
       style={styles.TempConatinerBg}
       onPress={() => {
-        if (!connectedDevice.device) {
+        if (connectedDevice.device) {
           navigation.navigate("halfcircle");
         } else {
           toast.show("Please connect to a device.", {

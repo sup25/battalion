@@ -4,34 +4,27 @@ import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import { AddUserData } from "../../api/Database/Database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import FetchUserProfile from "../../Hooks/UserProfile/UserProfile";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 
 const AddDevice = ({ navigation }) => {
   const { currentUser } = useAuth();
   const combinedSerialNumRef = useRef("");
-  const existingData = FetchUserProfile(currentUser);
+
   const [displayMessage, setDisplayMessage] = useState("");
   const [userData, setUserData] = useState({
     combinedSerialNum: "",
   });
 
-  const handleConfirm = async () => {
+  const handleConfirm = async (setIsLoading) => {
+    setIsLoading(true);
     try {
       const { combinedSerialNum } = userData;
 
       // Validate the combinedSerialNum field
       if (!combinedSerialNum || combinedSerialNum.length !== 12) {
-        const message =
-          "Invalid combinedSerialNum. Please enter a 12-digit value.";
+        const message = "Invalid serial number. Please enter a 12-digit value.";
         setDisplayMessage(message);
-        return;
-      }
-
-      if (existingData) {
-        // Display an error message if the data already exists
-        const errorMessage = "Device data already exists. Cannot update.";
-        setDisplayMessage(errorMessage);
+        setIsLoading(false);
         return;
       }
 
@@ -59,8 +52,9 @@ const AddDevice = ({ navigation }) => {
       setUserData({
         combinedSerialNum: "",
       });
+      handleNavigation();
     } catch (error) {
-      console.error("Error updating device data:", error);
+      setIsLoading(false);
     }
   };
 
@@ -72,7 +66,7 @@ const AddDevice = ({ navigation }) => {
     }
     await AsyncStorage.setItem("combinedSerialNum", combinedSerialNum);
     console.log("Entered combined serial number:", combinedSerialNum);
-    navigation.navigate("fourdigitcodeinsertscreen");
+    navigation.navigate("searchscreen", { isFirstTime: true });
   };
 
   const handleChangeText = (key, value) => {
@@ -103,18 +97,13 @@ const AddDevice = ({ navigation }) => {
           <Text style={styles.message}>{displayMessage}</Text>
         ) : null}
       </View>
-      <View style={{ alignItems: "center", top: 20 }}>
-        <Text onPress={handleNavigation} style={styles.InserCodetxt}>
-          Insert code
-        </Text>
-      </View>
 
       <View style={styles.btn}>
         <CarthagosButton
           title="confirm"
           width={277}
           textColor={colors.white}
-          onPress={handleConfirm}
+          onPress={(setIsLoading) => handleConfirm(setIsLoading)}
         />
       </View>
     </View>
@@ -132,6 +121,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.black,
+    paddingHorizontal: 15,
   },
   containerSmall: {
     width: "100%",
@@ -168,9 +158,9 @@ const styles = StyleSheet.create({
   },
   message: {
     color: colors.white,
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "normal",
+    textAlign: "left",
     marginTop: 10,
   },
 });

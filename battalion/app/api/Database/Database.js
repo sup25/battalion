@@ -6,6 +6,7 @@ import {
   getDocs,
   query,
   where,
+  updateDoc,
 } from "firebase/firestore";
 import { db } from "../../config/Firebase/Firebase";
 
@@ -37,7 +38,7 @@ export const AddUserData = async (data) => {
 
     if (deviceDoc.exists()) {
       console.log("Device data already exists. Cannot update.");
-      return;
+      throw new Error("Device data already exists. Cannot update.");
     }
     const ownerUser = await getDoc(doc(collection(db, "users"), data.owner));
     if (!ownerUser.exists()) {
@@ -110,6 +111,27 @@ export const updateDeviceMacId = async (deviceId, deviceMacId) => {
     }
   } catch (error) {
     console.error("Error updating device:", error);
+    throw error;
+  }
+};
+
+export const storeFourDigitsToTheDb = async (
+  combinedSerialNum,
+  digitValuesAsNumbers,
+  setPasswordError = false
+) => {
+  try {
+    // Update the Firestore document with the new password
+    const deviceRef = doc(collection(db, "devices"), combinedSerialNum);
+    await updateDoc(deviceRef, {
+      fourDigitCode: digitValuesAsNumbers,
+    });
+  } catch (error) {
+    if (setPasswordError) {
+      setPasswordError(
+        "Error storing password to the database, please check your internet connection."
+      );
+    }
     throw error;
   }
 };

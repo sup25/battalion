@@ -36,7 +36,7 @@ const Home = ({ navigation }) => {
             <Text
               style={styles.addDevice}
               onPress={() => {
-                navigation.navigate("searchscreen");
+                navigation.navigate("addDevice");
               }}
             >
               Add Device +

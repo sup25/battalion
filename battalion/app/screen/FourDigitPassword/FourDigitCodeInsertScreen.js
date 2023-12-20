@@ -1,26 +1,18 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  TouchableWithoutFeedback,
-} from "react-native";
-import React, { useState, useRef, useEffect } from "react";
+import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
+import React, { useState, useEffect } from "react";
 import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { collection, doc, updateDoc } from "firebase/firestore";
-import { db } from "../../config/Firebase/Firebase";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import FourDigitsCode from "../../component/FourDigitsCode";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
+import { storeFourDigitsToTheDb } from "../../api/Database/Database";
 
-export default function FourDigitCodeInsertScreen({ route }) {
-  const { password, setDevicePassword } = useAppSettingContext();
-  const { writePasswordToDevice } = useBleContext();
-  const [digitValues, setDigitValues] = useState(password);
+export default function FourDigitCodeInsertScreen({ navigation }) {
+  const { setDevicePassword } = useAppSettingContext();
+  const { writePasswordToDevice, connectedDevice } = useBleContext();
+  const [digitValues, setDigitValues] = useState([]);
   const [combinedSerialNum, setCombinedSerialNum] = useState("");
   const [show, setShow] = useState(false);
   const [passwordError, setPasswordError] = useState();
@@ -45,30 +37,8 @@ export default function FourDigitCodeInsertScreen({ route }) {
     fetchCombinedSerialNum();
   }, []);
 
-  const storeFourDigitsToTheDb = async (fourDigits) => {
-    try {
-      // Convert digitValues to an array of numbers
-      const digitValuesAsNumbers = digitValues.map((value) =>
-        parseInt(value, 10)
-      );
-
-      // Update the context and AsyncStorage
-      setDevicePassword(digitValuesAsNumbers);
-
-      // Update the Firestore document with the new password
-      const deviceRef = doc(collection(db, "devices"), combinedSerialNum);
-      await updateDoc(deviceRef, {
-        fourDigitCode: digitValuesAsNumbers,
-      });
-
-      console.log("Password updated successfully");
-    } catch (error) {
-      console.log("Error updating password:", error.message);
-      throw error;
-    }
-  };
-
-  const handleConfirm = async () => {
+  const handleConfirm = async (setIsLoading) => {
+    setIsLoading(true);
     if (digitValues.length < 4) {
       console.log("Please enter 4 digits");
       throw new Error("Please enter 4 digits");
@@ -77,18 +47,24 @@ export default function FourDigitCodeInsertScreen({ route }) {
     setPasswordError();
     if (connectedDevice.device) {
       try {
-        await writePasswordToDevice(pass); // set to ble device
-        setDevicePassword(pass); //set to the state + async
-        storeFourDigitsToTheDb(pass); // set to the database
-        setPasswordError(); // reset error handling
+        await writePasswordToDevice(digitValues); // set to ble device
+        setDevicePassword(digitValues); //set to the state + async
+        await storeFourDigitsToTheDb(
+          combinedSerialNum,
+          digitValues,
+          setPasswordError
+        ); // set to the database
+        setIsLoading(false);
+        navigation.navigate("Home");
       } catch (error) {
-        console.log("Error writing password to device:", error);
+        setIsLoading(false);
         setPasswordError(
           "Error writing password to device, please check device connection."
         );
         throw error;
       }
     } else {
+      setIsLoading(false);
       setPasswordError(
         "Error writing password to device, please check device connection."
       );
@@ -118,7 +94,11 @@ export default function FourDigitCodeInsertScreen({ route }) {
             />
           </View>
         </TouchableWithoutFeedback>
-        <FourDigitsCode defaultValue={digitValues} isVisible={show} />
+        <FourDigitsCode
+          defaultValue={digitValues}
+          isVisible={show}
+          submitHandler={setDigitValues}
+        />
         {passwordError && <Text style={styles.paragraph}>{passwordError}</Text>}
 
         <View style={styles.button}>
@@ -126,7 +106,7 @@ export default function FourDigitCodeInsertScreen({ route }) {
             title="confirm"
             textColor="white"
             width={277}
-            onPress={handleConfirm}
+            onPress={(setIsLoading) => handleConfirm(setIsLoading)}
           />
         </View>
       </View>

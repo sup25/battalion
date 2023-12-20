@@ -2,10 +2,14 @@ import React from "react";
 import { View, StyleSheet, Animated, Text, TextInput } from "react-native";
 import Svg, { Circle, G } from "react-native-svg";
 
-const ChargingProgressCircle = ({ percents }) => {
+const ChargingProgressCircle = ({
+  percents,
+  circleRadius = 16,
+  strokeWidth = 5,
+}) => {
   const innerPercents = percents > 100 ? 100 : percents < 0 ? 0 : percents;
-  const radius = 16; // Half of the desired width
-
+  const radius = circleRadius; // Half of the desired width
+  const size = radius * 2 + 6;
   const circumference = 2 * Math.PI * radius;
   const strokeDasharray = `${circumference} ${circumference}`;
   const strokeDashoffset =
@@ -13,19 +17,19 @@ const ChargingProgressCircle = ({ percents }) => {
 
   return (
     <View>
-      <Svg width={38} height={38}>
+      <Svg width={size} height={size}>
         <G>
           <Circle
-            cx={19}
-            cy={19}
+            cx={size / 2}
+            cy={size / 2}
             r={radius}
             fill="transparent"
             stroke="#252525"
-            strokeWidth={5}
+            strokeWidth={strokeWidth}
           />
           <Circle
-            cx={19}
-            cy={19}
+            cx={size / 2}
+            cy={size / 2}
             r={radius}
             fill="transparent"
             stroke={
@@ -35,11 +39,11 @@ const ChargingProgressCircle = ({ percents }) => {
                 ? "yellow"
                 : "green"
             }
-            strokeWidth={5}
+            strokeWidth={strokeWidth}
             strokeLinecap="round"
             strokeDasharray={strokeDasharray}
             strokeDashoffset={strokeDashoffset}
-            transform="rotate(-90, 19, 19)" // Rotate by 45 degrees around the center (10, 10)
+            transform={`rotate(-90, ${size / 2}, ${size / 2})`} // Rotate by 45 degrees around the center (10, 10)
           />
         </G>
       </Svg>

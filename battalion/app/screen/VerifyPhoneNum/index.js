@@ -24,7 +24,8 @@ const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
     messagingSenderId: "255101624190",
     appId: "1:255101624190:web:32883f32d3db47fa3d1d2f",
   };
-  const handleSendVerificationCode = async () => {
+  const handleSendVerificationCode = async (setIsLoading) => {
+    setIsLoading(true);
     try {
       const fullPhoneNumber = countryCode + phoneNumber;
       const phoneProvider = new PhoneAuthProvider(auth);
@@ -37,18 +38,20 @@ const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
       console.log("Message:", message);
 
       const user = currentUser;
-      console.log(user);
+
       if (user) {
         const userData = {
           phoneNumber: fullPhoneNumber,
         };
         const addedToFirestore = await addUserToFirestore(user.uid, userData);
 
-        if (addedToFirestore) {
-          console.log("Phone number added to Firestore successfully.");
-        } else {
+        if (!addedToFirestore) {
+          setIsLoading(false);
           console.error("Failed to add phone number to Firestore.");
         }
+      } else {
+        setIsLoading(false);
+        setInfo(`Error: User is not logged in.`);
       }
 
       navigation.navigate("ConfirmCode", {
@@ -56,6 +59,7 @@ const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
         phoneNumber: fullPhoneNumber,
       });
     } catch (error) {
+      setIsLoading(false);
       setInfo(`Error: ${error.message}`);
     }
   };
@@ -91,7 +95,7 @@ const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
           title="confirm"
           width={277}
           textColor={colors.white}
-          onPress={handleSendVerificationCode}
+          onPress={(setIsLoading) => handleSendVerificationCode(setIsLoading)}
         />
       </View>
     </View>

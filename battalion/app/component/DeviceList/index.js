@@ -1,4 +1,11 @@
-import { StyleSheet, Text, View, Image, ScrollView } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Image,
+  ScrollView,
+  ActivityIndicator,
+} from "react-native";
 import React, { useEffect, useState } from "react";
 import colors from "../../config/Colors/colors";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
@@ -21,8 +28,8 @@ const DeviceList = ({ ownerId }) => {
           isLocked: false,
           isMain: false,
           isEnabled: false,
-          temp: 5,
-          batteryLevel: 50,
+          temp: false,
+          batteryLevel: false,
         };
       });
       setDevices(newDevices);
@@ -38,8 +45,13 @@ const DeviceList = ({ ownerId }) => {
   }, []);
   return (
     <View style={styles.Container}>
-      {!isLoaded && <Text style={{ color: "white" }}>Fetching data...</Text>}
-      <ScrollView>
+      {!isLoaded && (
+        <View>
+          <Text style={{ color: "white" }}>Fetching devices</Text>
+          <ActivityIndicator size="small" color="#ffffff" />
+        </View>
+      )}
+      <ScrollView style={{ width: "100%" }}>
         {devices.map((item, index) => (
           <View
             key={item.id}
@@ -73,12 +85,17 @@ const DeviceList = ({ ownerId }) => {
                   ]}
                 >
                   <MaterialCommunityIcons
-                    name="thermometer"
+                    name="thermometer-bluetooth"
                     size={32}
                     color={colors.icon}
                   />
                   <Text style={styles.Degree}>
-                    {getTempValueAndUnit({ value: item.temp, unit: temp.unit })}
+                    {item.temp
+                      ? getTempValueAndUnit({
+                          value: item.temp,
+                          unit: temp.unit,
+                        })
+                      : `--${temp.unit === "c" ? "℃" : "°F"}`}
                   </Text>
                 </View>
                 <View
@@ -87,12 +104,14 @@ const DeviceList = ({ ownerId }) => {
                     { opacity: item.isEnabled ? 1 : 0.5 },
                   ]}
                 >
-                  <Text style={styles.BatteryAndPercents}>
-                    {item?.batteryLevel ? item.batteryLevel : "--"}
-                  </Text>
                   <ChargingProgressCircle
                     percents={item?.batteryLevel ? item.batteryLevel : 0}
+                    circleRadius={10}
+                    strokeWidth={3}
                   />
+                  <Text style={styles.BatteryAndPercents}>
+                    {item?.batteryLevel ? item.batteryLevel : "--"}%
+                  </Text>
                 </View>
                 <View
                   style={[
@@ -101,7 +120,7 @@ const DeviceList = ({ ownerId }) => {
                   ]}
                 >
                   <Text style={styles.lockedTxt}>
-                    {item.isLocked ? "Locked" : "Unlocked"}
+                    Device {item.isLocked ? "Locked" : "Unlocked"}
                   </Text>
                   <View style={styles.IconWrapper}>
                     {item.isLocked ? (
@@ -137,11 +156,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     padding: 5,
     paddingBottom: 100,
+    width: "100%",
   },
   DeviceInfoWrapper: {
     justifyContent: "space-between",
     alignItems: "center",
     borderRadius: 5,
+    width: "100%",
   },
   Section: {
     flexDirection: "column",
@@ -164,10 +185,9 @@ const styles = StyleSheet.create({
     paddingRight: 14,
   },
   Wrapper: {
-    justifyContent: "space-between",
     flexDirection: "row",
     alignItems: "center",
-
+    justifyContent: "center",
     width: "32%",
     height: 55,
     backgroundColor: "#1b1b1b",
@@ -182,12 +202,14 @@ const styles = StyleSheet.create({
   },
   BatteryAndPercents: {
     fontWeight: "900",
-    fontSize: 28,
+    fontSize: 22,
+    marginLeft: 5,
     color: colors.white,
   },
   lockedTxt: {
-    width: 48,
     color: colors.white,
+    fontSize: 12,
+    fontWeight: "bold",
   },
   IconWrapper: {
     width: 28,
@@ -196,6 +218,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#282828",
     justifyContent: "center",
     alignItems: "center",
+    marginLeft: 5,
   },
   disabledDevice: {
     backgroundColor: "#777",

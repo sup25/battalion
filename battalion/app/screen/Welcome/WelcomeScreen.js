@@ -102,7 +102,7 @@ const WelcomeScreen = ({ navigation }) => {
               <Text
                 style={styles.addDevice}
                 onPress={() => {
-                  navigation.navigate("searchscreen");
+                  navigation.navigate("addDevice");
                 }}
               >
                 Add Device +
@@ -146,15 +146,10 @@ const WelcomeScreen = ({ navigation }) => {
             <LightsToggle />
           </View>
         </View>
-        <TouchableOpacity
-          style={styles.unlockedTempContainer}
-          onPress={() => {
-            navigation.navigate("home");
-          }}
-        >
+        <View style={styles.unlockedTempContainer}>
           <BoxTemp />
           <SetBoxTemp />
-        </TouchableOpacity>
+        </View>
         <BatteryPercent />
       </View>
     </View>

@@ -20,7 +20,8 @@ export default function RegisterScreen({ navigation }) {
 
   const { currentUser } = useAuth();
 
-  const handleRegister = async () => {
+  const handleRegister = async (setIsLoading) => {
+    setIsLoading(true);
     if (name.trim() === "" || email.trim() === "" || password.trim() === "") {
       setRegisterErrorMessage("Please fill all the fields");
       handleClearMessage(setRegisterErrorMessage, 3000);
@@ -28,6 +29,7 @@ export default function RegisterScreen({ navigation }) {
     }
 
     if (password !== confirmpassword) {
+      setIsLoading(false);
       handleClearMessage(setPasswordMatchError, 3000);
       return;
     } else {
@@ -54,12 +56,10 @@ export default function RegisterScreen({ navigation }) {
       if (addedToFirestore) {
         console.log("User data added to Firestore successfully.");
       } else {
+        setIsLoading(false);
         console.error("Failed to add user data to Firestore.");
       }
 
-      console.log("Registered with:", user.email);
-      /*  console.log(user); */
-      console.log("User displayName:", user.displayName);
       setRegisterSuccessMessage("Successfully registered");
       setName("");
       setEmail("");
@@ -69,15 +69,12 @@ export default function RegisterScreen({ navigation }) {
 
       // If the phone is verified, navigate to another screen
       if (currentUser && currentUser.phoneNumber) {
-        console.log("Phonenumber is verified.");
       } else {
         // Navigate to the "Phoneverify" screen if phone is not verified
         navigation.navigate("Phoneverify");
-        console.log(
-          "Phonenumber is not verified. Redirecting to phone verify."
-        );
       }
     } catch (error) {
+      setIsLoading(false);
       if (error.code === "auth/email-already-in-use") {
         setRegisterErrorMessage("User already exists.");
       } else if (
@@ -88,7 +85,6 @@ export default function RegisterScreen({ navigation }) {
       } else {
         setRegisterErrorMessage(error.message);
       }
-      console.log(error);
 
       handleClearMessage(setRegisterErrorMessage, 3000);
     }
@@ -149,7 +145,7 @@ export default function RegisterScreen({ navigation }) {
       <View style={styles.btnLink}>
         <CarthagosLinkButton
           navigation={navigation}
-          onPress={handleRegister}
+          onPress={(setIsLoading) => handleRegister(setIsLoading)}
           title="Continue"
           mainDesc="Already Have an account? "
           desc="Login"
