@@ -65,7 +65,24 @@ const WelcomeScreen = ({ navigation }) => {
             flexDirection: "row",
           }}
         >
-          <Text style={styles.textWelcome}>Welcome, {userName}</Text>
+          <View
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <TouchableWithoutFeedback
+              onPress={() => navigation.navigate("home")}
+            >
+              <MaterialCommunityIcons
+                name="arrow-left"
+                size={24}
+                color="#B0B0B0"
+              />
+            </TouchableWithoutFeedback>
+            <Text style={styles.textWelcome}>device details</Text>
+          </View>
           <TouchableWithoutFeedback
             onPress={() => navigation.navigate("devicesetting")}
           >
@@ -297,6 +314,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: "900",
     alignItems: "flex-start",
+    marginLeft: 10,
   },
 
   unlockedImageContainer: {
