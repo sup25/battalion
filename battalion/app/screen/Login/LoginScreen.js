@@ -12,15 +12,16 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 import colors from "../../config/Colors/colors";
 import CarthagosLinkButton from "../../component/CarthagosLinkButton/CarthagosLinkButton";
 import { useRoute } from "@react-navigation/native";
-import handleClearMessage from "../../utils/HandleClearMessage/HandleClearMessage";
+
 import { UseBioMetric } from "../../Hooks/UseBioMetric";
 import TextLogoWhite from "../../assets/TextLogoWhite";
+import { useToast } from "react-native-toast-notifications";
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [loginErrorMessage, setLoginErrorMessage] = useState("");
 
+  const toast = useToast();
   const route = useRoute();
 
   useEffect(() => {
@@ -40,20 +41,26 @@ const LoginScreen = ({ navigation }) => {
       } else {
         await signInWithEmailAndPassword(auth, email, password);
         navigation.navigate("MainTabs");
+        toast.show("Biometric authentication failed", {
+          type: "normal",
+        });
         console.log("Biometric authentication failed");
       }
     } catch (error) {
       if (error.code === "auth/wrong-password") {
-        setLoginErrorMessage(
-          "User not found. Please check your email or password."
-        );
+        toast.show("User not found. Please check your email or password.", {
+          type: "normal",
+        });
       } else if (error.code === "auth/user-not-found") {
-        setLoginErrorMessage("User does not exist.");
+        toast.show("User does not exist.", {
+          type: "normal",
+        });
       } else {
-        setLoginErrorMessage("Login failed. Please try again.");
+        toast.show("Login failed. Please try again", {
+          type: "normal",
+        });
       }
       console.log(error);
-      handleClearMessage(setLoginErrorMessage, 3000);
     }
   };
 
@@ -96,9 +103,6 @@ const LoginScreen = ({ navigation }) => {
         >
           <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
         </TouchableOpacity>
-        {loginErrorMessage ? (
-          <Text style={styles.errorText}>{loginErrorMessage}</Text>
-        ) : null}
       </View>
       <View style={styles.btnLink}>
         <CarthagosLinkButton

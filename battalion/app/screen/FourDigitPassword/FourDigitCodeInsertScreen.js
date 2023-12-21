@@ -8,15 +8,15 @@ import FourDigitsCode from "../../component/FourDigitsCode";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { storeFourDigitsToTheDb } from "../../api/Database/Database";
-
+import { useToast } from "react-native-toast-notifications";
 export default function FourDigitCodeInsertScreen({ navigation }) {
   const { setDevicePassword } = useAppSettingContext();
   const { writePasswordToDevice, connectedDevice } = useBleContext();
   const [digitValues, setDigitValues] = useState([]);
   const [combinedSerialNum, setCombinedSerialNum] = useState("");
   const [show, setShow] = useState(false);
-  const [passwordError, setPasswordError] = useState();
 
+  const toast = useToast();
   useEffect(() => {
     const fetchCombinedSerialNum = async () => {
       try {
@@ -44,30 +44,33 @@ export default function FourDigitCodeInsertScreen({ navigation }) {
       throw new Error("Please enter 4 digits");
     }
 
-    setPasswordError();
     if (connectedDevice.device) {
       try {
         await writePasswordToDevice(digitValues); // set to ble device
         setDevicePassword(digitValues); //set to the state + async
-        await storeFourDigitsToTheDb(
-          combinedSerialNum,
-          digitValues,
-          setPasswordError
-        ); // set to the database
+        await storeFourDigitsToTheDb(combinedSerialNum, digitValues); // set to the database
         setIsLoading(false);
         navigation.navigate("Home");
       } catch (error) {
         setIsLoading(false);
-        setPasswordError(
-          "Error writing password to device, please check device connection."
+        toast.show(
+          "Error writing password to device, please check device connection.",
+          {
+            type: "normal",
+          }
         );
+
         throw error;
       }
     } else {
       setIsLoading(false);
-      setPasswordError(
-        "Error writing password to device, please check device connection."
+      toast.show(
+        "Error writing password to device, please check device connection.",
+        {
+          type: "normal",
+        }
       );
+
       throw new Error("No device connected");
     }
 
@@ -99,7 +102,6 @@ export default function FourDigitCodeInsertScreen({ navigation }) {
           isVisible={show}
           submitHandler={setDigitValues}
         />
-        {passwordError && <Text style={styles.paragraph}>{passwordError}</Text>}
 
         <View style={styles.button}>
           <CarthagosButton

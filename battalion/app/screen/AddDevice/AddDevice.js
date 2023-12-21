@@ -5,12 +5,12 @@ import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import { AddUserData } from "../../api/Database/Database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
+import { useToast } from "react-native-toast-notifications";
 
 const AddDevice = ({ navigation }) => {
   const { currentUser } = useAuth();
   const combinedSerialNumRef = useRef("");
-
-  const [displayMessage, setDisplayMessage] = useState("");
+  const toast = useToast();
   const [userData, setUserData] = useState({
     combinedSerialNum: "",
   });
@@ -22,8 +22,10 @@ const AddDevice = ({ navigation }) => {
 
       // Validate the combinedSerialNum field
       if (!combinedSerialNum || combinedSerialNum.length !== 12) {
-        const message = "Invalid serial number. Please enter a 12-digit value.";
-        setDisplayMessage(message);
+        toast.show("Invalid serial number. Please enter a 12-digit value.", {
+          type: "normal",
+        });
+
         setIsLoading(false);
         return;
       }
@@ -44,9 +46,9 @@ const AddDevice = ({ navigation }) => {
       // Call AddUserData to send combinedSerialNum
       await AddUserData(updatedUserData);
 
-      // Show success message
-      const successMessage = "Data saved successfully!";
-      setDisplayMessage(successMessage);
+      toast.show("Data saved successfully!", {
+        type: "normal",
+      });
 
       // Clear the text input field
       setUserData({
@@ -70,10 +72,6 @@ const AddDevice = ({ navigation }) => {
   };
 
   const handleChangeText = (key, value) => {
-    // Clear the success message when the user starts typing
-    if (displayMessage) {
-      setDisplayMessage("");
-    }
     // Update the combinedSerialNumRef with the current value
     combinedSerialNumRef.current = value;
 
@@ -93,9 +91,6 @@ const AddDevice = ({ navigation }) => {
           value={userData.combinedSerialNum}
           onChangeText={(value) => handleChangeText("combinedSerialNum", value)}
         />
-        {displayMessage ? (
-          <Text style={styles.message}>{displayMessage}</Text>
-        ) : null}
       </View>
 
       <View style={styles.btn}>

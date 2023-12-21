@@ -46,6 +46,7 @@ const PrivateStackNavigator = () => {
         component={AddDevice}
         options={{ headerShown: false }}
       />
+
       <Stack.Screen
         name="forgotpasswordprivate"
         component={ForgotPassword}

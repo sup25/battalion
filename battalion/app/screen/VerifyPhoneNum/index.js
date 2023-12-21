@@ -7,23 +7,16 @@ import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import { PhoneAuthProvider } from "firebase/auth";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
+import { useToast } from "react-native-toast-notifications";
+import firebaseConfigWeb from "../../config/FireBaseConfigWeb";
 
 const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("+1");
   const { currentUser } = useAuth();
   const recaptchaVerifier = useRef(null);
-  const [info, setInfo] = useState("");
+  const toast = useToast();
 
-  const firebaseConfig = {
-    apiKey: "AIzaSyCOB7BcSJL0z46RG_8VET7R3axYekDBY2M",
-    authDomain: "fir-auth-3f578.firebaseapp.com",
-    databaseURL: "https://fir-auth-3f578-default-rtdb.firebaseio.com",
-    projectId: "fir-auth-3f578",
-    storageBucket: "fir-auth-3f578.appspot.com",
-    messagingSenderId: "255101624190",
-    appId: "1:255101624190:web:32883f32d3db47fa3d1d2f",
-  };
   const handleSendVerificationCode = async (setIsLoading) => {
     setIsLoading(true);
     try {
@@ -33,9 +26,10 @@ const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
         fullPhoneNumber,
         recaptchaVerifier.current
       );
-      const message = "Success: Verification code has been sent to your phone";
-      setInfo(message);
-      console.log("Message:", message);
+
+      toast.show("Success: Verification code has been sent to your phone", {
+        type: "normal",
+      });
 
       const user = currentUser;
 
@@ -51,23 +45,30 @@ const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
         }
       } else {
         setIsLoading(false);
-        setInfo(`Error: User is not logged in.`);
+
+        toast.show("Error: User is not logged in.", {
+          type: "normal",
+        });
       }
 
       navigation.navigate("ConfirmCode", {
         verificationId,
         phoneNumber: fullPhoneNumber,
+        countryCode: countryCode,
       });
     } catch (error) {
       setIsLoading(false);
-      setInfo(`Error: ${error.message}`);
+
+      toast.show(`Error: ${error.message}`, {
+        type: "normal",
+      });
     }
   };
   return (
     <View style={styles.container}>
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
-        firebaseConfig={firebaseConfig}
+        firebaseConfig={firebaseConfigWeb}
       />
       <View style={styles.containerSmall}>
         <Text style={styles.txtFirst}>Verify your phone with a code</Text>
@@ -88,7 +89,6 @@ const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
             onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}
           />
         </View>
-        <Text style={styles.info}>{info}</Text>
       </View>
       <View style={styles.btn}>
         <CarthagosButton
@@ -119,10 +119,7 @@ const styles = StyleSheet.create({
     marginTop: 76,
     alignItems: "center",
   },
-  info: {
-    fontSize: 24,
-    color: colors.white,
-  },
+
   phoneNumberInput: {
     width: 230,
     backgroundColor: "#1E1E1E",

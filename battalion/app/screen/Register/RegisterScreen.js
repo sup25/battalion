@@ -5,35 +5,36 @@ import TextLogo from "../../assets/TextLogo";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../config/Firebase/Firebase";
 import CarthagosLinkButton from "../../component/CarthagosLinkButton/CarthagosLinkButton";
-import { useAuth } from "../../utils/AuthProvider/AuthProvider";
-import handleClearMessage from "../../utils/HandleClearMessage/HandleClearMessage";
+
 import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection";
+
+import { useToast } from "react-native-toast-notifications";
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmPassword] = useState("");
-  const [passwordMatchError, setPasswordMatchError] = useState(false);
-  const [registerErrorMessage, setRegisterErrorMessage] = useState("");
-  const [registerSuccessMessage, setRegisterSuccessMessage] = useState("");
 
-  const { currentUser } = useAuth();
+  const toast = useToast();
 
   const handleRegister = async (setIsLoading) => {
     setIsLoading(true);
     if (name.trim() === "" || email.trim() === "" || password.trim() === "") {
-      setRegisterErrorMessage("Please fill all the fields");
-      handleClearMessage(setRegisterErrorMessage, 3000);
+      toast.show("Please fill all the fields", {
+        type: "normal",
+      });
+
       return;
     }
 
     if (password !== confirmpassword) {
       setIsLoading(false);
-      handleClearMessage(setPasswordMatchError, 3000);
+      toast.show("Password didnot matched.", {
+        type: "normal",
+      });
       return;
     } else {
-      setPasswordMatchError(false);
     }
 
     try {
@@ -55,38 +56,37 @@ export default function RegisterScreen({ navigation }) {
 
       if (addedToFirestore) {
         console.log("User data added to Firestore successfully.");
+        navigation.navigate("occupation");
       } else {
         setIsLoading(false);
         console.error("Failed to add user data to Firestore.");
       }
 
-      setRegisterSuccessMessage("Successfully registered");
+      toast.show("Successfully registered", {
+        type: "normal",
+      });
       setName("");
       setEmail("");
       setPassword("");
       setConfirmPassword("");
-      handleClearMessage(setRegisterSuccessMessage, 3000);
-
-      // If the phone is verified, navigate to another screen
-      if (currentUser && currentUser.phoneNumber) {
-      } else {
-        // Navigate to the "Phoneverify" screen if phone is not verified
-        navigation.navigate("Phoneverify");
-      }
     } catch (error) {
       setIsLoading(false);
       if (error.code === "auth/email-already-in-use") {
-        setRegisterErrorMessage("User already exists.");
+        toast.show("User already exists.", {
+          type: "normal",
+        });
       } else if (
         error.code === "auth/invalid-email" ||
         error.code === "auth/missing-password"
       ) {
-        setRegisterErrorMessage("Please fill all the fields");
+        toast.show("Please fill all the fields", {
+          type: "normal",
+        });
       } else {
-        setRegisterErrorMessage(error.message);
+        toast.show("Registration error", {
+          type: "normal",
+        });
       }
-
-      handleClearMessage(setRegisterErrorMessage, 3000);
     }
   };
 
@@ -132,15 +132,6 @@ export default function RegisterScreen({ navigation }) {
           value={confirmpassword}
           secureTextEntry
         />
-        {registerErrorMessage ? (
-          <Text style={styles.errorText}>{registerErrorMessage}</Text>
-        ) : null}
-        {registerSuccessMessage ? (
-          <Text style={styles.successText}>{registerSuccessMessage}</Text>
-        ) : null}
-        {passwordMatchError ? (
-          <Text style={styles.errorText}>Password doesnot match</Text>
-        ) : null}
       </View>
       <View style={styles.btnLink}>
         <CarthagosLinkButton
