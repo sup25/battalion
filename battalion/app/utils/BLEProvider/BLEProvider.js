@@ -186,14 +186,14 @@ const BleProvider = ({ children }) => {
         characteristics.forEach((characteristic) => {});
       });
       setConnectedDevice((prev) => ({
-        ...prev,
+        error: null,
         device: deviceConnection,
         connecting: false,
       }));
       return deviceConnection;
     } catch (e) {
       setConnectedDevice((prev) => ({
-        ...prev,
+        device: null,
         error: e.message,
         connecting: false,
       }));

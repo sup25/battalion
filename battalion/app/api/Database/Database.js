@@ -122,7 +122,7 @@ export const storeFourDigitsToTheDb = async (
 ) => {
   try {
     // Update the Firestore document with the new password
-    const deviceRef = doc(collection(db, "devices"), combinedSerialNum);
+    const deviceRef = doc(collection(db, "devices"), "123456789123");
     await updateDoc(deviceRef, {
       fourDigitCode: digitValuesAsNumbers,
     });
