@@ -10,7 +10,7 @@ import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
 import firebaseConfigWeb from "../../config/FireBaseConfigWeb";
 
-const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
+const VerifyPhoneNum = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("+1");
   const { currentUser } = useAuth();
@@ -26,6 +26,7 @@ const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
         fullPhoneNumber,
         recaptchaVerifier.current
       );
+      console.log("PNum", fullPhoneNumber);
 
       toast.show("Success: Verification code has been sent to your phone", {
         type: "normal",
@@ -79,14 +80,14 @@ const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
           <TextInput
             style={styles.countryCodetxt}
             defaultValue={countryCode}
-            onChangeText={(code) => setCountryCode(code)}
+            onChangeText={setCountryCode}
           />
           <TextInput
             style={styles.phoneNumberInput}
             autoCompleteType="tel"
             keyboardType="phone-pad"
             textContentType="telephoneNumber"
-            onChangeText={(phoneNumber) => setPhoneNumber(phoneNumber)}
+            onChangeText={setPhoneNumber}
           />
         </View>
       </View>

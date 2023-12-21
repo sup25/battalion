@@ -41,11 +41,20 @@ const Occupation = ({ navigation }) => {
       const user = auth.currentUser;
       if (user) {
         const userId = user.uid;
-        const userData = {
-          occupations: selectedCategory.map((categoryId) =>
+        let occupations = [];
+
+        if (selectedCategory.length === 0) {
+          // If no category is selected, use otherOccupation as the occupation
+          occupations = [otherOccupation];
+        } else {
+          // If categories are selected, use them
+          occupations = selectedCategory.map((categoryId) =>
             getCategoryById(categoryId)
-          ),
-          otherOccupation,
+          );
+        }
+
+        const userData = {
+          occupations,
         };
 
         const success = await addUserToFirestore(userId, userData);
