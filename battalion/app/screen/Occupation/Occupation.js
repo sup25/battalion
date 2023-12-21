@@ -1,11 +1,23 @@
-import { StyleSheet, Text, View, TextInput } from "react-native";
-import React from "react";
-import CarthagosLinkButton from "../../component/CarthagosLinkButton";
-import Screen from "../component/Screen";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TextInput,
+  TouchableWithoutFeedback,
+} from "react-native";
+import React, { useState } from "react";
+import CarthagosLinkButton from "../../component/CarthagosLinkButton/CarthagosLinkButton";
 import colors from "../../config/Colors/colors";
-import TextLogo from "../../assets/TextLogo";
+import TextLogoWhite from "../../assets/TextLogoWhite";
+import CarthagosScreen from "../../component/CarthagosScreen/CarthagosScreen";
+import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection";
+import { getAuth } from "firebase/auth";
 
 const Occupation = ({ navigation }) => {
+  const [selectedCategory, setSelectedCategory] = useState([]);
+  const [otherOccupation, setOtherOccupation] = useState("");
+  const auth = getAuth();
+
   const Category = [
     { id: 1, occupation: "Electrician" },
     { id: 2, occupation: "Construction Manager" },
@@ -24,28 +36,93 @@ const Occupation = ({ navigation }) => {
     { id: 15, occupation: "Heavy equipment operator" },
   ];
 
+  const handleContinue = async () => {
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const userId = user.uid;
+        const userData = {
+          occupations: selectedCategory.map((categoryId) =>
+            getCategoryById(categoryId)
+          ),
+          otherOccupation,
+        };
+
+        const success = await addUserToFirestore(userId, userData);
+
+        if (success) {
+          navigation.navigate("Phoneverify");
+        } else {
+          console.log("Failed to add user to Firestore");
+        }
+      } else {
+        console.log("User not authenticated");
+      }
+    } catch (error) {
+      console.error("Error handling continue:", error);
+    }
+  };
+
+  const getCategoryById = (categoryId) => {
+    const category = Category.find((cat) => cat.id === categoryId);
+    return category ? category.occupation : "";
+  };
+
   return (
-    <>
-      <Screen style={styles.container}>
+    <CarthagosScreen style={styles.container}>
+      <View style={styles.wrapper}>
         <View style={styles.logoTextContainer}>
-          <TextLogo />
+          <TextLogoWhite />
           <Text style={styles.textHeading}>What's your Occupation?</Text>
         </View>
         <View style={styles.categoryContainer}>
           {Category.map((cat) => {
             return (
               <View key={cat.id} style={styles.categoryItem}>
-                <Text style={styles.category}>{cat.occupation}</Text>
+                <TouchableWithoutFeedback
+                  onPress={() => {
+                    const isSelected = selectedCategory.includes(cat.id);
+                    if (isSelected) {
+                      // If category is already selected, remove it
+                      setSelectedCategory((prevSelected) =>
+                        prevSelected.filter((id) => id !== cat.id)
+                      );
+                    } else {
+                      // If category is not selected, add it
+                      setSelectedCategory((prevSelected) => [
+                        ...prevSelected,
+                        cat.id,
+                      ]);
+                    }
+                  }}
+                >
+                  <Text
+                    style={[
+                      styles.category,
+                      {
+                        backgroundColor: selectedCategory.includes(cat.id)
+                          ? "white"
+                          : "#2D2D2D",
+                        color: selectedCategory.includes(cat.id)
+                          ? "black"
+                          : colors.white,
+                      },
+                    ]}
+                  >
+                    {cat.occupation}
+                  </Text>
+                </TouchableWithoutFeedback>
               </View>
             );
           })}
         </View>
-        <View style={styles.occupationContainer}>
+        <View style={styles.InputContainer}>
           <Text style={styles.otherText}>Other</Text>
           <TextInput
             style={styles.input}
             placeholder="Write here"
             placeholderTextColor="#989898"
+            onChangeText={setOtherOccupation}
           />
         </View>
         <View style={styles.btnLink}>
@@ -57,19 +134,51 @@ const Occupation = ({ navigation }) => {
             width={277}
             loginRoute="Login"
             textColor="white"
+            onPress={handleContinue}
           />
         </View>
-      </Screen>
-    </>
+      </View>
+    </CarthagosScreen>
   );
 };
 
 export default Occupation;
 
 const styles = StyleSheet.create({
-  btnLink: {
+  container: {
+    flex: 1,
+    backgroundColor: colors.black,
+  },
+  wrapper: {
+    paddingTop: 30,
+  },
+
+  logoTextContainer: {
+    width: "100%",
     alignItems: "center",
   },
+  textHeading: {
+    color: colors.white,
+    marginTop: 18,
+    fontSize: 24,
+    fontWeight: "500",
+  },
+
+  categoryContainer: {
+    width: "100%",
+    display: "flex",
+    flexDirection: "row",
+    flexWrap: "wrap",
+    paddingLeft: 18,
+    paddingRight: 20,
+    marginTop: 46,
+    alignItems: "center",
+  },
+  categoryItem: {
+    marginRight: 8,
+    marginTop: 8,
+  },
+
   category: {
     color: colors.white,
     backgroundColor: "#2D2D2D",
@@ -82,22 +191,8 @@ const styles = StyleSheet.create({
     display: "flex",
     alignItems: "center",
   },
-  categoryContainer: {
-    width: "100%",
-    display: "flex",
-    flexDirection: "row",
-    flexWrap: "wrap",
-    paddingLeft: 18,
-    paddingRight: 20,
-    marginTop: 46,
-  },
-  categoryItem: {
-    marginRight: 8,
-    marginTop: 8,
-  },
-  container: {
-    flex: 1,
-    backgroundColor: colors.black,
+  btnLink: {
+    alignItems: "center",
   },
 
   input: {
@@ -107,14 +202,10 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     backgroundColor: colors.white,
     fontSize: 18,
-    right: 260,
+    right: 275,
   },
-  logoTextContainer: {
-    width: "100%",
-    alignItems: "center",
-  },
-  occupationContainer: {
-    display: "flex",
+
+  InputContainer: {
     flexDirection: "row",
     alignItems: "center",
     width: "100%",
@@ -135,12 +226,6 @@ const styles = StyleSheet.create({
     width: "100%",
   },
 
-  textHeading: {
-    color: colors.white,
-    marginTop: 18,
-    fontSize: 24,
-    fontWeight: "500",
-  },
   txtBtnContainer: {
     display: "flex",
     alignItems: "center",

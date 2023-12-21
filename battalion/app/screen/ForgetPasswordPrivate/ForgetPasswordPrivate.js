@@ -15,17 +15,20 @@ const ForgotPasswordPrivate = ({ navigation }) => {
   const [errormsg, setErrorMsg] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
-  const handleResetPassword = async () => {
+  const handleResetPassword = async (setIsLoading) => {
+    setIsLoading(true);
     if (currentUser && currentUser.email && currentUser.email === email) {
       try {
         console.log("Sending reset email to:", email);
         await sendPasswordResetEmail(auth, email);
         setSuccessMessage("sent successfully");
+        setIsLoading(false);
       } catch (error) {
+        setIsLoading(false);
         setErrorMsg(error.message);
-        console.log("Error message:", error.message);
       }
     } else {
+      setIsLoading(false);
       setErrorMsg("Invalid email or user not logged in");
     }
   };
@@ -59,7 +62,7 @@ const ForgotPasswordPrivate = ({ navigation }) => {
       </View>
       <View style={styles.btnContainer}>
         <CarthagosButton
-          onPress={handleResetPassword}
+          onPress={(setIsLoading) => handleResetPassword(setIsLoading)}
           title="Submit"
           width={277}
           textColor="white"

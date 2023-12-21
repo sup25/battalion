@@ -36,7 +36,7 @@ const Home = ({ navigation }) => {
             <Text
               style={styles.addDevice}
               onPress={() => {
-                navigation.navigate("searchscreen");
+                navigation.navigate("addDevice");
               }}
             >
               Add Device +
@@ -44,7 +44,7 @@ const Home = ({ navigation }) => {
           </View>
         )}
       </View>
-      <DeviceList />
+      <DeviceList ownerId={currentUser.uid} />
     </View>
   );
 };
@@ -57,7 +57,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
     alignItems: "center",
     justifyContent: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: 15,
   },
   wrapper: {
     paddingHorizontal: 15,

@@ -21,6 +21,8 @@ export const AppSettingProvider = ({ children }) => {
   const [batteryLevel, setBatteryLevel] = useState(false);
   const [isCharging, setIsCharging] = useState(false);
 
+  const [connectedDevices, setConnectedDevices] = useState([]);
+
   const getItemFromAsyncStorage = async (itemName) => {
     try {
       const value = await AsyncStorage.getItem(itemName);
@@ -51,6 +53,12 @@ export const AppSettingProvider = ({ children }) => {
     }
     if (parsedSettings?.isLightsOn) {
       setIsLightsOn(parsedSettings.isLightsOn);
+    }
+    if (parsedSettings?.batteryLevel) {
+      setBatteryLevel(parsedSettings.isLightsOn);
+    }
+    if (parsedSettings?.isCharging) {
+      setIsCharging(parsedSettings.isCharging);
     }
   };
   useEffect(() => {
@@ -107,6 +115,26 @@ export const AppSettingProvider = ({ children }) => {
     return `${val}${unit}`;
   };
 
+  const setDeviceBatteryLevel = async (value) => {
+    setBatteryLevel(value);
+    await AsyncStorage.mergeItem(
+      "appSettings",
+      JSON.stringify({ batteryLevel: value })
+    );
+  };
+
+  const setDeviceIsCharging = async (value) => {
+    setIsCharging(value);
+    await AsyncStorage.mergeItem(
+      "appSettings",
+      JSON.stringify({ isCharging: value })
+    );
+  };
+
+  const setConnectedDevice = (device) => {
+    setConnectedDevices((prev) => [device, ...prev]);
+  };
+
   const contextValue = {
     temp,
     password,
@@ -117,6 +145,8 @@ export const AppSettingProvider = ({ children }) => {
     setTempUnit,
     setDevicePassword,
     setDeviceIsLocked,
+    setDeviceBatteryLevel,
+    setDeviceIsCharging,
     setDeviceIsLightsOn,
     getTempValueAndUnit,
 

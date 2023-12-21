@@ -16,23 +16,13 @@ function CarthagosButton({
 }) {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handlePress = () => {
-    setIsLoading(true);
-    onPress();
-
-    // Simulating a loading delay, you can replace this with your asynchronous code
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  };
-
   return (
     <TouchableOpacity
       style={[
         styles.button,
         { backgroundColor: isLoading ? colors.medium : colors[color], width },
       ]}
-      onPress={handlePress}
+      onPress={() => (isLoading ? false : onPress(setIsLoading))}
       disabled={isLoading} // Disable the button while loading
     >
       {isLoading ? (

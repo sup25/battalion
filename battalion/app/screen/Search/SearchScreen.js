@@ -17,9 +17,13 @@ import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import PulseAnimation from "../PulseAnimation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useToast } from "react-native-toast-notifications";
+import { useRoute } from "@react-navigation/native";
 
 const SearchScreen = ({ navigation }) => {
   const toast = useToast();
+  const route = useRoute();
+  const { isFirstTime } = route.params;
+
   const [selectedDevice, setSelectedDevice] = useState({
     device: null,
     index: null,
@@ -163,8 +167,11 @@ const SearchScreen = ({ navigation }) => {
                 try {
                   console.log("device id", selectedDevice.device.id);
                   await connectToDevice(selectedDevice.device);
-
-                  navigation.navigate("Home");
+                  if (isFirstTime) {
+                    navigation.navigate("fourdigitcodeinsertscreen");
+                  } else {
+                    navigation.navigate("Home");
+                  }
                 } catch (err) {
                   console.log("err to connect", err);
                   toast.show(

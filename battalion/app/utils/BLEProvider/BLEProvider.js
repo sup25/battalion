@@ -9,7 +9,6 @@ import { BleManager } from "react-native-ble-plx";
 import * as ExpoDevice from "expo-device";
 import { PermissionsAndroid, Platform } from "react-native";
 import { Buffer } from "buffer";
-import base64 from "react-native-base64";
 import convertedArrayToHex from "../ConvertArrayToHex/convertArrayToHex";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import appConfig from "../../config/app";
@@ -45,7 +44,7 @@ const BleProvider = ({ children }) => {
     connecting: false,
   });
   const SPS_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
-  const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
+  const SPS_SERVER_TX_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
   const SPS_SERVER_RX_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
   // const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
   // const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
@@ -117,8 +116,8 @@ const BleProvider = ({ children }) => {
       scanning: true,
     }));
     bleManager.startDeviceScan(
-      // [SPS_SERVICE_UUID],
-      null,
+      [SPS_SERVICE_UUID],
+      // null,
       { allowDuplicates: false },
       (error, device) => {
         if (startTime) {
@@ -232,7 +231,7 @@ const BleProvider = ({ children }) => {
       let res =
         await connectedDevice.device.writeCharacteristicWithResponseForService(
           SPS_SERVICE_UUID,
-          SPS_SERVER_RX_UUID, // Use the appropriate UUID for writing
+          SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
           passwordWithHeader.toString("base64")
         );
 
@@ -260,7 +259,7 @@ const BleProvider = ({ children }) => {
       let res =
         await connectedDevice.device.writeCharacteristicWithResponseForService(
           SPS_SERVICE_UUID,
-          SPS_SERVER_RX_UUID, // Use the appropriate UUID for writing
+          SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
           lightsWithPrefix.toString("base64")
         );
 
@@ -286,7 +285,7 @@ const BleProvider = ({ children }) => {
       let res =
         await connectedDevice.device.writeCharacteristicWithResponseForService(
           SPS_SERVICE_UUID,
-          SPS_SERVER_RX_UUID, // Use the appropriate UUID for writing
+          SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
           tempWithPrefix.toString("base64")
         );
 
@@ -313,7 +312,7 @@ const BleProvider = ({ children }) => {
       let res =
         await connectedDevice.device.writeCharacteristicWithResponseForService(
           SPS_SERVICE_UUID,
-          SPS_SERVER_RX_UUID, // Use the appropriate UUID for writing
+          SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
           lockWithPrefix.toString("base64")
         );
 

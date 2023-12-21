@@ -1,30 +1,22 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-  TouchableWithoutFeedback,
-} from "react-native";
-import React, { useState, useRef, useEffect } from "react";
+import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
+import React, { useState, useEffect } from "react";
 import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { collection, doc, updateDoc } from "firebase/firestore";
-import { db } from "../../config/Firebase/Firebase";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import FourDigitsCode from "../../component/FourDigitsCode";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
-
-export default function FourDigitCodeInsertScreen({ route }) {
-  const { password, setDevicePassword } = useAppSettingContext();
-  const { writePasswordToDevice } = useBleContext();
-  const [digitValues, setDigitValues] = useState(password);
+import { storeFourDigitsToTheDb } from "../../api/Database/Database";
+import { useToast } from "react-native-toast-notifications";
+export default function FourDigitCodeInsertScreen({ navigation }) {
+  const { setDevicePassword } = useAppSettingContext();
+  const { writePasswordToDevice, connectedDevice } = useBleContext();
+  const [digitValues, setDigitValues] = useState([]);
   const [combinedSerialNum, setCombinedSerialNum] = useState("");
   const [show, setShow] = useState(false);
-  const [passwordError, setPasswordError] = useState();
 
+  const toast = useToast();
   useEffect(() => {
     const fetchCombinedSerialNum = async () => {
       try {
@@ -45,53 +37,40 @@ export default function FourDigitCodeInsertScreen({ route }) {
     fetchCombinedSerialNum();
   }, []);
 
-  const storeFourDigitsToTheDb = async (fourDigits) => {
-    try {
-      // Convert digitValues to an array of numbers
-      const digitValuesAsNumbers = digitValues.map((value) =>
-        parseInt(value, 10)
-      );
-
-      // Update the context and AsyncStorage
-      setDevicePassword(digitValuesAsNumbers);
-
-      // Update the Firestore document with the new password
-      const deviceRef = doc(collection(db, "devices"), combinedSerialNum);
-      await updateDoc(deviceRef, {
-        fourDigitCode: digitValuesAsNumbers,
-      });
-
-      console.log("Password updated successfully");
-    } catch (error) {
-      console.log("Error updating password:", error.message);
-      throw error;
-    }
-  };
-
-  const handleConfirm = async () => {
+  const handleConfirm = async (setIsLoading) => {
+    setIsLoading(true);
     if (digitValues.length < 4) {
       console.log("Please enter 4 digits");
       throw new Error("Please enter 4 digits");
     }
 
-    setPasswordError();
     if (connectedDevice.device) {
       try {
-        await writePasswordToDevice(pass); // set to ble device
-        setDevicePassword(pass); //set to the state + async
-        storeFourDigitsToTheDb(pass); // set to the database
-        setPasswordError(); // reset error handling
+        await writePasswordToDevice(digitValues); // set to ble device
+        setDevicePassword(digitValues); //set to the state + async
+        await storeFourDigitsToTheDb(combinedSerialNum, digitValues); // set to the database
+        setIsLoading(false);
+        navigation.navigate("Home");
       } catch (error) {
-        console.log("Error writing password to device:", error);
-        setPasswordError(
-          "Error writing password to device, please check device connection."
+        setIsLoading(false);
+        toast.show(
+          "Error writing password to device, please check device connection.",
+          {
+            type: "normal",
+          }
         );
+
         throw error;
       }
     } else {
-      setPasswordError(
-        "Error writing password to device, please check device connection."
+      setIsLoading(false);
+      toast.show(
+        "Error writing password to device, please check device connection.",
+        {
+          type: "normal",
+        }
       );
+
       throw new Error("No device connected");
     }
 
@@ -118,15 +97,18 @@ export default function FourDigitCodeInsertScreen({ route }) {
             />
           </View>
         </TouchableWithoutFeedback>
-        <FourDigitsCode defaultValue={digitValues} isVisible={show} />
-        {passwordError && <Text style={styles.paragraph}>{passwordError}</Text>}
+        <FourDigitsCode
+          defaultValue={digitValues}
+          isVisible={show}
+          submitHandler={setDigitValues}
+        />
 
         <View style={styles.button}>
           <CarthagosButton
             title="confirm"
             textColor="white"
             width={277}
-            onPress={handleConfirm}
+            onPress={(setIsLoading) => handleConfirm(setIsLoading)}
           />
         </View>
       </View>

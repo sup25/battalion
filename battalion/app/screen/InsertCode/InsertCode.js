@@ -4,19 +4,23 @@ import {
   PhoneAuthProvider,
   linkWithCredential,
   updateProfile,
-  signInWithPhoneNumber,
 } from "firebase/auth";
 import { auth } from "../../config/Firebase/Firebase";
 import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import { useRoute } from "@react-navigation/native";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
+import { useToast } from "react-native-toast-notifications";
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import firebaseConfigWeb from "../../config/FireBaseConfigWeb";
 
 const InsertCode = ({ navigation }) => {
+  const toast = useToast();
   const recaptchaVerifier = useRef(null);
   const { currentUser } = useAuth();
-  const [info, setInfo] = useState("");
   const [verificationId, setVerificationID] = useState("");
+  const [countryCode, setCountryCode] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
   const [verificationCode, setVerificationCode] = useState([
     "",
     "",
@@ -27,22 +31,53 @@ const InsertCode = ({ navigation }) => {
   ]);
   const route = useRoute();
 
+  // Extract the verificationId from the route parameters
+  useEffect(() => {
+    if (route.params && route.params.verificationId) {
+      setVerificationID(route.params.verificationId);
+      setCountryCode(route.params.countryCode);
+      setPhoneNumber(route.params.phoneNumber);
+    }
+  }, [route.params]);
+
+  const handleResendCode = async (setIsLoading) => {
+    setIsLoading(true);
+
+    try {
+      const fullPhoneNumber = `${countryCode}${phoneNumber}`;
+      const phoneProvider = new PhoneAuthProvider(auth);
+      const newVerificationId = await phoneProvider.verifyPhoneNumber(
+        fullPhoneNumber,
+        recaptchaVerifier.current
+      );
+
+      if (!newVerificationId) {
+        throw new Error("Invalid new verification ID");
+      }
+
+      setVerificationID(newVerificationId);
+      toast.show("Success: New verification code has been sent to your phone", {
+        type: "normal",
+      });
+    } catch (error) {
+      setIsLoading(false);
+      toast.show("Error: Failed to resend verification code", {
+        type: "normal",
+      });
+      console.log(`Error: ${error.message}`);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   // Create refs for each text input field
   const inputRefs = [];
   for (let i = 0; i < 6; i++) {
     inputRefs[i] = useRef(null);
   }
 
-  // Extract the verificationId from the route parameters
-  useEffect(() => {
-    if (route.params && route.params.verificationId) {
-      setVerificationID(route.params.verificationId);
-    }
-  }, [route.params]);
-
-  const handleResendCode = async () => {};
-
-  const handleVerifyVerificationCode = async () => {
+  const handleVerifyVerificationCode = async (setIsLoading) => {
+    setIsLoading(true);
     try {
       const code = verificationCode.join(""); // Join the digits to get the complete 6-digit code
       const credential = PhoneAuthProvider.credential(verificationId, code);
@@ -53,12 +88,17 @@ const InsertCode = ({ navigation }) => {
         email: currentUser?.email || "", // Update the email to the one from which the user signed up
         phoneNumber: currentUser?.phoneNumber || "", // Keep the existing phone number as it is already verified
       });
-      const message = "Success: Phone authentication successful";
-      setInfo(message);
-      console.log("Message", message);
+
+      toast.show(" Phone authentication successful", {
+        type: "normal",
+      });
       navigation.navigate("privateRoute", { screen: "MainTabs" });
     } catch (error) {
-      setInfo(`Error: ${error.message}`);
+      setIsLoading(false);
+      toast.show("Phone authentication unsuccessful, Please try again", {
+        type: "normal",
+      });
+      console.log(`Error: ${error.message}`);
     }
   };
 
@@ -76,6 +116,10 @@ const InsertCode = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
+      <FirebaseRecaptchaVerifierModal
+        ref={recaptchaVerifier}
+        firebaseConfig={firebaseConfigWeb}
+      />
       <View style={styles.containerSmall}>
         <Text style={styles.txtFirst}>Insert Code</Text>
         <Text style={styles.txtSecond}>
@@ -100,13 +144,13 @@ const InsertCode = ({ navigation }) => {
             />
           ))}
         </View>
-        <Text style={styles.info}>{info}</Text>
+
         <CarthagosButton
           title="resend code"
           width={277}
           textColor={colors.black}
           color="white"
-          onPress={handleResendCode}
+          onPress={(setIsLoading) => handleResendCode(setIsLoading)}
         />
       </View>
       <View style={styles.btn}>
@@ -114,7 +158,7 @@ const InsertCode = ({ navigation }) => {
           title="confirm"
           width={277}
           textColor={colors.white}
-          onPress={handleVerifyVerificationCode}
+          onPress={(setIsLoading) => handleVerifyVerificationCode(setIsLoading)}
         />
       </View>
     </View>
@@ -137,10 +181,7 @@ const styles = StyleSheet.create({
     marginTop: 76,
     alignItems: "center",
   },
-  info: {
-    fontSize: 24,
-    color: colors.white,
-  },
+
   txtInput: {
     width: 50,
     backgroundColor: "#1E1E1E",

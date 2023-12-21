@@ -2,36 +2,31 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
-import AddUserData from "../../api/Database/Database";
+import { AddUserData } from "../../api/Database/Database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import FetchUserProfile from "../../Hooks/UserProfile/UserProfile";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
+import { useToast } from "react-native-toast-notifications";
 
 const AddDevice = ({ navigation }) => {
   const { currentUser } = useAuth();
   const combinedSerialNumRef = useRef("");
-  const existingData = FetchUserProfile(currentUser);
-  const [displayMessage, setDisplayMessage] = useState("");
+  const toast = useToast();
   const [userData, setUserData] = useState({
     combinedSerialNum: "",
   });
 
-  const handleConfirm = async () => {
+  const handleConfirm = async (setIsLoading) => {
+    setIsLoading(true);
     try {
       const { combinedSerialNum } = userData;
 
       // Validate the combinedSerialNum field
       if (!combinedSerialNum || combinedSerialNum.length !== 12) {
-        const message =
-          "Invalid combinedSerialNum. Please enter a 12-digit value.";
-        setDisplayMessage(message);
-        return;
-      }
+        toast.show("Invalid serial number. Please enter a 12-digit value.", {
+          type: "normal",
+        });
 
-      if (existingData) {
-        // Display an error message if the data already exists
-        const errorMessage = "Device data already exists. Cannot update.";
-        setDisplayMessage(errorMessage);
+        setIsLoading(false);
         return;
       }
 
@@ -51,16 +46,17 @@ const AddDevice = ({ navigation }) => {
       // Call AddUserData to send combinedSerialNum
       await AddUserData(updatedUserData);
 
-      // Show success message
-      const successMessage = "Data saved successfully!";
-      setDisplayMessage(successMessage);
+      toast.show("Data saved successfully!", {
+        type: "normal",
+      });
 
       // Clear the text input field
       setUserData({
         combinedSerialNum: "",
       });
+      handleNavigation();
     } catch (error) {
-      console.error("Error updating device data:", error);
+      setIsLoading(false);
     }
   };
 
@@ -72,14 +68,10 @@ const AddDevice = ({ navigation }) => {
     }
     await AsyncStorage.setItem("combinedSerialNum", combinedSerialNum);
     console.log("Entered combined serial number:", combinedSerialNum);
-    navigation.navigate("fourdigitcodeinsertscreen");
+    navigation.navigate("searchscreen", { isFirstTime: true });
   };
 
   const handleChangeText = (key, value) => {
-    // Clear the success message when the user starts typing
-    if (displayMessage) {
-      setDisplayMessage("");
-    }
     // Update the combinedSerialNumRef with the current value
     combinedSerialNumRef.current = value;
 
@@ -99,14 +91,6 @@ const AddDevice = ({ navigation }) => {
           value={userData.combinedSerialNum}
           onChangeText={(value) => handleChangeText("combinedSerialNum", value)}
         />
-        {displayMessage ? (
-          <Text style={styles.message}>{displayMessage}</Text>
-        ) : null}
-      </View>
-      <View style={{ alignItems: "center", top: 20 }}>
-        <Text onPress={handleNavigation} style={styles.InserCodetxt}>
-          Insert code
-        </Text>
       </View>
 
       <View style={styles.btn}>
@@ -114,7 +98,7 @@ const AddDevice = ({ navigation }) => {
           title="confirm"
           width={277}
           textColor={colors.white}
-          onPress={handleConfirm}
+          onPress={(setIsLoading) => handleConfirm(setIsLoading)}
         />
       </View>
     </View>
@@ -132,6 +116,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.black,
+    paddingHorizontal: 15,
   },
   containerSmall: {
     width: "100%",
@@ -168,9 +153,9 @@ const styles = StyleSheet.create({
   },
   message: {
     color: colors.white,
-    fontSize: 16,
-    fontWeight: "bold",
-    textAlign: "center",
+    fontSize: 14,
+    fontWeight: "normal",
+    textAlign: "left",
     marginTop: 10,
   },
 });
