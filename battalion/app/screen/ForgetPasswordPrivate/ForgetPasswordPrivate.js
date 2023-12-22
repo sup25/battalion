@@ -6,12 +6,12 @@ import { auth } from "../../config/Firebase/Firebase";
 import colors from "../../config/Colors/colors";
 import TextLogo from "../../assets/TextLogo";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
+import { useToast } from "react-native-toast-notifications";
 
 const ForgotPasswordPrivate = ({ navigation }) => {
-  const { currentUser, logout } = useAuth();
-
+  const { currentUser } = useAuth();
   const [email, setEmail] = useState("");
-
+  const toast = useToast();
   const [errormsg, setErrorMsg] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
 
@@ -21,20 +21,23 @@ const ForgotPasswordPrivate = ({ navigation }) => {
       try {
         console.log("Sending reset email to:", email);
         await sendPasswordResetEmail(auth, email);
-        setSuccessMessage("sent successfully");
+        toast.show("sent successfully", {
+          type: "normal",
+        });
+
         setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
-        setErrorMsg(error.message);
+        toast.show("cant send reset email", {
+          type: "normal",
+        });
       }
     } else {
       setIsLoading(false);
-      setErrorMsg("Invalid email or user not logged in");
+      toast.show("Invalid email or user not logged in", {
+        type: "normal",
+      });
     }
-  };
-  const handleInputFocus = () => {
-    setErrorMsg("");
-    setSuccessMessage("");
   };
 
   return (
@@ -49,16 +52,11 @@ const ForgotPasswordPrivate = ({ navigation }) => {
           placeholderTextColor="#656565"
           value={email}
           onChangeText={(text) => setEmail(text)}
-          onFocus={handleInputFocus}
           style={styles.input}
           keyboardType="email-address"
           autoCapitalize="none"
           color="white"
         />
-        {errormsg ? <Text style={styles.errorText}>{errormsg}</Text> : null}
-        {successMessage ? (
-          <Text style={styles.SuccessText}>{successMessage}</Text>
-        ) : null}
       </View>
       <View style={styles.btnContainer}>
         <CarthagosButton
@@ -66,14 +64,6 @@ const ForgotPasswordPrivate = ({ navigation }) => {
           title="Submit"
           width={277}
           textColor="white"
-        />
-        <CarthagosButton
-          width={277}
-          textColor="white"
-          onPress={() => {
-            logout();
-          }}
-          title="logout"
         />
       </View>
     </View>
@@ -114,7 +104,7 @@ const styles = StyleSheet.create({
     width: 283,
     marginVertical: 20,
     height: 50,
-    color: "#656565",
+    color: colors.white,
   },
   logoContainer: {
     justifyContent: "flex-start",

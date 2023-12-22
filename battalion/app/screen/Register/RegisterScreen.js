@@ -56,7 +56,7 @@ export default function RegisterScreen({ navigation }) {
 
       if (addedToFirestore) {
         console.log("User data added to Firestore successfully.");
-        navigation.navigate("occupation");
+        navigation.navigate("selectUserOccupations");
       } else {
         setIsLoading(false);
         console.error("Failed to add user data to Firestore.");

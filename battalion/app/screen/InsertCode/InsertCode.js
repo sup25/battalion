@@ -63,7 +63,7 @@ const InsertCode = ({ navigation }) => {
       });
     } catch (error) {
       setIsLoading(false);
-      toast.show("Error: Failed to resend verification code", {
+      toast.show("Error: invalid verification id", {
         type: "normal",
       });
       console.error(`Error: ${error.message}`);
@@ -121,6 +121,8 @@ const InsertCode = ({ navigation }) => {
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={firebaseConfigWeb}
+        attemptInvisibleVerification={true}
+        invisible={true}
       />
       <View style={styles.containerSmall}>
         <Text style={styles.txtFirst}>Insert Code</Text>

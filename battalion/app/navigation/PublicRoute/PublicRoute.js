@@ -6,7 +6,7 @@ import RegisterScreen from "../../screen/Register/RegisterScreen";
 import ForgotPasswordScreen from "../../screen/ForgotPasswordScreen";
 import InsertCode from "../../screen/InsertCode/InsertCode";
 import VerifyPhoneNum from "../../screen/VerifyPhoneNum";
-import Occupation from "../../screen/Occupation/Occupation";
+import SelectUserOccupations from "../../screen/SelectUserOccupations";
 
 const Stack = createNativeStackNavigator();
 const PublicRoute = () => {
@@ -29,8 +29,8 @@ const PublicRoute = () => {
         options={{ headerShown: false }}
       />
       <Stack.Screen
-        name="occupation"
-        component={Occupation}
+        name="selectUserOccupations"
+        component={SelectUserOccupations}
         options={{ headerShown: false }}
       />
       <Stack.Screen

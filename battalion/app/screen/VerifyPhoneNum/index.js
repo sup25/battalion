@@ -22,11 +22,11 @@ const VerifyPhoneNum = ({ navigation }) => {
     try {
       const fullPhoneNumber = countryCode + phoneNumber;
       const phoneProvider = new PhoneAuthProvider(auth);
+
       const verificationId = await phoneProvider.verifyPhoneNumber(
         fullPhoneNumber,
         recaptchaVerifier.current
       );
-      console.log("PNum", fullPhoneNumber);
 
       toast.show("Success: Verification code has been sent to your phone", {
         type: "normal",
@@ -70,6 +70,8 @@ const VerifyPhoneNum = ({ navigation }) => {
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={firebaseConfigWeb}
+        attemptInvisibleVerification={true}
+        invisible={true}
       />
       <View style={styles.containerSmall}>
         <Text style={styles.txtFirst}>Verify your phone with a code</Text>
