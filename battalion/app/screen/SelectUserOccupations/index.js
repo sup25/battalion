@@ -12,13 +12,15 @@ import TextLogoWhite from "../../assets/TextLogoWhite";
 import CarthagosScreen from "../../component/CarthagosScreen/CarthagosScreen";
 import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection";
 import { getAuth } from "firebase/auth";
+import { useToast } from "react-native-toast-notifications";
 
-const Occupation = ({ navigation }) => {
+const SelectUserOccupations = ({ navigation }) => {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [otherOccupation, setOtherOccupation] = useState("");
   const auth = getAuth();
+  const toast = useToast();
 
-  const Category = [
+  const Categories = [
     { id: 1, occupation: "Electrician" },
     { id: 2, occupation: "Construction Manager" },
     { id: 3, occupation: "Plumber" },
@@ -40,32 +42,49 @@ const Occupation = ({ navigation }) => {
     try {
       const user = auth.currentUser;
       if (user) {
+        if (selectedCategory.length === 0 && !otherOccupation.trim()) {
+          toast.show(
+            "Please select an occupation or provide Other occupation.",
+            {
+              type: "normal",
+            }
+          );
+          return;
+        }
+
         const userId = user.uid;
+        const occupations =
+          selectedCategory.length === 0
+            ? [otherOccupation]
+            : selectedCategory.map((categoryId) => {
+                const options = Categories.find((cat) => cat.id === categoryId);
+                return options ? options.occupation : "";
+              });
+
         const userData = {
-          occupations: selectedCategory.map((categoryId) =>
-            getCategoryById(categoryId)
-          ),
-          otherOccupation,
+          occupations,
         };
 
         const success = await addUserToFirestore(userId, userData);
 
         if (success) {
+          toast.show("User occupations updated successfully", {
+            type: "normal",
+          });
           navigation.navigate("Phoneverify");
         } else {
-          console.log("Failed to add user to Firestore");
+          toast.show("Failed to add user data", {
+            type: "normal",
+          });
         }
       } else {
-        console.log("User not authenticated");
+        toast.show("User not authenticated", {
+          type: "normal",
+        });
       }
     } catch (error) {
       console.error("Error handling continue:", error);
     }
-  };
-
-  const getCategoryById = (categoryId) => {
-    const category = Category.find((cat) => cat.id === categoryId);
-    return category ? category.occupation : "";
   };
 
   return (
@@ -76,7 +95,7 @@ const Occupation = ({ navigation }) => {
           <Text style={styles.textHeading}>What's your Occupation?</Text>
         </View>
         <View style={styles.categoryContainer}>
-          {Category.map((cat) => {
+          {Categories.map((cat) => {
             return (
               <View key={cat.id} style={styles.categoryItem}>
                 <TouchableWithoutFeedback
@@ -138,7 +157,7 @@ const Occupation = ({ navigation }) => {
   );
 };
 
-export default Occupation;
+export default SelectUserOccupations;
 
 const styles = StyleSheet.create({
   container: {

@@ -5,6 +5,9 @@ import {
   View,
   TextInput,
   TouchableOpacity,
+  ScrollView,
+  StatusBar,
+  SafeAreaView,
 } from "react-native";
 
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
@@ -14,9 +17,10 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { db } from "../../config/Firebase/Firebase";
 import { setDoc, doc } from "firebase/firestore";
 import FetchUserProfile from "../../Hooks/UserProfile/UserProfile";
+import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 
 const ProfileScreen = ({ navigation }) => {
-  const { currentUser } = useAuth();
+  const { currentUser, logout } = useAuth();
   const userData = FetchUserProfile(currentUser);
   const [phoneNumber, setPhoneNumber] = useState();
   const [isEditingUsername, setIsEditingUsername] = useState(false);
@@ -87,8 +91,8 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.wrapper}>
+    <ScrollView style={styles.container}>
+      <SafeAreaView style={styles.wrapper}>
         <Text style={styles.profileTxt}>My profile</Text>
         <View style={styles.bigRectangle}>
           <View>
@@ -181,8 +185,19 @@ const ProfileScreen = ({ navigation }) => {
             />
           </TouchableOpacity>
         </View>
-      </View>
-    </View>
+        <View style={{ paddingTop: 10, paddingBottom: 10 }}>
+          <CarthagosButton
+            width={277}
+            textColor="white"
+            onPress={() => {
+              logout();
+            }}
+            title="logout"
+          />
+        </View>
+        <StatusBar backgroundColor={colors.black} barStyle="light-content" />
+      </SafeAreaView>
+    </ScrollView>
   );
 };
 
