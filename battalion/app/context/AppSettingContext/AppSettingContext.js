@@ -60,6 +60,9 @@ export const AppSettingProvider = ({ children }) => {
     if (parsedSettings?.isCharging) {
       setIsCharging(parsedSettings.isCharging);
     }
+    if (parsedSettings?.connectedDevices) {
+      setConnectedDevices(parsedSettings.connectedDevices);
+    }
   };
   useEffect(() => {
     getItemsFromAsyncStorageAndSetToState();
@@ -132,8 +135,33 @@ export const AppSettingProvider = ({ children }) => {
     );
   };
 
-  const setConnectedDevice = (device) => {
-    setConnectedDevices((prev) => [device, ...prev]);
+  const setConnectedDevice = (BLEDevice) => {
+    const device = {
+      connected: true,
+      id: BLEDevice.id,
+      name: BLEDevice.name,
+      device: BLEDevice,
+    };
+    setConnectedDevices((prev) => {
+      const isDeviceAlreadyConnected = prev.find((d) => d.id === device.id);
+      if (!isDeviceAlreadyConnected) {
+        const devices = prev.map((d) => ({ ...d, connected: false }));
+        AsyncStorage.mergeItem(
+          "appSettings",
+          JSON.stringify({ connectedDevices: [device, ...devices] })
+        );
+        return [device, ...devices];
+      } else {
+        const devices = prev
+          .filter((d) => d.id !== isDeviceAlreadyConnected.id)
+          .map((d) => ({ ...d, connected: false }));
+        AsyncStorage.mergeItem(
+          "appSettings",
+          JSON.stringify({ connectedDevices: [device, ...devices] })
+        );
+        return [device, ...devices];
+      }
+    });
   };
 
   const contextValue = {
@@ -150,6 +178,9 @@ export const AppSettingProvider = ({ children }) => {
     setDeviceIsCharging,
     setDeviceIsLightsOn,
     getTempValueAndUnit,
+
+    connectedDevices,
+    setConnectedDevice,
 
     boxTemp,
     setBoxTemp,

@@ -6,6 +6,7 @@ import React, {
   useEffect,
 } from "react";
 import { BleManager } from "react-native-ble-plx";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ExpoDevice from "expo-device";
 import { PermissionsAndroid, Platform } from "react-native";
 import { Buffer } from "buffer";
@@ -49,6 +50,55 @@ const BleProvider = ({ children }) => {
   // const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
   // const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
   // const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
+
+  const getItemFromAsyncStorage = async (itemName, child = false) => {
+    try {
+      const value = await AsyncStorage.getItem(itemName);
+      if (value !== null) {
+        return JSON.parse(child ? value[child] : value);
+      }
+    } catch (error) {
+      console.log("settings context error, getting async item", error);
+    }
+  };
+
+  useEffect(() => {
+    // Check if there's a stored device ID and attempt to reconnect
+    const storedDeviceId = getItemFromAsyncStorage(
+      "appSettings",
+      "connectedDevices"
+    )[0].id;
+
+    if (storedDeviceId) {
+      connectToDevice(storedDeviceId);
+    }
+
+    // Add listeners for app background/foreground events to handle BLE connection states
+    AppState.addEventListener("change", handleAppStateChange);
+
+    return () => {
+      // Remove listeners on component unmount
+      AppState.removeEventListener("change", handleAppStateChange);
+    };
+  }, []);
+
+  const handleAppStateChange = (nextAppState) => {
+    // Check app state changes and manage BLE connections accordingly
+    if (nextAppState === "active") {
+      // App has come to the foreground, attempt reconnection if needed
+      const storedDeviceId = getItemFromAsyncStorage(
+        "appSettings",
+        "connectedDevices"
+      )[0].id;
+
+      if (storedDeviceId) {
+        connectToDevice(storedDeviceId);
+      }
+    } else {
+      // App is in the background or inactive, handle disconnection or suspend operations
+      // Disconnect or perform necessary actions when app goes to background
+    }
+  };
 
   const requestAndroid31Permissions = async () => {
     const bluetoothScanPermission = await PermissionsAndroid.request(
