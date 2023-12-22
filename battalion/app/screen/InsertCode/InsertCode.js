@@ -19,7 +19,7 @@ const InsertCode = ({ navigation }) => {
   const recaptchaVerifier = useRef(null);
   const { currentUser } = useAuth();
   const [verificationId, setVerificationID] = useState("");
-  const [countryCode, setCountryCode] = useState("");
+
   const [phoneNumber, setPhoneNumber] = useState("");
   const [verificationCode, setVerificationCode] = useState([
     "",
@@ -34,8 +34,6 @@ const InsertCode = ({ navigation }) => {
   // Extract the verificationId from the route parameters
   useEffect(() => {
     if (route.params && route.params.verificationId) {
-      setVerificationID(route.params.verificationId);
-      setCountryCode(route.params.countryCode);
       setPhoneNumber(route.params.phoneNumber);
     }
   }, [route.params]);
@@ -44,8 +42,10 @@ const InsertCode = ({ navigation }) => {
     setIsLoading(true);
 
     try {
-      const fullPhoneNumber = `${countryCode}${phoneNumber}`;
+      const fullPhoneNumber = `${phoneNumber}`;
+      console.log("phoneNumber: ", fullPhoneNumber);
       const phoneProvider = new PhoneAuthProvider(auth);
+
       const newVerificationId = await phoneProvider.verifyPhoneNumber(
         fullPhoneNumber,
         recaptchaVerifier.current
@@ -55,16 +55,18 @@ const InsertCode = ({ navigation }) => {
         throw new Error("Invalid new verification ID");
       }
 
+      // Set the new verification ID in the state
       setVerificationID(newVerificationId);
+
       toast.show("Success: New verification code has been sent to your phone", {
         type: "normal",
       });
     } catch (error) {
       setIsLoading(false);
-      toast.show("Error: Failed to resend verification code", {
+      toast.show("Error: invalid verification id", {
         type: "normal",
       });
-      console.log(`Error: ${error.message}`);
+      console.error(`Error: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
@@ -119,6 +121,8 @@ const InsertCode = ({ navigation }) => {
       <FirebaseRecaptchaVerifierModal
         ref={recaptchaVerifier}
         firebaseConfig={firebaseConfigWeb}
+        attemptInvisibleVerification={true}
+        invisible={true}
       />
       <View style={styles.containerSmall}>
         <Text style={styles.txtFirst}>Insert Code</Text>
