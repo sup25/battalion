@@ -1,7 +1,10 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
 import { auth } from "../../config/Firebase/Firebase";
-import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection";
+import {
+  addUserToFirestore,
+  checkIfUserExistsByPhone,
+} from "../../config/UsersCollection/UsersCollection";
 import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
 import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
@@ -21,6 +24,7 @@ const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
     setIsLoading(true);
     try {
       const fullPhoneNumber = countryCode + phoneNumber;
+      await checkIfUserExistsByPhone(fullPhoneNumber);
       const phoneProvider = new PhoneAuthProvider(auth);
       const verificationId = await phoneProvider.verifyPhoneNumber(
         fullPhoneNumber,
@@ -59,7 +63,7 @@ const VerifyPhoneNum = ({ navigation, setPhoneNum }) => {
     } catch (error) {
       setIsLoading(false);
 
-      toast.show(`Error: ${error.message}`, {
+      toast.show(`${error.message}`, {
         type: "normal",
       });
     }

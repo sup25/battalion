@@ -81,19 +81,15 @@ const Occupation = ({ navigation }) => {
               <View key={cat.id} style={styles.categoryItem}>
                 <TouchableWithoutFeedback
                   onPress={() => {
-                    const isSelected = selectedCategory.includes(cat.id);
-                    if (isSelected) {
-                      // If category is already selected, remove it
-                      setSelectedCategory((prevSelected) =>
-                        prevSelected.filter((id) => id !== cat.id)
-                      );
-                    } else {
-                      // If category is not selected, add it
-                      setSelectedCategory((prevSelected) => [
-                        ...prevSelected,
-                        cat.id,
-                      ]);
-                    }
+                    setSelectedCategory((prevSelected) => {
+                      if (!prevSelected.includes(cat.id)) {
+                        return setSelectedCategory((prevSelected) => [
+                          ...prevSelected,
+                          cat.id,
+                        ]);
+                      }
+                      return prevSelected.filter((id) => id !== cat.id);
+                    });
                   }}
                 >
                   <Text
