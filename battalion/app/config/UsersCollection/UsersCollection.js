@@ -42,36 +42,10 @@ export const addUserToFirestore = async (userId, userData) => {
           throw new Error("Number in use. Please choose another number.");
         }
       } else {
-        const query = firestore()
-          .collection("users")
-          .where("uid", "==", userId);
-
-        // Fetch the documents from the query
-        const snapshot = await query.get();
-
-        // Loop through the documents and set data to each one
-        snapshot.forEach(async (doc) => {
-          // Get the document reference
-          const docRef = doc.ref;
-
-          // Set data to the document
-          await docRef.set(userData);
-        });
+        await firestore().collection("users").doc(userId).set(userData);
       }
     } else {
-      const query = firestore().collection("users").where("uid", "==", userId);
-
-      // Fetch the documents from the query
-      const snapshot = await query.get();
-
-      // Loop through the documents and set data to each one
-      snapshot.forEach(async (doc) => {
-        // Get the document reference
-        const docRef = doc.ref;
-
-        // Set data to the document
-        await docRef.set(userData);
-      });
+      await firestore().collection("users").doc(userId).set(userData);
     }
 
     return true; // Return true if the operation is successful
