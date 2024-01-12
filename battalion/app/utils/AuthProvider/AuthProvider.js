@@ -2,7 +2,24 @@ import React, { useEffect, useState, createContext, useContext } from "react";
 import { View, ActivityIndicator } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "@react-navigation/native";
-import { auth } from "../../config/Firebase/Firebase";
+import auth from "@react-native-firebase/auth";
+
+import firebase from "@react-native-firebase/app";
+
+// Your secondary Firebase project credentials...
+const credentials = {
+  apiKey: "AIzaSyCOB7BcSJL0z46RG_8VET7R3axYekDBY2M",
+  authDomain: "fir-auth-3f578.firebaseapp.com",
+  databaseURL: "https://fir-auth-3f578-default-rtdb.firebaseio.com",
+  projectId: "fir-auth-3f578",
+  storageBucket: "fir-auth-3f578.appspot.com",
+  messagingSenderId: "255101624190",
+  appId: "1:255101624190:web:32883f32d3db47fa3d1d2f",
+};
+
+const config = {
+  name: "SECONDARY_APP",
+};
 
 const AuthContext = createContext();
 
@@ -19,7 +36,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await auth.signOut();
+      await auth().signOut();
       setCurrentUser(null);
       await AsyncStorage.removeItem("currentUser");
       console.log("Successfully logged out");
@@ -31,8 +48,13 @@ export const AuthProvider = ({ children }) => {
     }
   };
 
+  const init = async () => {
+    await firebase.initializeApp(credentials);
+  };
+
+  init();
   useEffect(() => {
-    const unsubscribe = auth.onAuthStateChanged((user) => {
+    const unsubscribe = auth().onAuthStateChanged((user) => {
       userHandler(user);
       // Store the user authentication state in AsyncStorage
       if (user) {
