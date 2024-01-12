@@ -14,8 +14,7 @@ import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
-import { db } from "../../config/Firebase/Firebase";
-import { setDoc, doc } from "firebase/firestore";
+import firestore from "@react-native-firebase/firestore";
 import FetchUserProfile from "../../Hooks/UserProfile/UserProfile";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 
@@ -78,8 +77,9 @@ const ProfileScreen = ({ navigation }) => {
         });
 
       // Update the user profile data in Firestore
-      const userDocRef = doc(db, "users", currentUser.uid);
-      setDoc(userDocRef, updatedUserData, { merge: true })
+      const userDocRef = firestore().doc(`users/${currentUser.uid}`);
+      userDocRef
+        .set(updatedUserData, { merge: true })
         .then(() => {
           console.log("User profile data updated successfully");
           setIsEditingUsername(false);

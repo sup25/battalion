@@ -1,6 +1,6 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
-import { auth } from "../../config/Firebase/Firebase";
+
 import {
   addUserToFirestore,
   checkIfUserExistsByPhone,

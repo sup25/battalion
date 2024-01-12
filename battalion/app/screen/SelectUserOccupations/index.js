@@ -11,13 +11,13 @@ import colors from "../../config/Colors/colors";
 import TextLogoWhite from "../../assets/TextLogoWhite";
 import CarthagosScreen from "../../component/CarthagosScreen/CarthagosScreen";
 import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection";
-import { getAuth } from "firebase/auth";
+import auth from "@react-native-firebase/auth";
 import { useToast } from "react-native-toast-notifications";
 
 const SelectUserOccupations = ({ navigation }) => {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [otherOccupation, setOtherOccupation] = useState("");
-  const auth = getAuth();
+
   const toast = useToast();
 
   const Categories = [
@@ -40,7 +40,7 @@ const SelectUserOccupations = ({ navigation }) => {
 
   const handleContinue = async () => {
     try {
-      const user = auth.currentUser;
+      const user = auth().currentUser;
       if (user) {
         if (selectedCategory.length === 0 && !otherOccupation.trim()) {
           toast.show(

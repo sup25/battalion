@@ -7,8 +7,8 @@ import {
   TouchableOpacity,
   Image,
 } from "react-native";
-import { auth } from "../../config/Firebase/Firebase";
-import { signInWithEmailAndPassword } from "firebase/auth";
+
+import auth from "@react-native-firebase/auth";
 import colors from "../../config/Colors/colors";
 import CarthagosLinkButton from "../../component/CarthagosLinkButton/CarthagosLinkButton";
 import { useRoute } from "@react-navigation/native";
@@ -36,10 +36,10 @@ const LoginScreen = ({ navigation }) => {
       const biometricResult = await UseBioMetric();
 
       if (biometricResult) {
-        await signInWithEmailAndPassword(auth, email, password);
+        await auth().signInWithEmailAndPassword(email, password);
         navigation.navigate("MainTabs");
       } else {
-        await signInWithEmailAndPassword(auth, email, password);
+        await auth().signInWithEmailAndPassword(email, password);
         navigation.navigate("MainTabs");
         toast.show("Biometric authentication failed", {
           type: "normal",
