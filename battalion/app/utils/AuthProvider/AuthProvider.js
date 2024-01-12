@@ -46,17 +46,17 @@ export const AuthProvider = ({ children }) => {
 
     // Retrieve user authentication state from AsyncStorage on app startup
     const checkUserAuthentication = async () => {
-      try {
-        const storedUser = await AsyncStorage.getItem("currentUser");
-        if (storedUser) {
-          setCurrentUser(JSON.parse(storedUser));
-          console.log("current user details", storedUser);
-        }
-        setIsLoading(false);
-      } catch (error) {
-        console.log("Error retrieving user authentication state:", error);
-        setIsLoading(false);
-      }
+      // try {
+      //   const storedUser = await AsyncStorage.getItem("currentUser");
+      //   if (storedUser) {
+      //     setCurrentUser(JSON.parse(storedUser));
+      //     console.log("current user details", storedUser);
+      //   }
+      //   setIsLoading(false);
+      // } catch (error) {
+      //   console.log("Error retrieving user authentication state:", error);
+      //   setIsLoading(false);
+      // }
     };
     checkUserAuthentication();
     return () => unsubscribe();

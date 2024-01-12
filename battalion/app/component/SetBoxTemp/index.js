@@ -16,7 +16,7 @@ const SetBoxTemp = () => {
     <TouchableOpacity
       style={styles.TempConatinerBg}
       onPress={() => {
-        if (connectedDevice.device) {
+        if (connectedDevice?.device) {
           navigation.navigate("halfcircle");
         } else {
           toast.show("Please connect to a device.", {
@@ -29,7 +29,7 @@ const SetBoxTemp = () => {
         <Text
           style={[
             styles.degree,
-            { color: connectedDevice.device ? "white" : "grey" },
+            { color: connectedDevice?.device ? "white" : "grey" },
           ]}
         >
           {getTempValueAndUnit(temp)}
@@ -43,13 +43,13 @@ const SetBoxTemp = () => {
       <View
         style={[
           styles.setTextContainer,
-          { opacity: connectedDevice.device ? 1 : 0.5 },
+          { opacity: connectedDevice?.device ? 1 : 0.5 },
         ]}
       >
         <Text
           style={[
             styles.setText,
-            { color: connectedDevice.device ? "white" : "grey" },
+            { color: connectedDevice?.device ? "white" : "grey" },
           ]}
         >
           Set the box Temperature

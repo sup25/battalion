@@ -127,7 +127,7 @@ function useBLE() {
       setConnectedDevice(deviceConnection);
       const connectedDevice =
         await deviceConnection.discoverAllServicesAndCharacteristics();
-      const services = await connectedDevice.services();
+      const services = await connectedDevice?.services();
       console.log(services);
       // Log the UUIDs of services
       services.forEach(async (service) => {
@@ -151,7 +151,7 @@ function useBLE() {
   const disconnectFromDevice = () => {
     if (connectedDevice) {
       bleManager.stopDeviceScan();
-      bleManager.cancelDeviceConnection(connectedDevice.id);
+      bleManager.cancelDeviceConnection(connectedDevice?.id);
       setConnectedDevice(null);
       setHeartRate(0);
     }

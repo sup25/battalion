@@ -36,7 +36,10 @@ export const AppSettingProvider = ({ children }) => {
 
   const getItemsFromAsyncStorageAndSetToState = async () => {
     const settings = await getItemFromAsyncStorage("appSettings");
-    const parsedSettings = JSON.parse(settings);
+    let parsedSettings = {};
+    if (settings) {
+      parsedSettings = JSON.parse(settings);
+    }
     console.log("appSettings:", parsedSettings);
     if (parsedSettings?.temp?.value) {
       setTemp((prev) => ({ ...prev, value: parsedSettings.temp.value }));
@@ -135,7 +138,7 @@ export const AppSettingProvider = ({ children }) => {
     );
   };
 
-  const setConnectedDevice = (BLEDevice) => {
+  const setConnectedDevice = async (BLEDevice) => {
     const device = {
       connected: true,
       id: BLEDevice.id,

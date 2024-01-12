@@ -44,7 +44,7 @@ export default function FourDigitCodeInsertScreen({ navigation }) {
       throw new Error("Please enter 4 digits");
     }
 
-    if (connectedDevice.device) {
+    if (connectedDevice?.device) {
       try {
         await writePasswordToDevice(digitValues); // set to ble device
         setDevicePassword(digitValues); //set to the state + async

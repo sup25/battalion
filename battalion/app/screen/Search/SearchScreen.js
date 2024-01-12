@@ -18,6 +18,7 @@ import PulseAnimation from "../PulseAnimation";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useToast } from "react-native-toast-notifications";
 import { useRoute } from "@react-navigation/native";
+import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 
 const SearchScreen = ({ navigation }) => {
   const toast = useToast();
@@ -29,6 +30,7 @@ const SearchScreen = ({ navigation }) => {
     index: null,
   });
 
+  const { setConnectedDevice } = useAppSettingContext();
   const {
     setScan,
 
@@ -160,13 +162,14 @@ const SearchScreen = ({ navigation }) => {
           {selectedDevice.device && (
             <TouchableOpacity
               onPress={async () => {
-                if (connectedDevice.connecting || !selectedDevice.device) {
+                if (connectedDevice?.connecting || !selectedDevice.device) {
                   return false;
                 }
                 stopScanning();
                 try {
                   console.log("device id", selectedDevice.device.id);
                   await connectToDevice(selectedDevice.device);
+                  await setConnectedDevice(selectedDevice.device);
                   if (isFirstTime) {
                     navigation.navigate("fourdigitcodeinsertscreen");
                   } else {
@@ -193,7 +196,7 @@ const SearchScreen = ({ navigation }) => {
               }}
             >
               <Text style={{ color: "white" }}>
-                {connectedDevice.connecting
+                {connectedDevice?.connecting
                   ? "CONNECTING..."
                   : "CONNECT DEVICE"}
               </Text>

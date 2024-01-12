@@ -90,7 +90,7 @@ const WelcomeScreen = ({ navigation }) => {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.deviceContainer}>
-          {!connectedDevice.device && (
+          {!connectedDevice?.device && (
             <View
               style={{
                 flexDirection: "row",

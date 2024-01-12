@@ -38,7 +38,7 @@ const BatteryPercent = () => {
         <Text
           style={[
             styles.textOne,
-            { color: connectedDevice.device ? "white" : "grey" },
+            { color: connectedDevice?.device ? "white" : "grey" },
           ]}
         >
           {boxBatteryLevel < 0 ? "--" : boxBatteryLevel}%
@@ -46,7 +46,7 @@ const BatteryPercent = () => {
         <Text
           style={[
             styles.textTwo,
-            { color: connectedDevice.device ? "white" : "grey" },
+            { color: connectedDevice?.device ? "white" : "grey" },
           ]}
         >
           {boxIsCharging ? "Charging" : "Plug your Device"}
