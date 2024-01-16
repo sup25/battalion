@@ -8,7 +8,6 @@ import InsertCode from "../../screen/InsertCode/InsertCode";
 import VerifyPhoneNum from "../../screen/VerifyPhoneNum";
 import SelectUserOccupations from "../../screen/SelectUserOccupations";
 import WelcomeScreen from "../../screen/Welcome/WelcomeScreen";
-import BLETest from "../../screen/BLETest";
 
 const Stack = createNativeStackNavigator();
 const PublicRoute = () => {
