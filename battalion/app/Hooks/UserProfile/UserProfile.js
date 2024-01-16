@@ -1,17 +1,19 @@
 import { useEffect, useState } from "react";
 import firestore from "@react-native-firebase/firestore";
 
-function FetchUserProfile(currentUser) {
+function FetchUserProfile(currentUser = false) {
   const [userData, setUserData] = useState();
 
   useEffect(() => {
     const loadUserProfileData = async () => {
       if (currentUser) {
-        const userDocRef = firestore().doc(`users/${currentUser.uid}`);
-        userDocRef
+        console.log("currentUser", currentUser);
+        firestore()
+          .doc(`users/${currentUser.uid}`)
           .get()
           .then((docSnap) => {
-            if (docSnap.exists()) {
+            console.log("docSnap", docSnap.exists);
+            if (docSnap.exists) {
               const userData = docSnap.data();
               setUserData(userData);
             } else {

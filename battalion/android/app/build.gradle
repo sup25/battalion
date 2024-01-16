@@ -81,7 +81,7 @@ android {
 
     compileSdkVersion rootProject.ext.compileSdkVersion
 
-    namespace "com.expoble"
+    namespace "com.suparna.expoble"
     defaultConfig {
         applicationId 'com.suparna.expoble'
         minSdkVersion rootProject.ext.minSdkVersion

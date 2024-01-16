@@ -16,7 +16,7 @@ const PublicRoute = () => {
     <Stack.Navigator initialRouteName="Main">
       <Stack.Screen
         name="Main"
-        component={WelcomeScreen}
+        component={MainScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

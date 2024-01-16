@@ -119,7 +119,7 @@ export const storeFourDigitsToTheDb = async (
 ) => {
   try {
     // Get a reference to the devices collection
-    const devicesRef = firebase.firestore().collection("devices");
+    const devicesRef = firestore().collection("devices");
     // Update the document with the new password
     await devicesRef.doc(combinedSerialNum).update({
       fourDigitCode: digitValuesAsNumbers,

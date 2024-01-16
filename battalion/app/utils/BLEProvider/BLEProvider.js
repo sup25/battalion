@@ -17,15 +17,16 @@ import { useAppSettingContext } from "../../context/AppSettingContext/AppSetting
 import appConfig from "../../config/app";
 
 import { useToast } from "react-native-toast-notifications";
+import { useAuth } from "../AuthProvider/AuthProvider";
 const BleContext = createContext();
 
 const BleProvider = ({ children }) => {
-  const SPS_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
-  const SPS_SERVER_TX_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
-  const SPS_SERVER_RX_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
-  // const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
-  // const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
-  // const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
+  // const SPS_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
+  // const SPS_SERVER_TX_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
+  // const SPS_SERVER_RX_UUID = "19b10001-e8f2-537e-4f6c-d104768a1214";
+  const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
+  const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
+  const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
 
   const Toast = useToast();
   const devices = appConfig.env === "dev" ? appConfig.testDevices : [];
@@ -41,6 +42,8 @@ const BleProvider = ({ children }) => {
     isLightsOn,
   } = useAppSettingContext();
   const bleManager = useMemo(() => new BleManager(), []);
+
+  const { currentUser } = useAuth();
 
   const [device, setDevice] = useState(null);
   const [scan, setScan] = useState({
@@ -68,52 +71,19 @@ const BleProvider = ({ children }) => {
     }
   };
   const connectToDeviceOnStart = async () => {
-    Toast.show("Reconnecting to the device.", {
-      type: "normal",
-    });
-    const storedDeviceId = await getItemFromAsyncStorage(
-      "appSettings",
-      "connectedDevices"
-    );
-
-    if (storedDeviceId) {
-      try {
-        await connectToDevice(storedDeviceId?.[0]?.device);
-        Toast.show("Device reconnected successfuly.", {
-          type: "normal",
-        });
-      } catch (e) {
-        Toast.show("Couldn't reconnect to the device.", {
-          type: "normal",
-        });
-      }
-    }
-  };
-
-  useEffect(() => {
-    connectToDeviceOnStart();
-    // Add listeners for app background/foreground events to handle BLE connection states
-    AppState.addEventListener("change", handleAppStateChange);
-
-    // return () => {
-    //   // Remove listeners on component unmount
-    //   AppState.removeEventListener("change", handleAppStateChange);
-    // };
-  }, []);
-
-  const handleAppStateChange = async (nextAppState) => {
-    Toast.show("Reconnecting to the device.", {
-      type: "normal",
-    });
-    // Check app state changes and manage BLE connections accordingly
-    if (nextAppState === "active") {
-      // App has come to the foreground, attempt reconnection if needed
+    if (currentUser) {
       const storedDeviceId = await getItemFromAsyncStorage(
         "appSettings",
         "connectedDevices"
       );
 
       if (storedDeviceId) {
+        Toast.show(
+          `Trying to reconnect to the device (${storedDeviceId?.[0]?.device?.name}).`,
+          {
+            type: "normal",
+          }
+        );
         try {
           await connectToDevice(storedDeviceId?.[0]?.device);
           Toast.show("Device reconnected successfuly.", {
@@ -124,10 +94,53 @@ const BleProvider = ({ children }) => {
             type: "normal",
           });
         }
+      } else {
+        Toast.show("Couldn't reconnect to the device.", {
+          type: "normal",
+        });
       }
-    } else {
-      // App is in the background or inactive, handle disconnection or suspend operations
-      // Disconnect or perform necessary actions when app goes to background
+    }
+  };
+
+  useEffect(() => {
+    connectToDeviceOnStart();
+
+    const subscribe = AppState.addEventListener("change", handleAppStateChange);
+
+    return () => {
+      subscribe.remove();
+    };
+  }, []);
+
+  const handleAppStateChange = async (nextAppState) => {
+    if (currentUser) {
+      Toast.show("Reconnecting to the device.", {
+        type: "normal",
+      });
+      // Check app state changes and manage BLE connections accordingly
+      if (nextAppState === "active") {
+        // App has come to the foreground, attempt reconnection if needed
+        const storedDeviceId = await getItemFromAsyncStorage(
+          "appSettings",
+          "connectedDevices"
+        );
+
+        if (storedDeviceId) {
+          try {
+            await connectToDevice(storedDeviceId?.[0]?.device);
+            Toast.show("Device reconnected successfuly.", {
+              type: "normal",
+            });
+          } catch (e) {
+            Toast.show("Couldn't reconnect to the device.", {
+              type: "normal",
+            });
+          }
+        }
+      } else {
+        // App is in the background or inactive, handle disconnection or suspend operations
+        // Disconnect or perform necessary actions when app goes to background
+      }
     }
   };
 
@@ -299,39 +312,27 @@ const BleProvider = ({ children }) => {
   };
 
   const writePasswordToDevice = async (data = false) => {
-    const prefix = [55, 1];
+    const prefix = [85, 1];
     let passwordWithHeader = [];
     if (data) {
       if (data.length < 4) throw new Error("Password must be 4 digits");
-
-      passwordWithHeader = Buffer.from(
-        convertedArrayToHex(prefix.concat(data))
-      );
     }
-    const dataTest = [55, 1, 1, 2, 3, 4];
-    const dataBase64 = btoa(String.fromCharCode.apply(null, data));
-    const dataBase64Test = btoa(dataTest.join(""));
-    console.log("teete", dataBase64Test);
-    console.log(String.fromCharCode.apply(null, data), dataTest.join(""));
-    const test2 = Buffer.from(dataTest).toString("base64");
-    const test3 = base64.encode(dataTest.join(""));
-    const test4 = Buffer.from("550101020304", "hex").toString("base64");
-    console.log("1", dataBase64);
-    console.log("2", test2);
-    console.log("3", test3);
-    console.log("4", test4);
-    console.log("decode1", base64.decode(dataBase64));
-    console.log("decode2", base64.decode(test2));
-    console.log("decode3", base64.decode(test3));
-    console.log("decode4", base64.decode(test4));
+    passwordWithHeader = Buffer.from(prefix.concat(data));
+
+    // Convert to hex
+    const hexString = passwordWithHeader.toString("hex");
+
+    // Convert hex to base64
+    const base64String = Buffer.from(hexString, "hex").toString("base64");
     try {
       let res =
         await connectedDevice?.device.writeCharacteristicWithResponseForService(
           SPS_SERVICE_UUID,
           SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
-          dataBase64
+          base64String
         );
 
+      console.log("res", res);
       return res;
       // Password set successfully
     } catch (error) {
@@ -370,20 +371,27 @@ const BleProvider = ({ children }) => {
   };
 
   const writeTempToDevice = async (data = false) => {
-    const prefix = [55, 3];
+    const prefix = [85, 3];
     const prefixAndPass = prefix.concat(password);
+    // const tempType = prefixAndPass.concat([isLightsOn ? 1 : 0]); // 1 for celcius, 0 for farenheit
     const withTemp = prefixAndPass.concat([isLightsOn ? 1 : 0]);
     let tempWithPrefix = [];
     if (data) {
       tempWithPrefix = Buffer.from(convertedArrayToHex(withTemp.concat(data)));
     }
+    // Convert to hex
+    const hexString = tempWithPrefix.toString("hex");
+    console.log("hexString", hexString);
+
+    // Convert hex to base64
+    const base64String = Buffer.from(hexString, "hex").toString("base64");
 
     try {
       let res =
         await connectedDevice?.device.writeCharacteristicWithResponseForService(
           SPS_SERVICE_UUID,
           SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
-          tempWithPrefix.toString("base64")
+          base64String
         );
 
       return res;
