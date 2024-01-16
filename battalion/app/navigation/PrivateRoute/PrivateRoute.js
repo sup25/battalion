@@ -19,7 +19,6 @@ import TestingBLE from "../../screen/Search/TestingBLE";
 import HalfCircleSlider from "../../screen/HalfCircleSlider";
 import Home from "../../screen/Home";
 import { View, Text } from "react-native";
-import BLETest from "../../screen/BLETest";
 
 const Tab = createBottomTabNavigator();
 
