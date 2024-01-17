@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, Text, TextInput, StyleSheet, StatusBar } from "react-native";
 import colors from "../../config/Colors/colors";
 import TextLogo from "../../assets/TextLogo";
@@ -6,7 +6,10 @@ import auth from "@react-native-firebase/auth";
 
 import CarthagosLinkButton from "../../component/CarthagosLinkButton/CarthagosLinkButton";
 
-import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection";
+import {
+  addUserToFirestore,
+  createUser,
+} from "../../config/UsersCollection/UsersCollection";
 
 import { useToast } from "react-native-toast-notifications";
 
@@ -19,17 +22,24 @@ export default function RegisterScreen({ navigation }) {
 
   const toast = useToast();
 
+  useEffect(() => {
+    console.log("name:", name, ". email:", email);
+  }, [name, email]);
   // Handle user state changes
   const onAuthStateChanged = async (user) => {
-    const userData = {
-      name,
-      email,
-    };
     try {
-      const addedToFirestore = await addUserToFirestore(user.uid, userData);
+      await auth().currentUser.updateProfile({ displayName: name });
+
+      const addedToFirestore = await createUser(user.uid, {
+        name,
+        email,
+      });
 
       if (addedToFirestore) {
-        console.log("User data added to Firestore successfully.");
+        console.log(
+          "User data added to Firestore successfully.",
+          addedToFirestore
+        );
         navigation.navigate("selectUserOccupations");
       } else {
         setIsLoading(false);
@@ -39,11 +49,8 @@ export default function RegisterScreen({ navigation }) {
       toast.show("Successfully registered", {
         type: "normal",
       });
-      setName("");
-      setEmail("");
-      setPassword("");
-      setConfirmPassword("");
     } catch (error) {
+      console.log(error);
       toast.show("Registration error", {
         type: "normal",
       });
@@ -51,9 +58,19 @@ export default function RegisterScreen({ navigation }) {
   };
 
   useEffect(() => {
-    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
-    return subscriber; // unsubscribe on unmount
-  }, []);
+    const sub = auth().onAuthStateChanged(async (user) => {
+      if (user) {
+        if (email === "" && name === "") {
+          console.log("signout");
+          const signout = await auth().signOut();
+          console.log("signout", signout);
+        } else {
+          await onAuthStateChanged(user);
+        }
+      }
+    });
+    return sub;
+  }, [name, email]);
 
   const handleRegister = async (setIsLoading) => {
     setIsLoading(true);

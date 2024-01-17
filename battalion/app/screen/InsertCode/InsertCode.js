@@ -83,7 +83,7 @@ const InsertCode = ({ navigation }) => {
         code
       );
       await auth().currentUser.linkWithCredential(credential);
-
+      await auth().currentUser.updateProfile({ phoneNumber });
       if (currentUser) {
         const userData = {
           phoneNumber: phoneNumber,

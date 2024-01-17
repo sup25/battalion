@@ -101,13 +101,13 @@ const SelectUserOccupations = ({ navigation }) => {
                 <TouchableWithoutFeedback
                   onPress={() => {
                     setSelectedCategory((prevSelected) => {
-                      if (!prevSelected.includes(cat.id)) {
-                        return setSelectedCategory((prevSelected) => [
-                          ...prevSelected,
-                          cat.id,
-                        ]);
+                      if (prevSelected?.length) {
+                        if (!prevSelected.includes(cat.id)) {
+                          return [...prevSelected, cat.id];
+                        }
+                        return prevSelected.filter((id) => id !== cat.id);
                       }
-                      return prevSelected.filter((id) => id !== cat.id);
+                      return [cat.id];
                     });
                   }}
                 >

@@ -18,6 +18,15 @@ export const checkIfUserExistsByPhone = async (phoneNum) => {
     throw error; // Return false if there's an error
   }
 };
+
+export const createUser = async (userId, userData) => {
+  try {
+    await firestore().collection("users").doc(userId).set(userData);
+    return true;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
 export const addUserToFirestore = async (userId, userData) => {
   console.log("userData", userData);
   try {
@@ -34,8 +43,8 @@ export const addUserToFirestore = async (userId, userData) => {
         .get();
 
       if (users.length > 0) {
+        console.log("users:", users);
         if (userData.email) {
-          console.log(users);
           throw new Error("User already exists. Please sign in.");
         }
         if (userData.phoneNumber) {
