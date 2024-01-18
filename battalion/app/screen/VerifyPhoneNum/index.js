@@ -35,14 +35,20 @@ const VerifyPhoneNum = ({ navigation }) => {
 
   const handleSendVerificationCode = async (setIsLoading) => {
     setIsLoading(true);
+
     try {
-      const fullPhoneNumber = countryCode + phoneNumber;
+      const fullPhoneNumber = `${countryCode} ${phoneNumber.substring(
+        0,
+        3
+      )}-${phoneNumber.substring(3, 6)}-${phoneNumber.substring(6)}`;
       await checkIfUserExistsByPhone(fullPhoneNumber);
 
       toast.show("Success: Verification code has been sent to your phone", {
         type: "normal",
       });
-      const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
+
+      const confirmation = await auth().signInWithPhoneNumber(fullPhoneNumber);
+      console.log("Verification ID sent:", confirmation.verificationId);
       navigation.navigate("ConfirmCode", {
         confirmation,
         phoneNumber: fullPhoneNumber,
@@ -54,8 +60,10 @@ const VerifyPhoneNum = ({ navigation }) => {
       toast.show(`${error.message}`, {
         type: "normal",
       });
+      console.log("error msg", error.message);
     }
   };
+
   return (
     <View style={styles.container}>
       <View style={styles.containerSmall}>
