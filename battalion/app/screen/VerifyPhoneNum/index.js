@@ -41,7 +41,16 @@ const VerifyPhoneNum = ({ navigation }) => {
         0,
         3
       )}-${phoneNumber.substring(3, 6)}-${phoneNumber.substring(6)}`;
-      await checkIfUserExistsByPhone(fullPhoneNumber);
+
+      const isPhoneNumberInUse = await checkIfUserExistsByPhone(
+        fullPhoneNumber
+      );
+
+      if (isPhoneNumberInUse) {
+        toast.show("Number in use. Please choose another number.", {
+          type: "normal",
+        });
+      }
 
       toast.show("Success: Verification code has been sent to your phone", {
         type: "normal",

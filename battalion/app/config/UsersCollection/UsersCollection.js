@@ -8,7 +8,7 @@ export const checkIfUserExistsByPhone = async (phoneNum) => {
       .where("phoneNumber", "==", phoneNum)
       .get();
 
-    if (users.length > 0) {
+    if (users.size > 0) {
       throw new Error("Number in use. Please choose another number.");
     } else {
       return false;
