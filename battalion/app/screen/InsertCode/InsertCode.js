@@ -38,14 +38,17 @@ const InsertCode = ({ navigation }) => {
 
     try {
       const fullPhoneNumber = `${phoneNumber}`;
-      const confirmation = await auth().signInWithPhoneNumber(fullPhoneNumber);
+      const confirmation = await auth().signInWithPhoneNumber(
+        fullPhoneNumber,
+        true
+      );
 
-      if (!confirmation) {
+      if (!confirmation.verificationId) {
         throw new Error("Invalid new verification ID");
       }
 
       // Set the new verification ID in the state
-      setVerificationID(confirmation);
+      setVerificationID(confirmation.verificationId);
 
       toast.show("Success: New verification code has been sent to your phone", {
         type: "normal",
