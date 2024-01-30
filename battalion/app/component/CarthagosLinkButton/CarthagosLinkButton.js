@@ -14,8 +14,10 @@ function CarthagosLinkButton({
   loginRoute,
   color = "primary",
   textColor,
+  isLoading = false,
 }) {
   const handleLinkPress = () => {
+    if (isLoading) return;
     if (registerRoute) {
       navigation.navigate("Register");
     } else if (loginRoute) {

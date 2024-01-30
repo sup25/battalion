@@ -1,11 +1,62 @@
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "../Firebase/Firebase";
+import firestore from "@react-native-firebase/firestore";
 
 // Function to add user data to Firestore
-export const addUserToFirestore = async (userId, userData) => {
+export const checkIfUserExistsByPhone = async (phoneNum) => {
   try {
-    const userDocRef = doc(db, "users", userId);
-    await setDoc(userDocRef, userData, { merge: true });
+    const users = await firestore()
+      .collection("users")
+      .where("phoneNumber", "==", phoneNum)
+      .get();
+
+    if (users.length > 0) {
+      throw new Error("Number in use. Please choose another number.");
+    } else {
+      return false;
+    }
+  } catch (error) {
+    console.error("Error adding user to Firestore:", error);
+    throw error; // Return false if there's an error
+  }
+};
+
+export const createUser = async (userId, userData) => {
+  try {
+    await firestore().collection("users").doc(userId).set(userData);
+    return true;
+  } catch (err) {
+    throw new Error(err);
+  }
+};
+export const addUserToFirestore = async (userId, userData) => {
+  console.log("userData", userData);
+  try {
+    if (userData.email || userData.phoneNumber) {
+      const users = await firestore()
+        .collection("users")
+        .where(
+          userData.email
+            ? ("email", "==", userData.email)
+            : userData.phoneNumber
+            ? ("phoneNumber", "==", phoneNum)
+            : ""
+        )
+        .get();
+
+      if (users.length > 0) {
+        console.log("users:", users);
+        if (userData.email) {
+          throw new Error("User already exists. Please sign in.");
+        }
+        if (userData.phoneNumber) {
+          throw new Error("Number in use. Please choose another number.");
+        }
+      } else {
+        await firestore().collection("users").doc(userId).set(userData);
+      }
+    } else {
+      await firestore().collection("users").doc(userId).set(userData);
+    }
+
     return true; // Return true if the operation is successful
   } catch (error) {
     console.error("Error adding user to Firestore:", error);

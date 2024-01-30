@@ -36,7 +36,10 @@ export const AppSettingProvider = ({ children }) => {
 
   const getItemsFromAsyncStorageAndSetToState = async () => {
     const settings = await getItemFromAsyncStorage("appSettings");
-    const parsedSettings = JSON.parse(settings);
+    let parsedSettings = {};
+    if (settings) {
+      parsedSettings = JSON.parse(settings);
+    }
     console.log("appSettings:", parsedSettings);
     if (parsedSettings?.temp?.value) {
       setTemp((prev) => ({ ...prev, value: parsedSettings.temp.value }));
@@ -59,6 +62,9 @@ export const AppSettingProvider = ({ children }) => {
     }
     if (parsedSettings?.isCharging) {
       setIsCharging(parsedSettings.isCharging);
+    }
+    if (parsedSettings?.connectedDevices) {
+      setConnectedDevices(parsedSettings.connectedDevices);
     }
   };
   useEffect(() => {
@@ -110,7 +116,8 @@ export const AppSettingProvider = ({ children }) => {
   };
 
   const getTempValueAndUnit = (temp) => {
-    const val = temp.unit === "c" ? temp.value : (temp.value * 9) / 5 + 32;
+    const val =
+      temp.unit === "c" ? temp.value : Math.round((temp.value * 9) / 5 + 32);
     const unit = temp.unit === "c" ? "℃" : "°F";
     return `${val}${unit}`;
   };
@@ -131,8 +138,33 @@ export const AppSettingProvider = ({ children }) => {
     );
   };
 
-  const setConnectedDevice = (device) => {
-    setConnectedDevices((prev) => [device, ...prev]);
+  const setConnectedDevice = async (BLEDevice) => {
+    const device = {
+      connected: true,
+      id: BLEDevice.id,
+      name: BLEDevice.name,
+      device: BLEDevice,
+    };
+    setConnectedDevices((prev) => {
+      const isDeviceAlreadyConnected = prev.find((d) => d.id === device.id);
+      if (!isDeviceAlreadyConnected) {
+        const devices = prev.map((d) => ({ ...d, connected: false }));
+        AsyncStorage.mergeItem(
+          "appSettings",
+          JSON.stringify({ connectedDevices: [device, ...devices] })
+        );
+        return [device, ...devices];
+      } else {
+        const devices = prev
+          .filter((d) => d.id !== isDeviceAlreadyConnected.id)
+          .map((d) => ({ ...d, connected: false }));
+        AsyncStorage.mergeItem(
+          "appSettings",
+          JSON.stringify({ connectedDevices: [device, ...devices] })
+        );
+        return [device, ...devices];
+      }
+    });
   };
 
   const contextValue = {
@@ -149,6 +181,9 @@ export const AppSettingProvider = ({ children }) => {
     setDeviceIsCharging,
     setDeviceIsLightsOn,
     getTempValueAndUnit,
+
+    connectedDevices,
+    setConnectedDevice,
 
     boxTemp,
     setBoxTemp,

@@ -44,7 +44,7 @@ export default function FourDigitCodeInsertScreen({ navigation }) {
       throw new Error("Please enter 4 digits");
     }
 
-    if (connectedDevice.device) {
+    if (connectedDevice?.device) {
       try {
         await writePasswordToDevice(digitValues); // set to ble device
         setDevicePassword(digitValues); //set to the state + async
@@ -120,6 +120,7 @@ const styles = StyleSheet.create({
   button: {
     position: "absolute",
     alignSelf: "center",
+    bottom: 20,
   },
   container: {
     flex: 1,

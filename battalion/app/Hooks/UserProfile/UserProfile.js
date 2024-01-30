@@ -1,29 +1,31 @@
 import { useEffect, useState } from "react";
-import { db } from "../../config/Firebase/Firebase";
-import { doc, getDoc } from "firebase/firestore";
+import firestore from "@react-native-firebase/firestore";
 
-function FetchUserProfile(currentUser) {
+function FetchUserProfile(currentUser = false) {
   const [userData, setUserData] = useState();
 
   useEffect(() => {
     const loadUserProfileData = async () => {
       if (currentUser) {
-        try {
-          const userDocRef = doc(db, "users", currentUser.uid);
-          const userDocSnapshot = await getDoc(userDocRef);
-
-          if (userDocSnapshot.exists()) {
-            const userData = userDocSnapshot.data();
-            setUserData(userData);
-          } else {
-            console.log("User profile data not found in Firestore");
-          }
-        } catch (error) {
-          console.error(
-            "Error loading user profile data from Firestore:",
-            error
-          );
-        }
+        console.log("currentUser", currentUser);
+        firestore()
+          .doc(`users/${currentUser.uid}`)
+          .get()
+          .then((docSnap) => {
+            console.log("docSnap", docSnap.exists);
+            if (docSnap.exists) {
+              const userData = docSnap.data();
+              setUserData(userData);
+            } else {
+              console.log("User profile data not found in Firestore");
+            }
+          })
+          .catch((error) => {
+            console.error(
+              "Error loading user profile data from Firestore:",
+              error
+            );
+          });
       }
     };
 

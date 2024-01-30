@@ -1,14 +1,15 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
-import { auth } from "../../config/Firebase/Firebase";
-import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection";
-import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+
+import {
+  addUserToFirestore,
+  checkIfUserExistsByPhone,
+} from "../../config/UsersCollection/UsersCollection";
 import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
-import { PhoneAuthProvider } from "firebase/auth";
+import auth from "@react-native-firebase/auth";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
-import firebaseConfigWeb from "../../config/FireBaseConfigWeb";
 
 const VerifyPhoneNum = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -17,62 +18,46 @@ const VerifyPhoneNum = ({ navigation }) => {
   const recaptchaVerifier = useRef(null);
   const toast = useToast();
 
+  // Handle login
+  function onAuthStateChanged(user) {
+    if (user) {
+      // Some Android devices can automatically process the verification code (OTP) message, and the user would NOT need to enter the code.
+      // Actually, if he/she tries to enter it, he/she will get an error message because the code was already used in the background.
+      // In this function, make sure you hide the component(s) for entering the code and/or navigate away from this screen.
+      // It is also recommended to display a message to the user informing him/her that he/she has successfully logged in.
+    }
+  }
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber; // unsubscribe on unmount
+  }, []);
+
   const handleSendVerificationCode = async (setIsLoading) => {
     setIsLoading(true);
     try {
       const fullPhoneNumber = countryCode + phoneNumber;
-      const phoneProvider = new PhoneAuthProvider(auth);
-
-      const verificationId = await phoneProvider.verifyPhoneNumber(
-        fullPhoneNumber,
-        recaptchaVerifier.current
-      );
+      await checkIfUserExistsByPhone(fullPhoneNumber);
 
       toast.show("Success: Verification code has been sent to your phone", {
         type: "normal",
       });
-
-      const user = currentUser;
-
-      if (user) {
-        const userData = {
-          phoneNumber: fullPhoneNumber,
-        };
-        const addedToFirestore = await addUserToFirestore(user.uid, userData);
-
-        if (!addedToFirestore) {
-          setIsLoading(false);
-          console.error("Failed to add phone number to Firestore.");
-        }
-      } else {
-        setIsLoading(false);
-
-        toast.show("Error: User is not logged in.", {
-          type: "normal",
-        });
-      }
-
+      const confirmation = await auth().signInWithPhoneNumber(phoneNumber);
       navigation.navigate("ConfirmCode", {
-        verificationId,
+        confirmation,
         phoneNumber: fullPhoneNumber,
         countryCode: countryCode,
       });
     } catch (error) {
       setIsLoading(false);
 
-      toast.show(`Error: ${error.message}`, {
+      toast.show(`${error.message}`, {
         type: "normal",
       });
     }
   };
   return (
     <View style={styles.container}>
-      <FirebaseRecaptchaVerifierModal
-        ref={recaptchaVerifier}
-        firebaseConfig={firebaseConfigWeb}
-        attemptInvisibleVerification={true}
-        invisible={true}
-      />
       <View style={styles.containerSmall}>
         <Text style={styles.txtFirst}>Verify your phone with a code</Text>
         <Text style={styles.txtSecond}>

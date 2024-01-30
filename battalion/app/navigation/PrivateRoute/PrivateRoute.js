@@ -18,6 +18,7 @@ import SearchScreen from "../../screen/Search/SearchScreen";
 import TestingBLE from "../../screen/Search/TestingBLE";
 import HalfCircleSlider from "../../screen/HalfCircleSlider";
 import Home from "../../screen/Home";
+import { View, Text } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -99,9 +100,12 @@ const MainTabs = () => {
   return (
     <Tab.Navigator
       screenOptions={() => ({
+        tabBarLabelPosition: "beside-icon",
         headerShown: false,
-        tabBarLabelStyle: { fontSize: 15, color: "#fff" },
+        tabBarLabelStyle: { fontSize: 14, color: "#fff" },
         tabBarStyle: {
+          height: 50,
+
           backgroundColor: "#000",
           flexDirection: "row",
         },

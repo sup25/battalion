@@ -1,26 +1,20 @@
 import React, { useState, useEffect, useRef } from "react";
 import { StyleSheet, Text, TextInput, View } from "react-native";
-import {
-  PhoneAuthProvider,
-  linkWithCredential,
-  updateProfile,
-} from "firebase/auth";
-import { auth } from "../../config/Firebase/Firebase";
+import auth from "@react-native-firebase/auth";
 import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import { useRoute } from "@react-navigation/native";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
-import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
-import firebaseConfigWeb from "../../config/FireBaseConfigWeb";
+import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection";
 
 const InsertCode = ({ navigation }) => {
   const toast = useToast();
-  const recaptchaVerifier = useRef(null);
+
   const { currentUser } = useAuth();
   const [verificationId, setVerificationID] = useState("");
 
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
   const [verificationCode, setVerificationCode] = useState([
     "",
     "",
@@ -43,20 +37,14 @@ const InsertCode = ({ navigation }) => {
 
     try {
       const fullPhoneNumber = `${phoneNumber}`;
-      console.log("phoneNumber: ", fullPhoneNumber);
-      const phoneProvider = new PhoneAuthProvider(auth);
+      const confirmation = await auth().signInWithPhoneNumber(fullPhoneNumber);
 
-      const newVerificationId = await phoneProvider.verifyPhoneNumber(
-        fullPhoneNumber,
-        recaptchaVerifier.current
-      );
-
-      if (!newVerificationId) {
+      if (!confirmation) {
         throw new Error("Invalid new verification ID");
       }
 
       // Set the new verification ID in the state
-      setVerificationID(newVerificationId);
+      setVerificationID(confirmation);
 
       toast.show("Success: New verification code has been sent to your phone", {
         type: "normal",
@@ -82,15 +70,40 @@ const InsertCode = ({ navigation }) => {
     setIsLoading(true);
     try {
       const code = verificationCode.join(""); // Join the digits to get the complete 6-digit code
-      const credential = PhoneAuthProvider.credential(verificationId, code);
-      await linkWithCredential(currentUser, credential);
+      try {
+        await verificationId.confirm(code);
+      } catch (error) {
+        toast.show("Invalid code.", {
+          type: "normal",
+        });
+        throw new error("Invalid code.");
+      }
+      const credential = auth.PhoneAuthProvider.credential(
+        confirm.verificationId,
+        code
+      );
+      await auth().currentUser.linkWithCredential(credential);
+      await auth().currentUser.updateProfile({ phoneNumber });
+      if (currentUser) {
+        const userData = {
+          phoneNumber: phoneNumber,
+        };
+        const addedToFirestore = await addUserToFirestore(
+          currentUser.uid,
+          userData
+        );
 
-      // Update the user's profile with the phone number
-      await updateProfile(auth.currentUser, {
-        email: currentUser?.email || "", // Update the email to the one from which the user signed up
-        phoneNumber: currentUser?.phoneNumber || "", // Keep the existing phone number as it is already verified
-      });
+        if (!addedToFirestore) {
+          setIsLoading(false);
+          console.error("Failed to add phone number to Firestore.");
+        }
+      } else {
+        setIsLoading(false);
 
+        toast.show("Error: User is not logged in.", {
+          type: "normal",
+        });
+      }
       toast.show(" Phone authentication successful", {
         type: "normal",
       });
@@ -118,12 +131,6 @@ const InsertCode = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <FirebaseRecaptchaVerifierModal
-        ref={recaptchaVerifier}
-        firebaseConfig={firebaseConfigWeb}
-        attemptInvisibleVerification={true}
-        invisible={true}
-      />
       <View style={styles.containerSmall}>
         <Text style={styles.txtFirst}>Insert Code</Text>
         <Text style={styles.txtSecond}>

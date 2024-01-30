@@ -21,15 +21,20 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "plugins": [
-      [
-        "@config-plugins/react-native-ble-plx",
-        {
-          "isBackgroundEnabled": true
+    "plugins": ["react-native-ble-plx", 
+    "@react-native-firebase/app",
+     "@react-native-firebase/auth",
+    
+    [
+      "expo-build-properties",
+      {
+        "ios": {
+          "useFrameworks": "static"
         }
-      ]
-    ],
+      }
+    ]],
     "ios": {
+      "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "com.example.expo-ble",
       "infoPlist": {
@@ -39,6 +44,7 @@
       }
     },
     "android": {
+      "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF"
       },

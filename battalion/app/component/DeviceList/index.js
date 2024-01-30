@@ -14,7 +14,8 @@ import ChargingProgressCircle from "../ChargingProgressCircle";
 import { getOwnerAllDevices } from "../../api/Database/Database";
 
 const DeviceList = ({ ownerId }) => {
-  const { getTempValueAndUnit, temp, boxBatteryLevel } = useAppSettingContext();
+  const { getTempValueAndUnit, temp, boxBatteryLevel, connectedDevices } =
+    useAppSettingContext();
   const [devices, setDevices] = useState([]);
   const [isLoaded, setIsLoaded] = useState(false);
 
@@ -52,7 +53,7 @@ const DeviceList = ({ ownerId }) => {
         </View>
       )}
       <ScrollView style={{ width: "100%" }}>
-        {devices.map((item, index) => (
+        {connectedDevices.map((item, index) => (
           <View
             key={item.id}
             style={[

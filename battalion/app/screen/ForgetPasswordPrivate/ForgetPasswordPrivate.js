@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import { StyleSheet, View, TextInput, Text } from "react-native";
-import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../../config/Firebase/Firebase";
+import auth from "@react-native-firebase/auth";
 import colors from "../../config/Colors/colors";
 import TextLogo from "../../assets/TextLogo";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
@@ -20,7 +19,7 @@ const ForgotPasswordPrivate = ({ navigation }) => {
     if (currentUser && currentUser.email && currentUser.email === email) {
       try {
         console.log("Sending reset email to:", email);
-        await sendPasswordResetEmail(auth, email);
+        await auth().sendPasswordResetEmail(email);
         toast.show("sent successfully", {
           type: "normal",
         });

@@ -15,7 +15,7 @@ const BoxTemp = () => {
           <Text
             style={[
               styles.degree,
-              { color: connectedDevice.device ? "white" : "grey" },
+              { color: connectedDevice?.device ? "white" : "grey" },
             ]}
           >
             {boxTemp < 0
@@ -32,7 +32,7 @@ const BoxTemp = () => {
         <Text
           style={[
             styles.actualTxt,
-            { color: connectedDevice.device ? "white" : "grey" },
+            { color: connectedDevice?.device ? "white" : "grey" },
           ]}
         >
           Actual box temperature

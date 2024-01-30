@@ -9,13 +9,13 @@ import { useToast } from "react-native-toast-notifications";
 const LocksToggle = () => {
   const toast = useToast();
   const { isLocked, setDeviceIsLocked } = useAppSettingContext();
-  const { writeLockToDevice, connectedDevice } = useBleContext();
+  const { writeLockToggleToDevice, connectedDevice } = useBleContext();
   return (
     <View style={styles.deviceLocked}>
       <Text
         style={[
           styles.lockedTxt,
-          { color: connectedDevice.device ? "white" : "grey" },
+          { color: connectedDevice?.device ? "white" : "grey" },
         ]}
       >
         {isLocked ? "Device Locked" : "Device Unlocked"}
@@ -29,9 +29,9 @@ const LocksToggle = () => {
         <View style={styles.iconBackgroundContainer}>
           <TouchableWithoutFeedback
             onPress={async () => {
-              if (connectedDevice.device) {
+              if (connectedDevice?.device) {
                 try {
-                  await writeLockToDevice([!isLocked === false ? 0 : 1]);
+                  await writeLockToggleToDevice([isLocked ? 1 : 0]);
                   setDeviceIsLocked(!isLocked);
                 } catch (err) {
                   toast.show("Error writing to device, try to reconnect", {
@@ -49,13 +49,13 @@ const LocksToggle = () => {
               <MaterialCommunityIcons
                 name="lock"
                 size={20}
-                color={connectedDevice.device ? "black" : "#B0B0B0"}
+                color={connectedDevice?.device ? "black" : "#B0B0B0"}
               />
             ) : (
               <MaterialCommunityIcons
                 name="lock-open"
                 size={20}
-                color={connectedDevice.device ? "black" : "#B0B0B0"}
+                color={connectedDevice?.device ? "black" : "#B0B0B0"}
               />
             )}
           </TouchableWithoutFeedback>

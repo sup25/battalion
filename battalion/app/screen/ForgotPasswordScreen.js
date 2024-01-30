@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import CarthagosButton from "../component/CarthagosButton/CarthagosButton";
 import { StyleSheet, View, TextInput, Text } from "react-native";
-import { sendPasswordResetEmail } from "firebase/auth";
-import { auth } from "../config/Firebase/Firebase";
+import auth from "@react-native-firebase/auth";
 import colors from "../config/Colors/colors";
 import TextLogo from "../assets/TextLogo";
 import CarthagosScreen from "../component/CarthagosScreen/CarthagosScreen";
@@ -14,7 +13,8 @@ const ForgotPasswordScreen = ({ navigation }) => {
   const [errormsg, setErrorMsg] = useState("");
 
   const handleResetPassword = () => {
-    sendPasswordResetEmail(auth, email)
+    auth()
+      .sendPasswordResetEmail(email)
       .then(() => {
         setEmailSent(true);
       })

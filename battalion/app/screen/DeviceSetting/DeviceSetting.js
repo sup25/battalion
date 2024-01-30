@@ -34,7 +34,7 @@ const DeviceSetting = ({ navigation }) => {
 
   const submitPassword = async (pass) => {
     setPasswordError();
-    if (connectedDevice.device) {
+    if (connectedDevice?.device) {
       try {
         await writePasswordToDevice(pass);
         setDevicePassword(pass);

@@ -24,25 +24,23 @@ const Home = ({ navigation }) => {
         <Text style={styles.textWelcome}>Welcome, {userName}</Text>
       </View>
       <View style={styles.deviceContainer}>
-        {!connectedDevice.device && (
-          <View
-            style={{
-              flexDirection: "row",
-              width: "100%",
-              justifyContent: "space-between",
+        <View
+          style={{
+            flexDirection: "row",
+            width: "100%",
+            justifyContent: "space-between",
+          }}
+        >
+          <Text style={styles.connDevice}>Devices Connected</Text>
+          <Text
+            style={styles.addDevice}
+            onPress={() => {
+              navigation.navigate("addDevice");
             }}
           >
-            <Text style={styles.connDevice}>Devices Connected</Text>
-            <Text
-              style={styles.addDevice}
-              onPress={() => {
-                navigation.navigate("addDevice");
-              }}
-            >
-              Add Device +
-            </Text>
-          </View>
-        )}
+            Add Device +
+          </Text>
+        </View>
       </View>
       <DeviceList ownerId={currentUser.uid} />
     </View>

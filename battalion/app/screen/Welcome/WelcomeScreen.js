@@ -90,7 +90,7 @@ const WelcomeScreen = ({ navigation }) => {
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.deviceContainer}>
-          {!connectedDevice.device && (
+          {!connectedDevice?.device && (
             <View
               style={{
                 flexDirection: "row",
@@ -102,7 +102,7 @@ const WelcomeScreen = ({ navigation }) => {
               <Text
                 style={styles.addDevice}
                 onPress={() => {
-                  navigation.navigate("addDevice");
+                  navigation.navigate("searchscreen", { isFirstTime: true });
                 }}
               >
                 Add Device +

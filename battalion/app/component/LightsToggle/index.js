@@ -14,7 +14,7 @@ const LightsToggle = () => {
       <Text
         style={[
           styles.brightnessTxt,
-          { color: connectedDevice.device ? "white" : "grey" },
+          { color: connectedDevice?.device ? "white" : "grey" },
         ]}
       >
         Light Auto
@@ -28,7 +28,7 @@ const LightsToggle = () => {
         <View style={styles.iconBackgroundContainer}>
           <TouchableWithoutFeedback
             onPress={async () => {
-              if (connectedDevice.device) {
+              if (connectedDevice?.device) {
                 try {
                   await writeLightsToDevice([!isLightsOn === false ? 0 : 1]);
                   setDeviceIsLightsOn(!isLightsOn);
@@ -48,13 +48,13 @@ const LightsToggle = () => {
               <MaterialCommunityIcons
                 name="brightness-5"
                 size={20}
-                color={connectedDevice.device ? "black" : "#B0B0B0"}
+                color={connectedDevice?.device ? "black" : "#B0B0B0"}
               />
             ) : (
               <MaterialCommunityIcons
                 name="brightness-5"
                 size={20}
-                color={connectedDevice.device ? "black" : "#B0B0B0"}
+                color={connectedDevice?.device ? "black" : "#B0B0B0"}
               />
             )}
           </TouchableWithoutFeedback>
@@ -73,6 +73,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     paddingTop: 12,
+    marginTop: 10,
   },
   brightnessTxt: {
     fontWeight: "500",
