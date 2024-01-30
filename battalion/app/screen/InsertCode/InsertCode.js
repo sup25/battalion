@@ -10,6 +10,7 @@ import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection
 
 const InsertCode = ({ navigation }) => {
   const toast = useToast();
+  const route = useRoute();
 
   const { currentUser } = useAuth();
   const [verificationId, setVerificationID] = useState("");
@@ -23,12 +24,12 @@ const InsertCode = ({ navigation }) => {
     "",
     "",
   ]);
-  const route = useRoute();
 
   // Extract the verificationId from the route parameters
   useEffect(() => {
-    if (route.params && route.params.verificationId) {
+    if (route.params && route.params.confirmation) {
       setPhoneNumber(route.params.phoneNumber);
+      setVerificationID(route.params.confirmation.verificationId);
     }
   }, [route.params]);
 
@@ -37,14 +38,17 @@ const InsertCode = ({ navigation }) => {
 
     try {
       const fullPhoneNumber = `${phoneNumber}`;
-      const confirmation = await auth().signInWithPhoneNumber(fullPhoneNumber);
+      const confirmation = await auth().signInWithPhoneNumber(
+        fullPhoneNumber,
+        true
+      );
 
-      if (!confirmation) {
+      if (!confirmation.verificationId) {
         throw new Error("Invalid new verification ID");
       }
 
       // Set the new verification ID in the state
-      setVerificationID(confirmation);
+      setVerificationID(confirmation.verificationId);
 
       toast.show("Success: New verification code has been sent to your phone", {
         type: "normal",
@@ -69,28 +73,37 @@ const InsertCode = ({ navigation }) => {
   const handleVerifyVerificationCode = async (setIsLoading) => {
     setIsLoading(true);
     try {
-      const code = verificationCode.join(""); // Join the digits to get the complete 6-digit code
-      try {
+      const code = verificationCode.join("");
+      /* try {
         await verificationId.confirm(code);
       } catch (error) {
         toast.show("Invalid code.", {
           type: "normal",
         });
-        throw new error("Invalid code.");
+        console.error(`Error: ${error.message}
+        throw new Error("Invalid code.");
+      } */
+      // Check if the user is already linked to the phone provider
+      if (!currentUser.phoneNumber) {
+        const credential = auth.PhoneAuthProvider.credential(
+          route.params.confirmation.verificationId,
+          code
+        );
+        await auth().currentUser.linkWithCredential(credential);
+        await auth().currentUser.updateProfile({ phoneNumber });
+      } else {
+        // User is already linked to the phone provider
+        console.log("User is already linked to the phone provider");
       }
-      const credential = auth.PhoneAuthProvider.credential(
-        confirm.verificationId,
-        code
-      );
-      await auth().currentUser.linkWithCredential(credential);
-      await auth().currentUser.updateProfile({ phoneNumber });
+
       if (currentUser) {
         const userData = {
           phoneNumber: phoneNumber,
         };
         const addedToFirestore = await addUserToFirestore(
           currentUser.uid,
-          userData
+          userData,
+          true
         );
 
         if (!addedToFirestore) {
@@ -134,7 +147,7 @@ const InsertCode = ({ navigation }) => {
       <View style={styles.containerSmall}>
         <Text style={styles.txtFirst}>Insert Code</Text>
         <Text style={styles.txtSecond}>
-          Enter the security code we sent to {currentUser?.phoneNumber || ""}
+          Enter the security code we sent to {phoneNumber}
         </Text>
         <View style={styles.txtInputContainer}>
           {verificationCode.map((digit, index) => (

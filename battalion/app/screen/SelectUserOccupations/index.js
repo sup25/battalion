@@ -65,7 +65,7 @@ const SelectUserOccupations = ({ navigation }) => {
           occupations,
         };
 
-        const success = await addUserToFirestore(userId, userData);
+        const success = await addUserToFirestore(userId, userData, true);
 
         if (success) {
           toast.show("User occupations updated successfully", {
