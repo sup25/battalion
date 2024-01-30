@@ -8,6 +8,7 @@ import InsertCode from "../../screen/InsertCode/InsertCode";
 import VerifyPhoneNum from "../../screen/VerifyPhoneNum";
 import SelectUserOccupations from "../../screen/SelectUserOccupations";
 import WelcomeScreen from "../../screen/Welcome/WelcomeScreen";
+import TestingBleScreen from "../../screen/TestingBle";
 
 const Stack = createNativeStackNavigator();
 const PublicRoute = () => {
@@ -15,7 +16,7 @@ const PublicRoute = () => {
     <Stack.Navigator initialRouteName="Main">
       <Stack.Screen
         name="Main"
-        component={MainScreen}
+        component={TestingBleScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen

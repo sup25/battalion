@@ -9,7 +9,7 @@ import { useToast } from "react-native-toast-notifications";
 const LocksToggle = () => {
   const toast = useToast();
   const { isLocked, setDeviceIsLocked } = useAppSettingContext();
-  const { writeLockToDevice, connectedDevice } = useBleContext();
+  const { writeLockToggleToDevice, connectedDevice } = useBleContext();
   return (
     <View style={styles.deviceLocked}>
       <Text
@@ -31,7 +31,7 @@ const LocksToggle = () => {
             onPress={async () => {
               if (connectedDevice?.device) {
                 try {
-                  await writeLockToDevice([!isLocked === false ? 0 : 1]);
+                  await writeLockToggleToDevice([isLocked ? 1 : 0]);
                   setDeviceIsLocked(!isLocked);
                 } catch (err) {
                   toast.show("Error writing to device, try to reconnect", {

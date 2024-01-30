@@ -103,13 +103,11 @@ const BleProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    connectToDeviceOnStart();
-
-    const subscribe = AppState.addEventListener("change", handleAppStateChange);
-
-    return () => {
-      subscribe.remove();
-    };
+    // connectToDeviceOnStart();
+    // const subscribe = AppState.addEventListener("change", handleAppStateChange);
+    // return () => {
+    //   subscribe.remove();
+    // };
   }, []);
 
   const handleAppStateChange = async (nextAppState) => {
@@ -311,19 +309,30 @@ const BleProvider = ({ children }) => {
     bleManager.stopDeviceScan();
   };
 
+  /**
+   * !index 0 must be 85, index 1 will be a prefix, index 2,3,4,5 will be password....
+   * @param {array} data - array of numbers [85,1,1,2,3,4]
+   */
+  const getBase64Data = (data) => {
+    console.log("og data: ", data);
+    let bufferData = Buffer.from(data);
+
+    // Convert to hex
+    const hexString = bufferData.toString("hex");
+    console.log("hex: ", hexString);
+    // Convert hex to base64
+    const base64String = Buffer.from(hexString, "hex").toString("base64");
+
+    return base64String;
+  };
   const writePasswordToDevice = async (data = false) => {
     const prefix = [85, 1];
-    let passwordWithHeader = [];
+
     if (data) {
       if (data.length < 4) throw new Error("Password must be 4 digits");
     }
-    passwordWithHeader = Buffer.from(prefix.concat(data));
 
-    // Convert to hex
-    const hexString = passwordWithHeader.toString("hex");
-
-    // Convert hex to base64
-    const base64String = Buffer.from(hexString, "hex").toString("base64");
+    const base64String = getBase64Data(prefix.concat(data));
     try {
       let res =
         await connectedDevice?.device.writeCharacteristicWithResponseForService(
@@ -342,49 +351,23 @@ const BleProvider = ({ children }) => {
     }
   };
 
-  const writeLightsToDevice = async (data = false) => {
-    const prefix = [55, 3];
-    const prefixAndPass = prefix.concat(password);
-    const withTemp = prefixAndPass.concat([temp.value]);
-    let lightsWithPrefix = [];
-    if (data) {
-      lightsWithPrefix = Buffer.from(
-        convertedArrayToHex(withTemp.concat(data))
-      );
-    }
-
-    try {
-      let res =
-        await connectedDevice?.device.writeCharacteristicWithResponseForService(
-          SPS_SERVICE_UUID,
-          SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
-          lightsWithPrefix.toString("base64")
-        );
-
-      return res;
-      // Password set successfully
-    } catch (error) {
-      console.log("err in write lights", error);
-      throw error;
-      // Handle error while setting password
-    }
-  };
-
-  const writeTempToDevice = async (data = false) => {
+  /**
+   *
+   * @param {number} temperatur
+   * @returns
+   */
+  const writeTempToDevice = async (unit, temperatur = false) => {
     const prefix = [85, 3];
-    const prefixAndPass = prefix.concat(password);
-    // const tempType = prefixAndPass.concat([isLightsOn ? 1 : 0]); // 1 for celcius, 0 for farenheit
-    const withTemp = prefixAndPass.concat([isLightsOn ? 1 : 0]);
-    let tempWithPrefix = [];
-    if (data) {
-      tempWithPrefix = Buffer.from(convertedArrayToHex(withTemp.concat(data)));
-    }
-    // Convert to hex
-    const hexString = tempWithPrefix.toString("hex");
-    console.log("hexString", hexString);
+    console.log("temp.unit ", temp.unit);
+    console.log("unit ", unit);
+    const data = prefix.concat(
+      password,
+      [temperatur],
+      [unit],
+      [isLightsOn ? 1 : 0]
+    );
 
-    // Convert hex to base64
-    const base64String = Buffer.from(hexString, "hex").toString("base64");
+    const base64String = getBase64Data(data);
 
     try {
       let res =
@@ -403,22 +386,113 @@ const BleProvider = ({ children }) => {
     }
   };
 
-  const writeLockToDevice = async (data = false) => {
-    const prefix = [55, 4];
-    const prefixAndPass = prefix.concat(password);
-    let lockWithPrefix = [];
-    if (data) {
-      lockWithPrefix = Buffer.from(
-        convertedArrayToHex(prefixAndPass.concat(data))
-      );
-    }
+  const writeTempUnitToDevice = async (unit = false) => {
+    const prefix = [85, 3];
+    const data = prefix.concat(
+      password,
+      [temp.value],
+      [unit ? unit : temp.unit === "c" ? 0 : 1],
+      [isLightsOn ? 1 : 0]
+    );
+
+    const base64String = getBase64Data(data);
 
     try {
       let res =
         await connectedDevice?.device.writeCharacteristicWithResponseForService(
           SPS_SERVICE_UUID,
           SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
-          lockWithPrefix.toString("base64")
+          base64String
+        );
+
+      return res;
+      // Password set successfully
+    } catch (error) {
+      console.log("err in write temp", error);
+      throw error;
+      // Handle error while setting password
+    }
+  };
+
+  /**
+   *
+   * @param {number} lightsState - 0 for off, 1 for on (auto)
+   * @returns
+   */
+  const writeLightsToDevice = async (lightsState) => {
+    const prefix = [85, 3];
+    const data = prefix.concat(
+      password,
+      [temp.value],
+      [temp.unit === "c" ? 0 : 1],
+      [lightsState]
+    );
+
+    const base64String = getBase64Data(data);
+
+    try {
+      let res =
+        await connectedDevice?.device.writeCharacteristicWithResponseForService(
+          SPS_SERVICE_UUID,
+          SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
+          base64String
+        );
+
+      return res;
+      // Password set successfully
+    } catch (error) {
+      console.log("err in write light", error);
+      throw error;
+      // Handle error while setting password
+    }
+  };
+
+  const writeLockToggleToDevice = async (data = false) => {
+    const prefix = [85, 4];
+    const prefixAndPass = prefix.concat(password, data);
+
+    const base64String = getBase64Data(prefixAndPass);
+
+    try {
+      let res =
+        await connectedDevice?.device.writeCharacteristicWithResponseForService(
+          SPS_SERVICE_UUID,
+          SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
+          base64String
+        );
+
+      return res;
+      // Password set successfully
+    } catch (error) {
+      console.log("err in write lock toggle", error);
+      throw error;
+      // Handle error while setting password
+    }
+  };
+  const updateCurrentTime = () => {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    const hoursH = Math.floor(hours / 10);
+    const hoursL = hours % 10;
+    const minutesH = Math.floor(minutes / 10);
+    const minutesL = minutes % 10;
+
+    return [hoursH, hoursL, minutesH, minutesL];
+  };
+  const writeTimeToDevice = async (data = false) => {
+    const prefix = [85, 2];
+    const prefixAndPass = prefix.concat(password, updateCurrentTime());
+
+    const base64String = getBase64Data(prefixAndPass);
+
+    try {
+      let res =
+        await connectedDevice?.device.writeCharacteristicWithResponseForService(
+          SPS_SERVICE_UUID,
+          SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
+          base64String
         );
 
       return res;
@@ -431,7 +505,8 @@ const BleProvider = ({ children }) => {
   };
 
   const getStatusFromBase64AndSetToState = (statusData) => {
-    const data = Buffer.from(base64.decode(statusData)).toString("utf-8");
+    let data = base64.decode(statusData);
+
     console.log("statusData", statusData);
 
     // Extract the array of numbers from the Buffer
@@ -456,10 +531,12 @@ const BleProvider = ({ children }) => {
     console.log({
       password,
       temperature,
+      temperatureMode,
       deviceStatus,
       batteryLevel,
       chargerStatus,
       lightStatus,
+      deviceLidOpen,
     });
   };
 
@@ -507,19 +584,19 @@ const BleProvider = ({ children }) => {
             connecting: false,
             device: null,
           }));
-          if (isFirstTime) {
-            isFirstTime = false;
-            try {
-              await connectToDevice(disconnectedDevice);
-              Toast.show("Device reconnected successfuly.", {
-                type: "normal",
-              });
-            } catch (e) {
-              Toast.show("Couldn't reconnect to device.", {
-                type: "normal",
-              });
-            }
-          }
+          // if (isFirstTime) {
+          //   isFirstTime = false;
+          //   try {
+          //     await connectToDevice(disconnectedDevice);
+          //     Toast.show("Device reconnected successfuly.", {
+          //       type: "normal",
+          //     });
+          //   } catch (e) {
+          //     Toast.show("Couldn't reconnect to device.", {
+          //       type: "normal",
+          //     });
+          //   }
+          // }
         }
       );
     }
@@ -548,7 +625,9 @@ const BleProvider = ({ children }) => {
         writePasswordToDevice,
         writeLightsToDevice,
         writeTempToDevice,
-        writeLockToDevice,
+        writeTempUnitToDevice,
+        writeLockToggleToDevice,
+        writeTimeToDevice,
         getStatusFromDevice,
         startMonitoringDevice,
       }}
