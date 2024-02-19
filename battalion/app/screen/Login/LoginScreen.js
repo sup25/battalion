@@ -16,8 +16,10 @@ import { useRoute } from "@react-navigation/native";
 import { UseBioMetric } from "../../Hooks/UseBioMetric";
 import TextLogoWhite from "../../assets/TextLogoWhite";
 import { useToast } from "react-native-toast-notifications";
+import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 
 const LoginScreen = ({ navigation }) => {
+  const { currentUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -36,11 +38,23 @@ const LoginScreen = ({ navigation }) => {
       const biometricResult = await UseBioMetric();
 
       if (biometricResult) {
+        if (currentUser && !currentUser.phoneNumber) {
+          navigation.navigate("Phoneverify");
+          return toast.show("User doesnt have a phone number attached.", {
+            type: "normal",
+          });
+        }
         await auth().signInWithEmailAndPassword(email, password);
-        navigation.navigate("MainTabs");
+        navigation.navigate("privateRoute", { screen: "MainTabs" });
       } else {
+        if (currentUser && !currentUser.phoneNumber) {
+          navigation.navigate("Phoneverify");
+          return toast.show("User doesnt have a phone number attached.", {
+            type: "normal",
+          });
+        }
         await auth().signInWithEmailAndPassword(email, password);
-        navigation.navigate("MainTabs");
+        navigation.navigate("privateRoute", { screen: "MainTabs" });
         toast.show("Biometric authentication failed", {
           type: "normal",
         });

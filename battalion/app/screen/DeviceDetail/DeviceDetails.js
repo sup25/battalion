@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
-
 import {
   StyleSheet,
   Text,
@@ -19,11 +18,14 @@ import LightsToggle from "../../component/LightsToggle";
 import SetBoxTemp from "../../component/SetBoxTemp";
 import BoxTemp from "../../component/BoxTemp";
 import BatteryPercent from "../../component/BatteryPercent";
+import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 
 const DeviceDetails = ({ navigation }) => {
+  const { disconnectFromDevice } = useBleContext();
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
+
       <ImageBackground
         style={styles.background}
         source={require("../../assets/background.png")}
@@ -81,6 +83,14 @@ const DeviceDetails = ({ navigation }) => {
           <SetBoxTemp />
         </View>
         <BatteryPercent />
+      </View>
+      <View>
+        <TouchableWithoutFeedback
+          style={{ backgroundColor: "white" }}
+          onPress={() => disconnectFromDevice()}
+        >
+          <Text>Disconnect from device</Text>
+        </TouchableWithoutFeedback>
       </View>
     </View>
   );

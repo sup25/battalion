@@ -1,6 +1,48 @@
 import firestore from "@react-native-firebase/firestore";
 import { db } from "../../config/Firebase/Firebase";
 
+const addUserToDevice = async (deviceId, userId) => {
+  try {
+    // Get a reference to the devices collection
+    const devicesRef = firestore().collection("devices");
+    // Get a reference to the document using the device ID
+    const deviceRef = devicesRef.doc(deviceId);
+    // Get the document data
+    const deviceDoc = await deviceRef.get();
+
+    if (!deviceDoc.exists) {
+      throw new Error("Device not found");
+    }
+
+    // Get a reference to the users collection
+    const usersRef = firestore().collection("users");
+    // Get a reference to the document using the user ID
+    const userRef = usersRef.doc(userId);
+    // Get the document data
+    const userDoc = await userRef.get();
+
+    if (!userDoc.exists) {
+      throw new Error("User not found");
+    }
+
+    // Add the user to the device's users array
+    await deviceRef.update({
+      users: firestore.FieldValue.arrayUnion({
+        id: userId,
+        ...userDoc.data(),
+        approved: false,
+        requestDate: new Date().getUTCDate(),
+        requestUpdateDate: new Date().getUTCDate(),
+      }),
+    });
+
+    console.log("User added to device successfully");
+  } catch (error) {
+    console.error("Error adding user to device:", error);
+    throw error;
+  }
+};
+
 export const AddUserData = async (data) => {
   const { fourDigitCode, combinedSerialNum } = data;
   try {
@@ -30,40 +72,55 @@ export const AddUserData = async (data) => {
     // Get the document data
     const deviceDoc = await deviceRef.get();
 
-    if (deviceDoc.exists) {
-      console.log("Device data already exists. Cannot update.");
-      throw new Error("Device data already exists. Cannot update.");
+    if (!deviceDoc.data()) {
+      throw new Error("Device not found");
     }
-    // Get a reference to the users collection
-    const usersRef = firestore().collection("users");
-    // Get a reference to the document using owner id
-    const ownerRef = usersRef.doc(data.owner);
-    // Get the document data
-    const ownerDoc = await ownerRef.get();
+    if (deviceDoc.data()) {
+      if (deviceDoc.data()?.owner && deviceDoc.data()?.owner?.id !== null) {
+        console.log("as user", data);
+        addUserToDevice(data.combinedSerialNum, data.owner);
+        return true;
+      } else {
+        // Get a reference to the users collection
+        const usersRef = firestore().collection("users");
+        // Get a reference to the document using owner id
+        const ownerRef = usersRef.doc(data.owner);
+        // Get the document data
+        const ownerDoc = await ownerRef.get();
 
-    if (!ownerDoc.exists) {
-      throw new Error("Owner user not found.");
+        if (!ownerDoc.exists) {
+          throw new Error("Owner user not found.");
+        }
+
+        const ownerData = ownerDoc.data();
+        // Set the document data using setDoc
+        console.log("owner", ownerData);
+        await deviceRef.update({
+          modelNum,
+          prodDate,
+          serialNum,
+          combinedSerialNum: remaining,
+          fourDigitCode,
+          owner: {
+            id: data.owner,
+            ...ownerData,
+          },
+          users: [],
+          teamType,
+        });
+
+        // Add the user to the device's users array
+        await deviceRef.update({
+          usersIds: firestore.FieldValue.arrayUnion(data.owner),
+        });
+
+        console.log("Device data saved successfully");
+        return true;
+      }
     }
-
-    const ownerData = ownerDoc.data();
-    // Set the document data using setDoc
-    await deviceRef.set({
-      modelNum,
-      prodDate,
-      serialNum,
-      combinedSerialNum: remaining,
-      fourDigitCode,
-      owner: {
-        id: data.owner,
-        ...ownerData,
-      },
-      users: [],
-      teamType,
-    });
-
-    console.log("Device data saved successfully");
   } catch (error) {
     console.log("Error saving device data:", error.message);
+    throw error;
   }
 };
 
@@ -75,6 +132,29 @@ export const getOwnerAllDevices = async (ownerId) => {
     const query = devicesRef.where("owner.id", "==", ownerId);
     // Get the documents that match the query
     const querySnapshot = await query.get();
+
+    // Extract data from the documents
+    const devices = [];
+    querySnapshot.forEach((doc) => {
+      devices.push({ id: doc.id, ...doc.data() });
+    });
+    return devices;
+  } catch (error) {
+    console.error("Error getting devices:", error);
+    throw error;
+  }
+};
+
+export const getUserAllDevices = async (ownerId) => {
+  try {
+    // Get a reference to the devices collection
+    const devicesRef = firestore().collection("devices");
+    // Query devices based on the owner ID
+    const query = devicesRef.where("usersIds", "array-contains", ownerId);
+    console.log("ownerId", ownerId);
+    // Get the documents that match the query
+    const querySnapshot = await query.get();
+
     // Extract data from the documents
     const devices = [];
     querySnapshot.forEach((doc) => {
@@ -118,12 +198,14 @@ export const storeFourDigitsToTheDb = async (
   setPasswordError = false
 ) => {
   try {
-    // Get a reference to the devices collection
-    const devicesRef = firestore().collection("devices");
-    // Update the document with the new password
-    await devicesRef.doc(combinedSerialNum).update({
-      fourDigitCode: digitValuesAsNumbers,
-    });
+    if (combinedSerialNum) {
+      // Get a reference to the devices collection
+      const devicesRef = firestore().collection("devices");
+      // Update the document with the new password
+      await devicesRef.doc(combinedSerialNum).update({
+        fourDigitCode: digitValuesAsNumbers,
+      });
+    }
   } catch (error) {
     if (setPasswordError) {
       setPasswordError(
@@ -131,5 +213,200 @@ export const storeFourDigitsToTheDb = async (
       );
     }
     throw error;
+  }
+};
+
+export const checkIfUserHasPermissionToConnect = async (ownerId, deviceId) => {
+  try {
+    // Get a reference to the devices collection
+    const devicesRef = firestore().collection("devices");
+    // Query devices based on the owner ID
+    const query = devicesRef
+      .where("usersIds", "array-contains", ownerId)
+      .where("deviceId", "==", deviceId);
+
+    // Get the documents that match the query
+    const querySnapshot = await query.get();
+
+    // Extract data from the documents
+    const devices = [];
+    querySnapshot.forEach((doc) => {
+      devices.push({ id: doc.id, ...doc.data() });
+    });
+
+    return devices.length > 0 ? devices[0] : false;
+  } catch (error) {
+    console.error("Error getting devices:", error);
+    throw error;
+  }
+};
+
+export const checkIfUserIsOwner = async (ownerId, deviceId) => {
+  try {
+    // Get a reference to the devices collection
+    const devicesRef = firestore().collection("devices");
+    // Query devices based on the owner ID
+    const query = devicesRef
+      .where("deviceId", "==", deviceId)
+      .where("owner.id", "==", ownerId);
+
+    // Get the documents that match the query
+    const querySnapshot = await query.get();
+    console.log("/////////////", querySnapshot);
+    // Extract data from the documents
+    return querySnapshot.size > 0 ? true : false;
+  } catch (error) {
+    console.error("Error getting devices:", error);
+    throw error;
+  }
+};
+
+export const getDeviceUsers = async (deviceId) => {
+  if (deviceId) {
+    try {
+      // Get a reference to the devices collection
+      const devicesRef = firestore().collection("devices");
+      // Query devices based on the owner ID
+      const query = devicesRef.where("deviceId", "==", deviceId);
+
+      // Get the documents that match the query
+      const querySnapshot = await query.get();
+
+      // Extract data from the documents
+      const devices = [];
+      querySnapshot.forEach((doc) => {
+        devices.push({ id: doc.id, ...doc.data() });
+      });
+      if (devices.length > 0) {
+        return devices[0].users;
+      } else {
+        throw new Error("Device not found");
+      }
+    } catch (error) {
+      console.error("Error getting devices:", error);
+      throw error;
+    }
+  }
+  throw new Error("Device not found");
+};
+export const aproveUser = async (deviceId, userId) => {
+  // Get a reference to the devices collection
+  const devicesRef = firestore().collection("devices");
+  // Get a reference to the query using the device ID
+  const deviceRef = devicesRef.where("deviceId", "==", deviceId);
+  // Get the query snapshot using the device ID and limit to one result
+  const device = await deviceRef.limit(1).get();
+  // Get the first document change in the snapshot
+  const deviceChange = device.docChanges()[0];
+  // Get the document data
+  const deviceData = deviceChange.doc.data();
+  // Get the document reference
+  const deviceDocRef = deviceChange.doc.ref;
+  // Filter out the existing userId and user object
+  const filteredUsersIds = deviceData.usersIds.filter((id) => id !== userId);
+  const filteredUsers = deviceData.users.filter((user) => user.id !== userId);
+  // Add the new userId and user object
+  const updatedUsersIds = [...filteredUsersIds, userId];
+  const updatedUsers = [
+    ...filteredUsers,
+
+    {
+      ...deviceData.users.find((user) => user.id === userId),
+      approved: true,
+      status: "approved",
+    },
+  ];
+  // Update the document
+  await deviceDocRef.update({
+    usersIds: updatedUsersIds,
+    users: updatedUsers,
+  });
+};
+
+export const rejectUser = async (deviceId, userId) => {
+  // Get a reference to the devices collection
+  const devicesRef = firestore().collection("devices");
+  // Get a reference to the query using the device ID
+  const deviceRef = devicesRef.where("deviceId", "==", deviceId);
+  // Get the query snapshot using the device ID and limit to one result
+  const device = await deviceRef.limit(1).get();
+  // Get the first document change in the snapshot
+  const deviceChange = device.docChanges()[0];
+  // Get the document data
+  const deviceData = deviceChange.doc.data();
+  // Get the document reference
+  const deviceDocRef = deviceChange.doc.ref;
+  // Filter out the existing userId and user object
+  const filteredUsers = deviceData.users.filter((user) => user.id !== userId);
+  // Add the new userId and user object
+
+  const updatedUsers = [
+    ...filteredUsers,
+
+    {
+      ...deviceData.users.find((user) => user.id === userId),
+      approved: false,
+      status: "rejected",
+    },
+  ];
+  // Update the document
+  await deviceDocRef.update({
+    users: updatedUsers,
+  });
+};
+
+export const disconnectUser = async (deviceId, userId) => {
+  // Get a reference to the devices collection
+  const devicesRef = firestore().collection("devices");
+  // Get a reference to the query using the device ID
+  const deviceRef = devicesRef.where("deviceId", "==", deviceId);
+  // Get the query snapshot using the device ID and limit to one result
+  const device = await deviceRef.limit(1).get();
+  // Get the first document change in the snapshot
+  const deviceChange = device.docChanges()[0];
+  // Get the document data
+  const deviceData = deviceChange.doc.data();
+  // Get the document reference
+  const deviceDocRef = deviceChange.doc.ref;
+  // Filter out the existing userId and user object
+  const filteredUsersIds = deviceData.usersIds.filter((id) => id !== userId);
+  const filteredUsers = deviceData.users.filter((user) => user.id !== userId);
+  // Add the new userId and user object
+  const updatedUsersIds = filteredUsersIds;
+  const updatedUsers = [
+    ...filteredUsers,
+
+    {
+      ...deviceData.users.find((user) => user.id === userId),
+      approved: false,
+      status: "disconnected",
+    },
+  ];
+  // Update the document
+  await deviceDocRef.update({
+    usersIds: updatedUsersIds,
+    users: updatedUsers,
+  });
+};
+
+export const setNameToDevice = async (name, deviceId) => {
+  console.log("deviceid", deviceId);
+  // Add the 'name' parameter
+  const deviceRef = firestore()
+    .collection("devices")
+    .where("deviceId", "==", deviceId);
+  try {
+    await deviceRef.get().then((querySnapshot) => {
+      // Use 'get' instead of 'update' to fetch the document
+      querySnapshot.forEach((doc) => {
+        doc.ref.update({
+          name: name, // Update the 'name' field with the provided value
+        });
+      });
+    });
+    return true;
+  } catch (err) {
+    console.log(err);
+    throw new Error(err);
   }
 };

@@ -44,17 +44,24 @@ const AddDevice = ({ navigation }) => {
       };
 
       // Call AddUserData to send combinedSerialNum
-      await AddUserData(updatedUserData);
+      try {
+        await AddUserData(updatedUserData);
 
-      toast.show("Data saved successfully!", {
-        type: "normal",
-      });
+        toast.show("Data saved successfully!", {
+          type: "normal",
+        });
 
-      // Clear the text input field
-      setUserData({
-        combinedSerialNum: "",
-      });
-      handleNavigation();
+        // Clear the text input field
+        setUserData({
+          combinedSerialNum: "",
+        });
+        handleNavigation();
+      } catch (error) {
+        setIsLoading(false);
+        toast.show(error.message, {
+          type: "normal",
+        });
+      }
     } catch (error) {
       setIsLoading(false);
     }
@@ -68,7 +75,10 @@ const AddDevice = ({ navigation }) => {
     }
     await AsyncStorage.setItem("combinedSerialNum", combinedSerialNum);
     console.log("Entered combined serial number:", combinedSerialNum);
-    navigation.navigate("searchscreen", { isFirstTime: true });
+    navigation.navigate("searchscreen", {
+      isFirstTime: true,
+      serialNum: combinedSerialNum,
+    });
   };
 
   const handleChangeText = (key, value) => {

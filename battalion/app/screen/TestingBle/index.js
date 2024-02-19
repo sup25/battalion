@@ -48,12 +48,7 @@ const TestingBleScreen = () => {
     scan,
     connectedDevice,
 
-    writePasswordToDevice,
-    writeTempToDevice,
-    writeTempUnitToDevice,
-    writeLockToggleToDevice,
-    writeLightsToDevice,
-    writeTimeToDevice,
+    getStatusFromDevice,
   } = useBleContext();
 
   let timer = null;
@@ -95,110 +90,17 @@ const TestingBleScreen = () => {
     try {
       switch (functionIndex) {
         case 0:
-          setMessage("Setting password to 5598");
-          setTitle("Setting password to 5598");
-          try {
-            setDevicePassword([5, 5, 9, 8]); //set to the state + async
-            await writePasswordToDevice([5, 5, 9, 8]); // set to ble device
-            setMessage(
-              `setting password succeeded! (the password now is 5598).check the box and then press "Next Test button" to continue.`
-            );
-          } catch (err) {
-            setMessage(`error setting password to 5598: ${err.message}`);
-          }
-          break;
-        case 1:
-          setMessage("Setting temperature to 25 C");
-          setTitle("Setting temperature to 25 C");
-          try {
-            setTempValue(25);
-            await writeTempToDevice(0, 25);
-            setMessage(
-              `setting temperature succeeded! (the temperature now is 25 C).check the box and then press "Next Test button" to continue.`
-            );
-          } catch (err) {
-            setMessage(`error setting temperature to 25 C: ${err.message}`);
-          }
+          setMessage("getting data from device");
+          const data = await getStatusFromDevice();
 
-          break;
-        case 2:
-          setMessage("Setting temperature to F");
-          setTitle("Setting temperature to F");
+          setTitle("getting data from device");
           try {
-            setTempUnit("f");
-            await writeTempUnitToDevice(1);
-            setMessage(
-              `setting temperature unit succeeded! (the temperature unit now is F).check the box and then press "Next Test button" to continue.`
-            );
+            setMessage(JSON.stringify(data));
           } catch (err) {
-            setMessage(`error setting temperature unit to F: ${err.message}`);
-          }
-          break;
-        case 3:
-          setMessage("Setting deivce to unlocked");
-          setTitle("Setting deivce to unlocked");
-          try {
-            setDeviceIsLocked(false);
-            await writeLockToggleToDevice(0);
-            setMessage(
-              `setting device to unlocked succeeded! (the device now is unlocked).check the box and then press "Next Test button" to continue.`
-            );
-          } catch (err) {
-            setMessage(`error setting device to unlocked: ${err.message}`);
-          }
-          break;
-        case 4:
-          setMessage("Setting deivce to locked");
-          setTitle("Setting deivce to locked");
-          try {
-            setDeviceIsLocked(true);
-            await writeLockToggleToDevice(1);
-            setMessage(
-              `setting device to locked succeeded! (the device now is locked).check the box and then press "Next Test button" to continue.`
-            );
-          } catch (err) {
-            setMessage(`error setting device to unlocked: ${err.message}`);
+            setMessage(`error getting data from device: ${err.message}`);
           }
           break;
 
-        case 5:
-          setMessage("Setting deivce lights to auto");
-          setTitle("Setting deivce lights to auto");
-          try {
-            setDeviceIsLightsOn(true);
-            await writeLightsToDevice(1);
-            setMessage(
-              `setting device lights to auto succeeded! (the device lights now is auto).check the box and then press "Next Test button" to continue.`
-            );
-          } catch (err) {
-            setMessage(`error setting device lights to auto: ${err.message}`);
-          }
-          break;
-        case 6:
-          setMessage("Setting deivce lights to off");
-          setTitle("Setting deivce lights to off");
-          try {
-            setDeviceIsLightsOn(false);
-            await writeLightsToDevice(0);
-            setMessage(
-              `setting device lights to off succeeded! (the device lights now is off).check the box and then press "Next Test button" to continue.`
-            );
-          } catch (err) {
-            setMessage(`error setting device lights to off: ${err.message}`);
-          }
-          break;
-        case 7:
-          setMessage("Setting deivce time (time from phone)");
-          setTitle("Setting deivce time (time from phone)");
-          try {
-            await writeTimeToDevice();
-            setMessage(
-              `setting device time succeeded! (the device time now is the current time as the phone).check the box and then press "Next Test button" to continue.`
-            );
-          } catch (err) {
-            setMessage(`error setting device time: ${err.message}`);
-          }
-          break;
         default:
           setMessage("Test is done!");
           setTitle("Test is done!");
@@ -277,7 +179,7 @@ const TestingBleScreen = () => {
               {title}
             </Text>
             <Text style={{ color: "white", marginBottom: 20 }}>{message}</Text>
-            {functionIndex <= 8 && (
+            {functionIndex <= 1 && (
               <Button
                 title={functionIndex === 0 ? "Start testing" : "Next Test"}
                 onPress={handleButtonClick}

@@ -16,7 +16,7 @@ const PublicRoute = () => {
     <Stack.Navigator initialRouteName="Main">
       <Stack.Screen
         name="Main"
-        component={TestingBleScreen}
+        component={MainScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -33,17 +33,17 @@ const PublicRoute = () => {
       <Stack.Screen
         name="selectUserOccupations"
         component={SelectUserOccupations}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
       <Stack.Screen
         name="Phoneverify"
         component={VerifyPhoneNum}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
       <Stack.Screen
         name="ConfirmCode"
         component={InsertCode}
-        options={{ headerShown: false }}
+        options={{ headerShown: false, gestureEnabled: false }}
       />
 
       <Stack.Screen

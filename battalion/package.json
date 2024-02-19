@@ -32,7 +32,7 @@
     "metro-config": "~0.80.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-native": "0.72.6",
+    "react-native": "0.72.10",
     "react-native-base64": "~0.2.1",
     "react-native-ble-plx": "~3.1.2",
     "react-native-confirmation-code-field": "~7.3.2",

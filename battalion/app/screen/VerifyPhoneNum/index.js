@@ -1,4 +1,4 @@
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { BackHandler, StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useRef, useEffect, useState } from "react";
 
 import {
@@ -28,6 +28,16 @@ const VerifyPhoneNum = ({ navigation }) => {
     }
   }
 
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      function () {
+        return true; // Return false from the callback function
+      }
+    );
+
+    return () => backHandler.remove(); // Clean up the event listener
+  }, []);
   useEffect(() => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber; // unsubscribe on unmount

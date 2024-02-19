@@ -14,6 +14,8 @@ export const AppSettingProvider = ({ children }) => {
   const [boxLights, setBoxLights] = useState(false);
   const [boxLocked, setBoxLocked] = useState(false);
 
+  const [boxName, setBoxName] = useState("");
+
   const [temp, setTemp] = useState({ value: -1, unit: "c" });
   const [password, setPassword] = useState([]);
   const [isLocked, setIsLocked] = useState(false);
@@ -22,6 +24,21 @@ export const AppSettingProvider = ({ children }) => {
   const [isCharging, setIsCharging] = useState(false);
 
   const [connectedDevices, setConnectedDevices] = useState([]);
+
+  const resetStat = () => {
+    setBoxTemp(-1);
+    setBoxBatteryLevel(-1);
+    setBoxIsCharging(false);
+    setTemp({ value: -1, unit: "c" });
+    setPassword([]);
+    setIsLocked(false);
+    setIsLightsOn(false);
+    setBatteryLevel(false);
+    setIsCharging(false);
+    setConnectedDevices([]);
+    setBoxName("");
+    AsyncStorage.removeItem("appSettings");
+  };
 
   const getItemFromAsyncStorage = async (itemName) => {
     try {
@@ -75,6 +92,14 @@ export const AppSettingProvider = ({ children }) => {
     getItemFromAsyncStorage("appSettings");
   }, [temp, password, isLocked, isLightsOn]);
 
+  const setBoxNameValue = async (value) => {
+    setBoxName((prev) => ({ ...prev, value }));
+    await AsyncStorage.mergeItem(
+      "appSettings",
+      JSON.stringify({ name: value })
+    );
+  };
+
   const setTempValue = async (value) => {
     setTemp((prev) => ({ ...prev, value }));
     await AsyncStorage.mergeItem(
@@ -117,7 +142,11 @@ export const AppSettingProvider = ({ children }) => {
 
   const getTempValueAndUnit = (temp) => {
     const val =
-      temp.unit === "c" ? temp.value : Math.round((temp.value * 9) / 5 + 32);
+      temp.value < 0
+        ? "--"
+        : temp.unit === "c"
+        ? temp.value
+        : Math.round((temp.value * 9) / 5 + 32);
     const unit = temp.unit === "c" ? "℃" : "°F";
     return `${val}${unit}`;
   };
@@ -169,6 +198,7 @@ export const AppSettingProvider = ({ children }) => {
 
   const contextValue = {
     temp,
+    setTemp,
     password,
     isLocked,
     isLightsOn,
@@ -194,6 +224,11 @@ export const AppSettingProvider = ({ children }) => {
     setBoxBatteryLevel,
     boxIsCharging,
     setBoxIsCharging,
+
+    boxName,
+    setBoxNameValue,
+
+    resetStat,
   };
 
   return (

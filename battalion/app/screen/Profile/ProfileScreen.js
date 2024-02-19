@@ -17,19 +17,42 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import firestore from "@react-native-firebase/firestore";
 import FetchUserProfile from "../../Hooks/UserProfile/UserProfile";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
+import {
+  aproveUser,
+  disconnectUser,
+  getDeviceUsers,
+  rejectUser,
+} from "../../api/Database/Database";
+import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
+import { Toast } from "react-native-toast-notifications";
 
 const ProfileScreen = ({ navigation }) => {
   const { currentUser, logout } = useAuth();
   const userData = FetchUserProfile(currentUser);
   const [phoneNumber, setPhoneNumber] = useState();
   const [isEditingUsername, setIsEditingUsername] = useState(false);
+  const { connectedDevice } = useBleContext();
 
   const [updatedUserName, setUpdatedUserName] = useState();
 
   const [userEmail, setUserEmail] = useState();
 
   const [userProfileData, setUserProfileData] = useState();
+  const [users, setUsers] = useState([]);
 
+  const fetchDeviceUsers = async () => {
+    try {
+      const deviceUsers = await getDeviceUsers(connectedDevice?.device?.id);
+      setUsers(deviceUsers);
+    } catch (error) {
+      Toast.show("Error fetching device users");
+      console.error("Error fetching device users:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDeviceUsers();
+  }, []);
   useEffect(() => {
     if (userData) {
       setUserProfileData(userData);
@@ -166,10 +189,139 @@ const ProfileScreen = ({ navigation }) => {
           />
           <Text style={styles.nodeviceTxt}>No devices connected</Text>
         </View>
+        {connectedDevice?.isOwner && (
+          <View style={{ width: "100%" }}>
+            <View style={styles.deviceTxtContainer}>
+              <Text style={styles.deviceCntd}>Users Connected</Text>
+            </View>
+            <View
+              style={{
+                ...styles.connectedInfoContainer,
+
+                justifyContent: users.length > 0 ? "flex-start" : "center",
+                alignItems: users.length > 0 ? "flex-start" : "center",
+              }}
+            >
+              {users.length > 0 ? (
+                users.map((user, index) => {
+                  return (
+                    <ScrollView
+                      key={user.id}
+                      style={{ width: "100%", height: "100%" }}
+                    >
+                      <View
+                        key={user.id}
+                        style={{
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          width: "100%",
+                          display: "flex",
+                          flexDirection: "row",
+                        }}
+                      >
+                        <Text
+                          key={user.id}
+                          style={{
+                            ...styles.listText,
+                          }}
+                        >
+                          {user.name}
+                        </Text>
+                        <View>
+                          {user.approved ? (
+                            <TouchableOpacity
+                              onPress={async () => {
+                                try {
+                                  await disconnectUser(
+                                    connectedDevice?.device?.id,
+                                    currentUser?.uid
+                                  );
+                                  await fetchDeviceUsers();
+                                } catch (err) {
+                                  console.log(err);
+                                }
+                              }}
+                            >
+                              <Text style={styles.listText}>Disconnect</Text>
+                            </TouchableOpacity>
+                          ) : (
+                            <View>
+                              {user?.status === "rejected" ? (
+                                <Text style={styles.listText}>Rejected</Text>
+                              ) : (
+                                <View
+                                  style={{
+                                    justifyContent: "space-between",
+                                    display: "flex",
+                                    flexDirection: "row",
+                                    gap: 15,
+                                  }}
+                                >
+                                  <TouchableOpacity
+                                    style={styles.btn}
+                                    onPress={async () => {
+                                      try {
+                                        await aproveUser(
+                                          connectedDevice?.device?.id,
+                                          currentUser?.uid
+                                        );
+                                        await fetchDeviceUsers();
+                                      } catch (err) {
+                                        //test
+                                        console.log(err);
+                                      }
+                                    }}
+                                  >
+                                    <Text style={styles.listText}>Accept</Text>
+                                  </TouchableOpacity>
+                                  <TouchableOpacity
+                                    style={styles.btn}
+                                    onPress={async () => {
+                                      try {
+                                        await rejectUser(
+                                          connectedDevice?.device?.id,
+                                          currentUser?.uid
+                                        );
+                                        await fetchDeviceUsers();
+                                      } catch (err) {
+                                        //test
+                                        console.log(err);
+                                      }
+                                    }}
+                                  >
+                                    <Text style={styles.listText}>Reject</Text>
+                                  </TouchableOpacity>
+                                </View>
+                              )}
+                            </View>
+                          )}
+                        </View>
+                      </View>
+                      {index < users.length - 1 ||
+                        (index === 0 && (
+                          <View
+                            style={{
+                              width: "100%",
+                              height: 1,
+                              marginTop: 10,
+                              marginBottom: 10,
+                              backgroundColor: "rgba(255,255,255,0.3)",
+                            }}
+                          />
+                        ))}
+                    </ScrollView>
+                  );
+                })
+              ) : (
+                <Text style={styles.nodeviceTxt}>No users connected</Text>
+              )}
+            </View>
+          </View>
+        )}
 
         <View style={styles.ForgetPasswordBox}>
           <View style={styles.resetPasswordBox}>
-            <Text style={styles.resetPasswordTxt}>reset Password</Text>
+            <Text style={styles.resetPasswordTxt}>reset{"\n"}Password</Text>
           </View>
           <TouchableOpacity
             onPress={() => {
@@ -226,13 +378,14 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
   },
   connectedInfoContainer: {
-    width: 335,
-    height: 141,
+    width: "100%",
+    height: 150,
     backgroundColor: colors.soft,
     marginTop: 13,
     marginBottom: 19,
     alignItems: "center",
     justifyContent: "center",
+    padding: 15,
   },
   deviceCntd: {
     fontSize: 15,
@@ -251,6 +404,14 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: colors.white,
   },
+  btn: {
+    backgroundColor: colors.primary,
+    paddingBottom: 5,
+    paddingTop: 5,
+    paddingLeft: 10,
+    paddingRight: 10,
+    borderRadius: 100,
+  },
   ForgetPasswordBox: {
     display: "flex",
     flexDirection: "row",
@@ -262,7 +423,7 @@ const styles = StyleSheet.create({
   },
   forgetText: {
     color: colors.white,
-    width: 80,
+    width: 100,
     fontSize: 18,
     fontWeight: "500",
   },
@@ -292,6 +453,11 @@ const styles = StyleSheet.create({
     transform: [{ translateY: -10 }],
   },
   nodeviceTxt: {
+    fontSize: 14,
+    fontWeight: "500",
+    color: colors.white,
+  },
+  listText: {
     fontSize: 14,
     fontWeight: "500",
     color: colors.white,

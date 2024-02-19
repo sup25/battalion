@@ -9,6 +9,7 @@ import {
 
 import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
+import GradientBackground from "../../component/GradientBackground";
 
 export default function MainScreen({ navigation }) {
   return (
@@ -24,6 +25,7 @@ export default function MainScreen({ navigation }) {
         </View>
 
         <View style={styles.textContainer}>
+          <GradientBackground color1={"transparent"} color2={"#000000"} />
           <Text style={styles.textWelcome}>WELCOME TO BATTALION</Text>
           <Text style={styles.textParagraph}>
             We are specialists in developing resilient tools and accessories
@@ -62,15 +64,17 @@ const styles = StyleSheet.create({
 
   headingTextContainer: {
     position: "absolute",
-    top: 160,
+    top: 200,
   },
   headingText: {
-    width: 300,
     textTransform: "uppercase",
     fontWeight: "900",
     color: colors.white,
     alignItems: "center",
-    fontSize: 60,
+    fontSize: 55,
+    lineHeight: 60,
+    width: "100%",
+    maxWidth: 360,
   },
   textAndButton: {
     backgroundColor: colors.black,
@@ -78,11 +82,11 @@ const styles = StyleSheet.create({
   },
   textContainer: {
     display: "flex",
+    position: "relative",
     width: "100%",
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "#000000a8",
   },
   textParagraph: {
     fontWeight: "400",

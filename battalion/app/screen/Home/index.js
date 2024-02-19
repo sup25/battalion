@@ -42,7 +42,7 @@ const Home = ({ navigation }) => {
           </Text>
         </View>
       </View>
-      <DeviceList ownerId={currentUser.uid} />
+      <DeviceList navigation={navigation} ownerId={currentUser.uid} />
     </View>
   );
 };

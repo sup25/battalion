@@ -23,7 +23,8 @@ import { useAppSettingContext } from "../../context/AppSettingContext/AppSetting
 const SearchScreen = ({ navigation }) => {
   const toast = useToast();
   const route = useRoute();
-  const { isFirstTime } = route.params;
+  const { isFirstTime, serialNum } = route.params;
+  const [retry, setRetry] = useState(false);
 
   const [selectedDevice, setSelectedDevice] = useState({
     device: null,
@@ -47,6 +48,7 @@ const SearchScreen = ({ navigation }) => {
   let timer = null;
 
   const init = async () => {
+    setScan((prev) => ({ ...prev, devices: [], error: false }));
     let isPermitted = await requestPermissions();
     if (isPermitted) {
       scanForPeripherals(toast, new Date());
@@ -76,7 +78,12 @@ const SearchScreen = ({ navigation }) => {
     return () => backHandler.remove(); // Clean up the event listener
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [retry]);
+
+  const toShowRetry = () => {
+    console.log("scan", scan);
+    return scan.error || (scan?.devices?.length === 0 && !scan.scanning);
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -159,6 +166,22 @@ const SearchScreen = ({ navigation }) => {
             })}
         </View>
         <View>
+          {toShowRetry() && (
+            <TouchableOpacity
+              onPress={() => setRetry((prev) => !prev)}
+              style={{
+                backgroundColor: colors.primary,
+                width: 277,
+                height: 60,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: 5,
+                fontSize: 20,
+              }}
+            >
+              <Text style={{ color: "white" }}>Retry</Text>
+            </TouchableOpacity>
+          )}
           {selectedDevice.device && (
             <TouchableOpacity
               onPress={async () => {
