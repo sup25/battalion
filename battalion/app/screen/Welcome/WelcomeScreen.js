@@ -23,27 +23,42 @@ import SetBoxTemp from "../../component/SetBoxTemp";
 import BoxTemp from "../../component/BoxTemp";
 import BatteryPercent from "../../component/BatteryPercent";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
+import { useToast } from "react-native-toast-notifications";
+import { setNameToDevice } from "../../api/Database/Database";
+import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const { connectedDevice } = useBleContext();
+  const { boxName, setBoxNameValue } = useAppSettingContext();
+  const { connectedDevice, disconnectFromDevice } = useBleContext();
+  const [deviceName, setDeviceName] = useState(boxName);
 
-  const handleEdit = () => {
+  const toast = useToast();
+
+  const handleSubmitName = async () => {
+    console.log("test");
+    if (deviceName === "") {
+      return toast.show("Please enter a name.");
+    }
+    try {
+      await setNameToDevice(deviceName, connectedDevice?.device?.id);
+      setIsEditing((prevState) => !prevState);
+      toast.show("Device name updated successfully.");
+      setBoxNameValue(deviceName);
+    } catch (error) {
+      console.log("Error setting name to device", error);
+    }
+  };
+  const handleEdit = async () => {
     setIsEditing((prevState) => !prevState);
   };
 
-  const [userName, setUserName] = useState();
-
-  const userData = FetchUserProfile(currentUser);
-
   useEffect(() => {
-    // Set the user's display name from currentUser
-    if (userData) {
-      setUserName(userData?.name || "");
+    if (boxName) {
+      setDeviceName(boxName);
     }
-  }, [userData]);
-
+  }, [boxName]);
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
@@ -84,7 +99,13 @@ const WelcomeScreen = ({ navigation }) => {
             <Text style={styles.textWelcome}>device details</Text>
           </View>
           <TouchableWithoutFeedback
-            onPress={() => navigation.navigate("devicesetting")}
+            onPress={() =>
+              connectedDevice?.device
+                ? navigation.navigate("devicesetting")
+                : toast.show("Please connect to a device.", {
+                    type: "error",
+                  })
+            }
           >
             <AntDesign name="setting" size={30} color="#fff" />
           </TouchableWithoutFeedback>
@@ -112,16 +133,25 @@ const WelcomeScreen = ({ navigation }) => {
         </View>
         <View style={styles.battalionId}>
           <TextInput
+            editable={isEditing}
+            onBlur={() => setIsEditing(false)}
             style={styles.input}
-            placeholder="Battalion Device #23456"
+            placeholder="Battalion Device name"
             placeholderTextColor="#656565"
+            value={deviceName}
+            focusable={true}
+            onChangeText={(text) => {
+              console.log(text);
+              setDeviceName(text);
+            }}
           />
           {isEditing ? (
             <MaterialCommunityIcons
               name="check"
-              color="#5A5A5A"
+              color="white"
               size={30}
               style={styles.icon}
+              onPress={handleSubmitName}
             />
           ) : (
             <MaterialCommunityIcons
@@ -151,6 +181,24 @@ const WelcomeScreen = ({ navigation }) => {
           <SetBoxTemp />
         </View>
         <BatteryPercent />
+        {connectedDevice?.device && (
+          <View style={styles.btn}>
+            <TouchableOpacity
+              style={{
+                width: "100%",
+                height: "100%",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+              onPress={() => disconnectFromDevice()}
+            >
+              <Text style={{ color: "white", fontSize: 14, fontWeight: "500" }}>
+                Disconnect from device
+              </Text>
+            </TouchableOpacity>
+          </View>
+        )}
       </View>
     </View>
   );
@@ -186,7 +234,17 @@ const styles = StyleSheet.create({
     color: "#B0B0B0",
     paddingRight: 11,
   },
-
+  btn: {
+    backgroundColor: colors.primary,
+    color: colors.white,
+    borderRadius: 5,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    padding: 5,
+    height: 30,
+    marginTop: 50,
+  },
   addDevice: {
     backgroundColor: colors.primary,
     color: colors.white,
@@ -251,6 +309,7 @@ const styles = StyleSheet.create({
   input: {
     width: 311,
     height: 40,
+    color: "white",
     marginVertical: 10,
     paddingHorizontal: 10,
     borderRadius: 5,

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
-import { StyleSheet, Text, TextInput, View } from "react-native";
+import { BackHandler, StyleSheet, Text, TextInput, View } from "react-native";
 import auth from "@react-native-firebase/auth";
 import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
@@ -12,7 +12,7 @@ const InsertCode = ({ navigation }) => {
   const toast = useToast();
   const route = useRoute();
 
-  const { currentUser } = useAuth();
+  const { currentUser, modifyUser } = useAuth();
   const [verificationId, setVerificationID] = useState("");
 
   const [phoneNumber, setPhoneNumber] = useState(route.params.phoneNumber);
@@ -32,6 +32,17 @@ const InsertCode = ({ navigation }) => {
       setVerificationID(route.params.confirmation.verificationId);
     }
   }, [route.params]);
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      function () {
+        return true; // Return false from the callback function
+      }
+    );
+
+    return () => backHandler.remove(); // Clean up the event listener
+  }, []);
 
   const handleResendCode = async (setIsLoading) => {
     setIsLoading(true);
@@ -71,33 +82,27 @@ const InsertCode = ({ navigation }) => {
   }
 
   const handleVerifyVerificationCode = async (setIsLoading) => {
+    console.log(auth());
+    console.log(currentUser);
     setIsLoading(true);
     try {
       const code = verificationCode.join("");
-      /* try {
-        await verificationId.confirm(code);
-      } catch (error) {
-        toast.show("Invalid code.", {
-          type: "normal",
-        });
-        console.error(`Error: ${error.message}
-        throw new Error("Invalid code.");
-      } */
-      // Check if the user is already linked to the phone provider
+
       if (!currentUser.phoneNumber) {
         const credential = auth.PhoneAuthProvider.credential(
           route.params.confirmation.verificationId,
           code
         );
+        console.log(credential);
         await auth().currentUser.linkWithCredential(credential);
         await auth().currentUser.updateProfile({ phoneNumber });
       } else {
         // User is already linked to the phone provider
         console.log("User is already linked to the phone provider");
       }
-
+      let userData = {};
       if (currentUser) {
-        const userData = {
+        userData = {
           phoneNumber: phoneNumber,
         };
         const addedToFirestore = await addUserToFirestore(
@@ -105,7 +110,7 @@ const InsertCode = ({ navigation }) => {
           userData,
           true
         );
-
+        modifyUser(userData);
         if (!addedToFirestore) {
           setIsLoading(false);
           console.error("Failed to add phone number to Firestore.");
@@ -122,6 +127,7 @@ const InsertCode = ({ navigation }) => {
       });
       navigation.navigate("privateRoute", { screen: "MainTabs" });
     } catch (error) {
+      console.log(error);
       setIsLoading(false);
       toast.show("Phone authentication unsuccessful, Please try again", {
         type: "normal",

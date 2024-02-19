@@ -35,7 +35,7 @@ const PrivateRoute = () => {
 const PrivateStackNavigator = () => {
   const Stack = createNativeStackNavigator();
   return (
-    <Stack.Navigator>
+    <Stack.Navigator initialRouteName="MainTabs">
       <Stack.Screen
         name="MainTabs"
         component={MainTabs}

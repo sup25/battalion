@@ -12,6 +12,7 @@ import {
 } from "../../config/UsersCollection/UsersCollection";
 
 import { useToast } from "react-native-toast-notifications";
+import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
@@ -21,6 +22,15 @@ export default function RegisterScreen({ navigation }) {
   const [isLoading, setIsLoading] = useState(false);
 
   const toast = useToast();
+
+  const { currentUser, modifyUser } = useAuth();
+
+  useEffect(() => {
+    console.log("currentUser", currentUser);
+    if (currentUser && !currentUser.phoneNumber && currentUser.email) {
+      navigation.navigate("selectUserOccupations");
+    }
+  }, []);
 
   useEffect(() => {
     console.log("name:", name, ". email:", email);
@@ -34,7 +44,7 @@ export default function RegisterScreen({ navigation }) {
         name,
         email,
       });
-
+      modifyUser({ uid: user.uid, name, email });
       if (addedToFirestore) {
         console.log(
           "User data added to Firestore successfully.",
@@ -79,7 +89,7 @@ export default function RegisterScreen({ navigation }) {
       toast.show("Please fill all the fields", {
         type: "normal",
       });
-
+      setIsLoading(false);
       return;
     }
 
@@ -107,6 +117,7 @@ export default function RegisterScreen({ navigation }) {
         toast.show("Please fill all the fields", {
           type: "normal",
         });
+        setIsLoading(false);
       } else {
         toast.show("Registration error", {
           type: "normal",

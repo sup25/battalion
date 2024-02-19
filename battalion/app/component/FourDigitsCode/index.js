@@ -68,7 +68,6 @@ const FourDigitsCode = ({
             if (submitHandler) {
               let res = await submitHandler(valAsArr);
               console.log("inner res", res);
-              setIsSaved(true);
             }
           }
         }}

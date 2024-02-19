@@ -7,9 +7,9 @@ const GradientBackground = ({ color1 = "transparent", color2 = "#000000" }) => {
     <View style={styles.container}>
       {/* Gradient Background */}
       <Svg style={StyleSheet.absoluteFill}>
-        <LinearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="100%">
-          <stop offset="0%" stopColor={color1} />
-          <stop offset="100%" stopColor={color2} />
+        <LinearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="40%">
+          <Stop offset="0%" stopColor={color1} stopOpacity={0} />
+          <Stop offset="100%" stopColor={color2} />
         </LinearGradient>
         <Rect x="0" y="0" width="100%" height="100%" fill="url(#gradient)" />
       </Svg>
@@ -22,7 +22,7 @@ const styles = StyleSheet.create({
     left: 0,
     flex: 1,
     position: "absolute",
-    zIndex: 1,
+    zIndex: 0,
     width: "100%",
     height: "100%",
     // Other styles for your container

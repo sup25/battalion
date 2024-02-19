@@ -4,8 +4,9 @@ import {
   View,
   TextInput,
   TouchableWithoutFeedback,
+  BackHandler,
 } from "react-native";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CarthagosLinkButton from "../../component/CarthagosLinkButton/CarthagosLinkButton";
 import colors from "../../config/Colors/colors";
 import TextLogoWhite from "../../assets/TextLogoWhite";
@@ -17,6 +18,17 @@ import { useToast } from "react-native-toast-notifications";
 const SelectUserOccupations = ({ navigation }) => {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [otherOccupation, setOtherOccupation] = useState("");
+
+  useEffect(() => {
+    const backHandler = BackHandler.addEventListener(
+      "hardwareBackPress",
+      function () {
+        return true; // Return false from the callback function
+      }
+    );
+
+    return () => backHandler.remove(); // Clean up the event listener
+  }, []);
 
   const toast = useToast();
 
