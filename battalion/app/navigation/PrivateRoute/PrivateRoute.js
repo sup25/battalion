@@ -1,6 +1,7 @@
+//private route edited
 import React from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { createNativeStackNavigator } from "@react-navigation/native-stack";
+
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../../config/Colors/colors";
 import ProfileScreen from "../../screen/Profile/ProfileScreen";
@@ -12,13 +13,12 @@ import DeviceDetails from "../../screen/DeviceDetail/DeviceDetails";
 import DeviceSetting from "../../screen/DeviceSetting/DeviceSetting";
 import SetTemperatureScreen from "../../screen/SetTemperatureScreen";
 import FourDigitCodeInsertScreen from "../../screen/FourDigitPassword/FourDigitCodeInsertScreen";
-
+import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import AddDevice from "../../screen/AddDevice/AddDevice";
 import SearchScreen from "../../screen/Search/SearchScreen";
 import TestingBLE from "../../screen/Search/TestingBLE";
 import HalfCircleSlider from "../../screen/HalfCircleSlider";
 import Home from "../../screen/Home";
-import { View, Text } from "react-native";
 
 const Tab = createBottomTabNavigator();
 
@@ -52,21 +52,7 @@ const PrivateStackNavigator = () => {
         component={ForgotPassword}
         options={{ headerShown: false }}
       />
-      <Stack.Screen
-        name="devicedetails"
-        component={DeviceDetails}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="devicesetting"
-        component={DeviceSetting}
-        options={{ headerShown: false }}
-      />
-      <Stack.Screen
-        name="setTemperatureScreen"
-        component={SetTemperatureScreen}
-        options={{ headerShown: false }}
-      />
+
       <Stack.Screen
         name="fourdigitcodeinsertscreen"
         component={FourDigitCodeInsertScreen}
@@ -87,11 +73,23 @@ const PrivateStackNavigator = () => {
         component={HalfCircleSlider}
         options={{ headerShown: false }}
       />
+    </Stack.Navigator>
+  );
+};
+
+const HomeStack = () => {
+  const Stack = createNativeStackNavigator();
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="Welcome" component={WelcomeScreen} />
+      {/*   <Stack.Screen name="devicedetails" component={DeviceDetails} /> */}
+      <Stack.Screen name="devicesetting" component={DeviceSetting} />
       <Stack.Screen
-        name="home"
-        component={Home}
-        options={{ headerShown: false }}
+        name="setTemperatureScreen"
+        component={SetTemperatureScreen}
       />
+
+      <Stack.Screen name="home" component={Home} />
     </Stack.Navigator>
   );
 };
@@ -113,7 +111,7 @@ const MainTabs = () => {
     >
       <Tab.Screen
         name="Home"
-        component={WelcomeScreen}
+        component={HomeStack}
         options={{
           tabBarIcon: ({ size, focused }) => (
             <MaterialCommunityIcons
