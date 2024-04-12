@@ -2,9 +2,13 @@ import React from "react";
 import { View, StyleSheet } from "react-native";
 import Svg, { LinearGradient, Stop, Rect } from "react-native-svg";
 
-const GradientBackground = ({ color1 = "transparent", color2 = "#000000" }) => {
+const GradientBackground = ({
+  color1 = "transparent",
+  color2 = "#000000",
+  style = {},
+}) => {
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, style]}>
       {/* Gradient Background */}
       <Svg style={StyleSheet.absoluteFill}>
         <LinearGradient id="gradient" x1="0%" y1="0%" x2="0%" y2="40%">
@@ -20,17 +24,12 @@ const GradientBackground = ({ color1 = "transparent", color2 = "#000000" }) => {
 const styles = StyleSheet.create({
   container: {
     left: 0,
-    flex: 1,
     position: "absolute",
     zIndex: 0,
     width: "100%",
     height: "100%",
+
     // Other styles for your container
-  },
-  content: {
-    flex: 1,
-    zIndex: 1,
-    // Other styles for your content
   },
 });
 

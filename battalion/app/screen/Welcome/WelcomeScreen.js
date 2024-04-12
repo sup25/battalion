@@ -10,12 +10,11 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
 } from "react-native";
-import { AntDesign } from "@expo/vector-icons";
 
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import FetchUserProfile from "../../Hooks/UserProfile/UserProfile";
 import colors from "../../config/Colors/colors";
-import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
 
 import LocksToggle from "../../component/LocksToggle";
 import LightsToggle from "../../component/LightsToggle";
@@ -26,6 +25,7 @@ import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { useToast } from "react-native-toast-notifications";
 import { setNameToDevice } from "../../api/Database/Database";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
+import GradientBackground from "../../component/GradientBackground";
 
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
@@ -37,7 +37,6 @@ const WelcomeScreen = ({ navigation }) => {
   const toast = useToast();
 
   const handleSubmitName = async () => {
-    console.log("test");
     if (deviceName === "") {
       return toast.show("Please enter a name.");
     }
@@ -64,18 +63,22 @@ const WelcomeScreen = ({ navigation }) => {
       <StatusBar translucent backgroundColor="transparent" />
 
       <ImageBackground
-        style={styles.background}
-        source={require("../../assets/background.png")}
+        imageStyle={{
+          resizeMode: "cover",
+          position: "absolute",
+          top: 0,
+        }}
+        source={require("../../assets/Header-home-battalion.png")}
       >
         <View
           style={{
             paddingHorizontal: 15,
             width: "100%",
-            marginTop: 55,
-            borderBottomColor: colors.white,
-            borderBottomWidth: 1,
+            marginTop: 75,
+
             paddingBottom: 10,
             display: "flex",
+            alignItems: "center",
             justifyContent: "space-between",
             flexDirection: "row",
           }}
@@ -98,6 +101,7 @@ const WelcomeScreen = ({ navigation }) => {
             </TouchableWithoutFeedback>
             <Text style={styles.textWelcome}>device details</Text>
           </View>
+
           <TouchableWithoutFeedback
             onPress={() =>
               connectedDevice?.device
@@ -107,7 +111,7 @@ const WelcomeScreen = ({ navigation }) => {
                   })
             }
           >
-            <AntDesign name="setting" size={30} color="#fff" />
+            <Ionicons name="settings-sharp" size={30} color="#fff" />
           </TouchableWithoutFeedback>
         </View>
         <View style={styles.deviceContainer}>
@@ -131,44 +135,51 @@ const WelcomeScreen = ({ navigation }) => {
             </View>
           )}
         </View>
-        <View style={styles.battalionId}>
-          <TextInput
-            editable={isEditing}
-            onBlur={() => setIsEditing(false)}
-            style={styles.input}
-            placeholder="Battalion Device name"
-            placeholderTextColor="#656565"
-            value={deviceName}
-            focusable={true}
-            onChangeText={(text) => {
-              console.log(text);
-              setDeviceName(text);
-            }}
-          />
-          {isEditing ? (
-            <MaterialCommunityIcons
-              name="check"
-              color="white"
-              size={30}
-              style={styles.icon}
-              onPress={handleSubmitName}
+
+        <View>
+          <GradientBackground color1={"#060606"} color2={"#000000"} />
+          <View style={styles.battalionId}>
+            <TextInput
+              editable={isEditing}
+              onBlur={() => setIsEditing(false)}
+              style={styles.input}
+              placeholder="Battalion Device name"
+              placeholderTextColor="#656565"
+              value={deviceName}
+              focusable={true}
+              onChangeText={(text) => {
+                console.log(text);
+                setDeviceName(text);
+              }}
             />
-          ) : (
-            <MaterialCommunityIcons
-              name="pencil"
-              color="#5A5A5A"
-              size={30}
-              style={styles.icon}
-              onPress={handleEdit}
-            />
-          )}
+            {connectedDevice.isOwner && (
+              <View style={styles.icon}>
+                {isEditing ? (
+                  <MaterialCommunityIcons
+                    name="check"
+                    color="white"
+                    size={30}
+                    onPress={handleSubmitName}
+                  />
+                ) : (
+                  <MaterialCommunityIcons
+                    name="pencil"
+                    color="#5A5A5A"
+                    size={30}
+                    onPress={handleEdit}
+                  />
+                )}
+              </View>
+            )}
+          </View>
         </View>
       </ImageBackground>
+
       <View style={styles.wrapper}>
         <View style={styles.unlockedImageContainer}>
           <Image
             style={styles.productImage}
-            source={require("../../assets/devicedetail.png")}
+            source={require("../../assets/battalion-rover-heat-device-details.png")}
           />
 
           <View style={{ display: "flex" }}>
@@ -214,12 +225,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    paddingHorizontal: 15,
   },
   productImage: {
-    width: 87,
-    height: 74,
-    opacity: 0.5,
+    width: 90,
+    height: 95,
+    // opacity: 0.5,
   },
   deviceLocked: {
     display: "flex",
@@ -256,10 +266,9 @@ const styles = StyleSheet.create({
   },
 
   battalionId: {
-    paddingHorizontal: 15,
-    alignSelf: "center",
-    backgroundColor: "#000000a8",
     width: "100%",
+
+    paddingHorizontal: 15,
   },
   button: {
     backgroundColor: "blue",
@@ -296,10 +305,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     flexDirection: "row",
     paddingHorizontal: 15,
-    paddingVertical: 20,
+
     alignItems: "center",
     width: "100%",
-    marginTop: 21,
+    marginTop: 30,
   },
   errorMessage: {
     color: "red",
@@ -307,7 +316,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
-    width: 311,
+    width: "100%",
     height: 40,
     color: "white",
     marginVertical: 10,

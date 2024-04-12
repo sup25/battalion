@@ -12,29 +12,32 @@ const BatteryPercent = () => {
 
   const getIconBasedOnBatteryLevel = () => {
     if (!boxBatteryLevel) return "battery-10-bluetooth";
-    if (boxBatteryLevel > 0 && boxBatteryLevel < 10)
+    if (boxBatteryLevel > 0 && boxBatteryLevel <= 5 && !boxIsCharging)
+      return "battery-alert-variant-outline";
+    if (boxBatteryLevel > 0 && boxBatteryLevel <= 10)
       return "battery-10-bluetooth";
-    if (boxBatteryLevel > 10 && boxBatteryLevel < 20)
+    if (boxBatteryLevel > 10 && boxBatteryLevel <= 20)
       return "battery-20-bluetooth";
-    if (boxBatteryLevel > 20 && boxBatteryLevel < 30)
+    if (boxBatteryLevel > 20 && boxBatteryLevel <= 30)
       return "battery-30-bluetooth";
-    if (boxBatteryLevel > 30 && boxBatteryLevel < 40)
+    if (boxBatteryLevel > 30 && boxBatteryLevel <= 40)
       return "battery-40-bluetooth";
-    if (boxBatteryLevel > 40 && boxBatteryLevel < 50)
+    if (boxBatteryLevel > 40 && boxBatteryLevel <= 50)
       return "battery-50-bluetooth";
-    if (boxBatteryLevel > 50 && boxBatteryLevel < 60)
+    if (boxBatteryLevel > 50 && boxBatteryLevel <= 60)
       return "battery-60-bluetooth";
-    if (boxBatteryLevel > 60 && boxBatteryLevel < 70)
+    if (boxBatteryLevel > 60 && boxBatteryLevel <= 70)
       return "battery-70-bluetooth";
-    if (boxBatteryLevel > 70 && boxBatteryLevel < 80)
+    if (boxBatteryLevel > 70 && boxBatteryLevel <= 80)
       return "battery-80-bluetooth";
-    if (boxBatteryLevel > 80 && boxBatteryLevel < 90)
+    if (boxBatteryLevel > 80 && boxBatteryLevel <= 90)
       return "battery-90-bluetooth";
     if (boxBatteryLevel > 90) return "battery-bluetooth";
   };
   return (
     <View style={styles.perTxtContainer}>
       <View style={styles.percentageText}>
+        <Text style={{ color: "white", fontSize: 16 }}>Device Battery</Text>
         <Text
           style={[
             styles.textOne,
@@ -49,7 +52,11 @@ const BatteryPercent = () => {
             { color: connectedDevice?.device ? "white" : "grey" },
           ]}
         >
-          {boxIsCharging ? "Charging" : "Plug your Device"}
+          {boxIsCharging
+            ? "Charging"
+            : boxBatteryLevel < 20
+            ? "Plug your Device"
+            : ""}
         </Text>
       </View>
       <View style={styles.BatteryTxtPercent}>

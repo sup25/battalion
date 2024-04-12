@@ -8,6 +8,8 @@ import {
   ScrollView,
   StatusBar,
   SafeAreaView,
+  RefreshControl,
+  ActivityIndicator,
 } from "react-native";
 
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
@@ -26,7 +28,7 @@ import {
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { Toast } from "react-native-toast-notifications";
 
-const ProfileScreen = ({ navigation }) => {
+const ProfileScreen = (props) => {
   const { currentUser, logout } = useAuth();
   const userData = FetchUserProfile(currentUser);
   const [phoneNumber, setPhoneNumber] = useState();
@@ -39,20 +41,36 @@ const ProfileScreen = ({ navigation }) => {
 
   const [userProfileData, setUserProfileData] = useState();
   const [users, setUsers] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
 
   const fetchDeviceUsers = async () => {
+    setRefreshing(true);
     try {
-      const deviceUsers = await getDeviceUsers(connectedDevice?.device?.id);
+      const deviceUsers = await getDeviceUsers(
+        connectedDevice?.device?.id,
+        connectedDevice?.isOwner
+      );
       setUsers(deviceUsers);
+      setRefreshing(false);
     } catch (error) {
-      Toast.show("Error fetching device users");
+      setRefreshing(false);
+      if (error.message === "Device not found") {
+        Toast.show(
+          "Couldn't get device's users,\nMake sure you are connected to the device"
+        );
+      } else {
+        Toast.show("Error fetching device users");
+      }
       console.error("Error fetching device users:", error);
     }
   };
 
   useEffect(() => {
-    fetchDeviceUsers();
-  }, []);
+    if (props.route?.name === "Profile" && props.navigation.isFocused()) {
+      fetchDeviceUsers();
+    }
+  }, [props.navigation.isFocused()]);
+
   useEffect(() => {
     if (userData) {
       setUserProfileData(userData);
@@ -114,7 +132,7 @@ const ProfileScreen = ({ navigation }) => {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <SafeAreaView style={styles.wrapper}>
         <Text style={styles.profileTxt}>My profile</Text>
         <View style={styles.bigRectangle}>
@@ -167,16 +185,11 @@ const ProfileScreen = ({ navigation }) => {
               placeholder="+10000"
               placeholderTextColor="white"
               value={phoneNumber}
-            />
-            <MaterialCommunityIcons
-              name="pencil"
-              color="#5A5A5A"
-              size={30}
-              style={styles.icon}
+              editable={false}
             />
           </View>
         </View>
-        <View style={styles.deviceTxtContainer}>
+        {/* <View style={styles.deviceTxtContainer}>
           <Text style={styles.deviceCntd}>Devices Connected</Text>
           <Text style={styles.addDevice}>Add Device +</Text>
         </View>
@@ -188,27 +201,48 @@ const ProfileScreen = ({ navigation }) => {
             color="white"
           />
           <Text style={styles.nodeviceTxt}>No devices connected</Text>
-        </View>
+        </View> */}
         {connectedDevice?.isOwner && (
           <View style={{ width: "100%" }}>
             <View style={styles.deviceTxtContainer}>
               <Text style={styles.deviceCntd}>Users Connected</Text>
+              <View
+                style={{
+                  marginLeft: 5,
+                  width: 30,
+                  height: 30,
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                {refreshing ? (
+                  <ActivityIndicator color="white" />
+                ) : (
+                  <MaterialCommunityIcons
+                    onPress={fetchDeviceUsers}
+                    name="refresh"
+                    size={25}
+                    color="white"
+                  />
+                )}
+              </View>
             </View>
-            <View
-              style={{
-                ...styles.connectedInfoContainer,
-
-                justifyContent: users.length > 0 ? "flex-start" : "center",
-                alignItems: users.length > 0 ? "flex-start" : "center",
-              }}
+            <ScrollView
+              indicatorStyle="white"
+              fadingEdgeLength={100}
+              showsVerticalScrollIndicator={true}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={fetchDeviceUsers}
+                />
+              }
+              style={styles.connectedInfoContainer}
             >
               {users.length > 0 ? (
                 users.map((user, index) => {
                   return (
-                    <ScrollView
-                      key={user.id}
-                      style={{ width: "100%", height: "100%" }}
-                    >
+                    <View key={user.id} style={{ width: "100%", height: 50 }}>
                       <View
                         key={user.id}
                         style={{
@@ -230,19 +264,24 @@ const ProfileScreen = ({ navigation }) => {
                         <View>
                           {user.approved ? (
                             <TouchableOpacity
+                              style={styles.btn}
+                              disabled={refreshing}
                               onPress={async () => {
+                                setRefreshing(true);
+                                if (refreshing) return;
                                 try {
                                   await disconnectUser(
                                     connectedDevice?.device?.id,
-                                    currentUser?.uid
+                                    user.id
                                   );
                                   await fetchDeviceUsers();
                                 } catch (err) {
+                                  setRefreshing(false);
                                   console.log(err);
                                 }
                               }}
                             >
-                              <Text style={styles.listText}>Disconnect</Text>
+                              <Text style={styles.listText}>Revoke access</Text>
                             </TouchableOpacity>
                           ) : (
                             <View>
@@ -258,16 +297,20 @@ const ProfileScreen = ({ navigation }) => {
                                   }}
                                 >
                                   <TouchableOpacity
+                                    disabled={refreshing}
                                     style={styles.btn}
                                     onPress={async () => {
+                                      setRefreshing(true);
+                                      if (refreshing) return;
                                       try {
                                         await aproveUser(
                                           connectedDevice?.device?.id,
-                                          currentUser?.uid
+                                          user.id
                                         );
                                         await fetchDeviceUsers();
                                       } catch (err) {
                                         //test
+                                        setRefreshing(false);
                                         console.log(err);
                                       }
                                     }}
@@ -275,21 +318,25 @@ const ProfileScreen = ({ navigation }) => {
                                     <Text style={styles.listText}>Accept</Text>
                                   </TouchableOpacity>
                                   <TouchableOpacity
+                                    disabled={refreshing}
                                     style={styles.btn}
                                     onPress={async () => {
+                                      setRefreshing(true);
+                                      if (refreshing) return;
                                       try {
                                         await rejectUser(
                                           connectedDevice?.device?.id,
-                                          currentUser?.uid
+                                          user.id
                                         );
                                         await fetchDeviceUsers();
                                       } catch (err) {
+                                        setRefreshing(false);
                                         //test
                                         console.log(err);
                                       }
                                     }}
                                   >
-                                    <Text style={styles.listText}>Reject</Text>
+                                    <Text style={styles.listText}>Ignore</Text>
                                   </TouchableOpacity>
                                 </View>
                               )}
@@ -297,25 +344,38 @@ const ProfileScreen = ({ navigation }) => {
                           )}
                         </View>
                       </View>
-                      {index < users.length - 1 ||
-                        (index === 0 && (
-                          <View
-                            style={{
-                              width: "100%",
-                              height: 1,
-                              marginTop: 10,
-                              marginBottom: 10,
-                              backgroundColor: "rgba(255,255,255,0.3)",
-                            }}
-                          />
-                        ))}
-                    </ScrollView>
+                      {(index < users?.length - 1 || index === 0) && (
+                        <View
+                          style={{
+                            width: "100%",
+                            height: 1,
+                            marginTop: 10,
+                            marginBottom: 10,
+                            backgroundColor: "rgba(255,255,255,0.3)",
+                          }}
+                        />
+                      )}
+                    </View>
                   );
                 })
               ) : (
-                <Text style={styles.nodeviceTxt}>No users connected</Text>
+                <View
+                  style={{
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                  }}
+                >
+                  <MaterialCommunityIcons
+                    style={styles.notfoundIcon}
+                    name="cube"
+                    size={30}
+                    color="white"
+                  />
+                  <Text style={styles.nodeviceTxt}>No users connected</Text>
+                </View>
               )}
-            </View>
+            </ScrollView>
           </View>
         )}
 
@@ -325,7 +385,7 @@ const ProfileScreen = ({ navigation }) => {
           </View>
           <TouchableOpacity
             onPress={() => {
-              navigation.navigate("forgotpasswordprivate");
+              props.navigation.navigate("forgotpasswordprivate");
             }}
             style={styles.forgotpasswordTxtIcon}
           >
@@ -337,9 +397,9 @@ const ProfileScreen = ({ navigation }) => {
             />
           </TouchableOpacity>
         </View>
-        <View style={{ paddingTop: 10, paddingBottom: 10 }}>
+        <View style={{ paddingTop: 10, paddingBottom: 10, width: "100%" }}>
           <CarthagosButton
-            width={277}
+            width={"100%"}
             textColor="white"
             onPress={() => {
               logout();
@@ -349,7 +409,7 @@ const ProfileScreen = ({ navigation }) => {
         </View>
         <StatusBar backgroundColor={colors.black} barStyle="light-content" />
       </SafeAreaView>
-    </ScrollView>
+    </View>
   );
 };
 
@@ -365,7 +425,7 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   bigRectangle: {
-    width: 335,
+    width: "100%",
     height: 239,
     backgroundColor: colors.soft,
     paddingHorizontal: 13,
@@ -379,13 +439,11 @@ const styles = StyleSheet.create({
   },
   connectedInfoContainer: {
     width: "100%",
-    height: 150,
+    height: 180,
     backgroundColor: colors.soft,
-    marginTop: 13,
-    marginBottom: 19,
-    alignItems: "center",
-    justifyContent: "center",
-    padding: 15,
+    marginTop: 5,
+    marginBottom: 15,
+    padding: 10,
   },
   deviceCntd: {
     fontSize: 15,
@@ -395,8 +453,8 @@ const styles = StyleSheet.create({
   deviceTxtContainer: {
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-between",
-    width: 335,
+
+    width: "100%",
     marginTop: 27,
   },
   email: {
@@ -416,8 +474,8 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     backgroundColor: "#2626266E",
-    width: 337,
-    height: 95,
+    width: "100%",
+    height: 90,
     justifyContent: "space-between",
     padding: 18,
   },
@@ -438,19 +496,19 @@ const styles = StyleSheet.create({
   },
   inputs: {
     backgroundColor: "#1B1B1B",
-    width: 307,
+    width: "100%",
     height: 37,
     borderRadius: 5,
     fontSize: 16,
     padding: 10,
+    marginTop: 5,
     color: colors.white,
     justifyContent: "center",
   },
   icon: {
     position: "absolute",
-    right: 20,
-    top: "50%",
-    transform: [{ translateY: -10 }],
+    right: 10,
+    bottom: 5,
   },
   nodeviceTxt: {
     fontSize: 14,
@@ -466,6 +524,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.medium,
     borderRadius: 50,
     padding: 5,
+    width: 40,
   },
   phoneNumber: {
     fontSize: 14,

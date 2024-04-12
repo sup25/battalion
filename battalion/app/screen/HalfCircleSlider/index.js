@@ -13,7 +13,8 @@ import TempInnerCircle from "../../component/TempCircleProgress/comps/InnerCircl
 
 const HalfCircleSlider = ({ navigation }) => {
   const tost = useToast();
-  const { temp, setTempValue, getTempValueAndUnit } = useAppSettingContext();
+  const { temp, setTempValue, getTempValueAndUnit, isLightsOn } =
+    useAppSettingContext();
   const { writeTempToDevice } = useBleContext();
   const [sliderValue, setSliderValue] = useState(temp.value);
 
@@ -29,7 +30,7 @@ const HalfCircleSlider = ({ navigation }) => {
   const strokeDasharray = `${halfCircumference},${circumference}`;
 
   const strokeDashoffset =
-    halfCircumference - (sliderValue / 100) * halfCircumference;
+    halfCircumference - (sliderValue / 40) * halfCircumference;
   return (
     <CarthagosScreen style={styles.container}>
       <View style={styles.IconAndHeadingTxt}>
@@ -71,19 +72,23 @@ const HalfCircleSlider = ({ navigation }) => {
 
       <View style={styles.SliderTxtWrapper}>
         <Slider
+          tapToSeek={false}
           maximumTrackTintColor="white"
           style={styles.slider}
           value={sliderValue}
           minimumTrackTintColor={colors.primary}
           thumbTintColor={colors.primary}
           minimumValue={0}
-          maximumValue={100}
-          step={1}
+          maximumValue={40}
+          step={5}
           onValueChange={(value) => handleValueChange(value)}
-          onSlidingComplete={async () => {
+          onSlidingComplete={async (e) => {
             try {
-              await writeTempToDevice([sliderValue]);
-              setTempValue(sliderValue);
+              await writeTempToDevice(
+                { value: e, unit: temp.unit },
+                isLightsOn
+              );
+              setTempValue(e);
             } catch (error) {
               console.log(error);
               tost.show("Error writing temperature to device", {

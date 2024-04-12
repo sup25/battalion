@@ -17,21 +17,18 @@ import {
   getUserAllDevices,
 } from "../../api/Database/Database";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
+import { useToast } from "react-native-toast-notifications";
 
 const DeviceList = ({ ownerId, navigation }) => {
-  const {
-    getTempValueAndUnit,
-    temp,
-    boxBatteryLevel,
+  const { getTempValueAndUnit, temp, boxBatteryLevel, isLocked, boxLocked } =
+    useAppSettingContext();
 
-    boxLocked,
-  } = useAppSettingContext();
-
-  const { connectToDevice, connectedDevice } = useBleContext();
+  const { connectToDevice, connectedDevice, requestPermissions } =
+    useBleContext();
   const [devices, setDevices] = useState([]);
   const [isLoaded, setIsLoaded] = useState(true);
   const [connecting, setConnecting] = useState({ device: null, status: false });
-
+  const toast = useToast();
   function removeDuplicates(array1, array2) {
     const uniqueObjects = [];
     const ids = new Set();
@@ -73,7 +70,7 @@ const DeviceList = ({ ownerId, navigation }) => {
         return {
           ...item,
           name: item?.name ? item.name : item.deviceId,
-          isLocked: isCurrentDevice ? boxLocked : false,
+          isLocked: isCurrentDevice ? isLocked : false,
           isMain: isCurrentDevice ? true : false,
           isEnabled: true,
           temp: isCurrentDevice ? temp : false,
@@ -90,6 +87,7 @@ const DeviceList = ({ ownerId, navigation }) => {
   useEffect(() => {
     getDevices();
     setConnecting({ device: null, status: false });
+    requestPermissions();
   }, []);
 
   return (
@@ -116,6 +114,7 @@ const DeviceList = ({ ownerId, navigation }) => {
                   } catch (err) {
                     console.log("connecting to the device err:", err);
                     setConnecting({ device: null, status: false });
+                    toast.show("Failed to connect to the device");
                   }
                 }
               }
@@ -194,7 +193,8 @@ const DeviceList = ({ ownerId, navigation }) => {
                   ]}
                 >
                   <Text style={styles.lockedTxt}>
-                    Device {item.isLocked ? "Locked" : "Unlocked"}
+                    Device{"\n"}
+                    {item.isLocked ? "Locked" : "Unlocked"}
                   </Text>
                   <View style={styles.IconWrapper}>
                     {item.isLocked ? (

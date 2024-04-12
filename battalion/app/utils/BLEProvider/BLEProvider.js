@@ -19,6 +19,7 @@ import {
   checkIfUserHasPermissionToConnect,
   checkIfUserIsOwner,
 } from "../../api/Database/Database";
+import { useNavigation } from "@react-navigation/native";
 const BleContext = createContext();
 
 const BleProvider = ({ children }) => {
@@ -28,6 +29,8 @@ const BleProvider = ({ children }) => {
   // const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
   // const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
   // const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
+
+  const navigation = useNavigation();
 
   const Toast = useToast();
   const devices = appConfig.env === "dev" ? appConfig.testDevices : [];
@@ -44,6 +47,7 @@ const BleProvider = ({ children }) => {
     isLightsOn,
     setBoxNameValue,
     resetStat,
+    setConnectedDevice: setConnectedDeviceState,
   } = useAppSettingContext();
   const bleManager = useMemo(() => new BleManager(), []);
 
@@ -59,8 +63,15 @@ const BleProvider = ({ children }) => {
     device: null,
     error: null,
     isOwner: false,
+    hasPassword: false,
     connecting: true,
   });
+
+  useEffect(() => {
+    if (connectedDevice?.device) {
+      setConnectedDeviceState(connectedDevice?.device);
+    }
+  }, [connectedDevice]);
 
   const getItemFromAsyncStorage = async (itemName, child = false) => {
     try {
@@ -75,22 +86,28 @@ const BleProvider = ({ children }) => {
       console.log("settings context error, getting async item", error);
     }
   };
+
   const connectToDeviceOnStart = async () => {
-    if (currentUser) {
-      const storedDeviceId = await getItemFromAsyncStorage(
+    console.log(navigation.getState(), "screen");
+    if (
+      currentUser &&
+      navigation.getState().routes[0].state.routes[0].name === "MainTabs"
+    ) {
+      const storedDevices = await getItemFromAsyncStorage(
         "appSettings",
         "connectedDevices"
       );
 
+      const storedDeviceId = storedDevices.find((d) => d.connected);
       if (storedDeviceId) {
         Toast.show(
-          `Trying to reconnect to the device (${storedDeviceId?.[0]?.device?.name}).`,
+          `Trying to reconnect to the device (${storedDeviceId?.name}).`,
           {
             type: "normal",
           }
         );
         try {
-          await connectToDevice(storedDeviceId?.[0]?.device);
+          await connectToDevice(storedDeviceId?.device);
           Toast.show("Device reconnected successfuly.", {
             type: "normal",
           });
@@ -99,9 +116,11 @@ const BleProvider = ({ children }) => {
             type: "normal",
           });
           resetStat();
+
           setConnectedDevice((prev) => ({
             ...prev,
             isOwner: false,
+            hasPassword: false,
             connecting: false,
             device: null,
           }));
@@ -114,6 +133,7 @@ const BleProvider = ({ children }) => {
         setConnectedDevice((prev) => ({
           ...prev,
           isOwner: false,
+          hasPassword: false,
           connecting: false,
           device: null,
         }));
@@ -131,21 +151,33 @@ const BleProvider = ({ children }) => {
 
   const handleAppStateChange = async (nextAppState) => {
     console.log(nextAppState);
-    if (currentUser) {
+
+    if (
+      currentUser &&
+      navigation.getState().routes[0].state.routes[0].name === "MainTabs"
+    ) {
+      setConnectedDevice((prev) => ({
+        ...prev,
+        device: null,
+        hasPassword: false,
+        connecting: true,
+      }));
       // Check app state changes and manage BLE connections accordingly
       if (nextAppState === "active") {
-        Toast.show("Reconnecting to the device.", {
-          type: "normal",
-        });
         // App has come to the foreground, attempt reconnection if needed
-        const storedDeviceId = await getItemFromAsyncStorage(
+        const storedDevices = await getItemFromAsyncStorage(
           "appSettings",
           "connectedDevices"
         );
+        const storedDeviceId = storedDevices.find((d) => d.connected);
 
         if (storedDeviceId) {
+          Toast.show("Reconnecting to the device.", {
+            type: "normal",
+          });
+
           try {
-            await connectToDevice(storedDeviceId?.[0]?.device);
+            await connectToDevice(storedDeviceId?.device);
             Toast.show("Device reconnected successfuly.", {
               type: "normal",
             });
@@ -157,6 +189,7 @@ const BleProvider = ({ children }) => {
             setConnectedDevice((prev) => ({
               ...prev,
               isOwner: false,
+              hasPassword: false,
               connecting: false,
               device: null,
             }));
@@ -170,6 +203,7 @@ const BleProvider = ({ children }) => {
           setConnectedDevice((prev) => ({
             ...prev,
             isOwner: false,
+            hasPassword: false,
             connecting: false,
             device: null,
           }));
@@ -270,13 +304,23 @@ const BleProvider = ({ children }) => {
 
           bleManager.stopDeviceScan();
           seconds = 19;
-          toast.show(
-            "Error scanning for devices, check if blutooth is on and try again",
-            {
-              type: "normal",
-              placement: "bottom",
-            }
-          );
+          if (error.message !== "Bluetooth is powered off") {
+            toast.show(
+              "Error scanning for devices, Bluetooth is off, turn it on and try again",
+              {
+                type: "normal",
+                placement: "bottom",
+              }
+            );
+          } else {
+            toast.show(
+              "Error scanning for devices, check if blutooth is on and try again",
+              {
+                type: "normal",
+                placement: "bottom",
+              }
+            );
+          }
           return error;
         }
         if (device) {
@@ -304,64 +348,63 @@ const BleProvider = ({ children }) => {
   const connectToDevice = async (device, setDevice) => {
     setConnectedDevice((prev) => ({ ...prev, connecting: true }));
     bleManager.stopDeviceScan();
+    let setTimeOut = setTimeout(async () => {
+      await bleManager.cancelDeviceConnection(device.id);
+      setConnectedDevice((prev) => ({
+        device: null,
+        isOwner: false,
+        hasPassword: false,
+        error: "Connection timeout",
+        connecting: false,
+      }));
+      clearTimeout(setTimeOut);
+      Toast.show("Timeout, failed to connect");
+      throw new Error("Connection timeout");
+    }, 15000);
     try {
       const deviceFromDb = await checkIfUserHasPermissionToConnect(
         currentUser.uid,
         device.id
       );
       if (!deviceFromDb) {
-        setConnectedDevice((prev) => ({
+        setConnectedDevice({
           device: null,
           isOwner: false,
+          hasPassword: false,
           error: "You don't have permission to connect to this device",
           connecting: false,
-        }));
+        });
         Toast.show("You don't have permission to connect to this device");
         throw new Error("You don't have permission to connect to this device");
       }
       setBoxNameValue(deviceFromDb.name);
       const isOwner = await checkIfUserIsOwner(currentUser.uid, device.id);
-      const setTimeOut = setTimeout(async () => {
-        await bleManager.cancelDeviceConnection(device.id);
-        setConnectedDevice((prev) => ({
-          device: null,
-          isOwner: false,
-          error: "Connection timeout",
-          connecting: false,
-        }));
-        clearTimeout(setTimeOut);
-        Toast.show("Timeout, failed to connect");
-        throw new Error("Connection timeout");
-      }, 15000);
+
       const deviceConnection = await bleManager.connectToDevice(device.id);
 
       const connectedDevice =
         await deviceConnection.discoverAllServicesAndCharacteristics();
-      const services = await connectedDevice?.services();
-      // Log the UUIDs of services
-      services.forEach(async (service) => {
-        // Log the UUIDs of characteristics
+      await connectedDevice?.services();
 
-        const characteristics = await service.characteristics();
-        characteristics.forEach((characteristic) => {});
-      });
-      setConnectedDevice((prev) => ({
+      setConnectedDevice({
         error: null,
         device: deviceConnection,
+        hasPassword: deviceFromDb?.fourDigitCode ? true : false,
         isOwner: isOwner,
         connecting: false,
-      }));
-      console.log("connected!", deviceConnection.id, deviceConnection.name);
+      });
       clearTimeout(setTimeOut);
       return deviceConnection;
     } catch (e) {
       clearTimeout(setTimeOut);
-      setConnectedDevice((prev) => ({
+      setConnectedDevice({
         device: null,
         error: e.message,
         isOwner: false,
+        hasPassword: false,
         connecting: false,
-      }));
+      });
+
       console.log("FAILED TO CONNECT", e);
       throw e;
     }
@@ -371,7 +414,12 @@ const BleProvider = ({ children }) => {
     if (connectedDevice?.device) {
       bleManager.stopDeviceScan();
       bleManager.cancelDeviceConnection(connectedDevice?.device.id);
-      setConnectedDevice((prev) => ({ ...prev, isOwner: false, device: null }));
+      setConnectedDevice((prev) => ({
+        ...prev,
+        isOwner: false,
+        hasPassword: false,
+        device: null,
+      }));
     }
   };
 
@@ -385,28 +433,22 @@ const BleProvider = ({ children }) => {
    * @param {array} data - array of numbers [85,1,1,2,3,4]
    */
   const getBase64Data = (data) => {
-    console.log("og data: ", data);
     let bufferData = Buffer.from(data);
 
     // Convert to hex
     const hexString = bufferData.toString("hex");
-    console.log("hex: ", hexString);
     // Convert hex to base64
     const base64String = Buffer.from(hexString, "hex").toString("base64");
 
     return base64String;
   };
   const getDataFromArray = (base64Data) => {
-    console.log("1", base64Data);
     // Convert base64 to hex
     const hexString = Buffer.from(base64Data, "base64").toString("hex");
-    console.log("2", hexString);
     // Convert hex to buffer
     const bufferData = Buffer.from(hexString, "hex");
-    console.log("3", bufferData);
     // Convert buffer to data array in base 10
     const dataArray = Array.from(bufferData);
-    console.log("4", dataArray);
     return dataArray;
   };
 
@@ -426,8 +468,6 @@ const BleProvider = ({ children }) => {
           base64String
         );
 
-      console.log("res", res.value);
-      console.log("res", getDataFromArray(res.value));
       return res;
       // Password set successfully
     } catch (error) {
@@ -442,15 +482,13 @@ const BleProvider = ({ children }) => {
    * @param {number} temperatur
    * @returns
    */
-  const writeTempToDevice = async (unit, temperatur = false) => {
+  const writeTempToDevice = async (temprature, lights) => {
     const prefix = [85, 3];
-    console.log("temp.unit ", temp.unit);
-    console.log("unit ", unit);
     const data = prefix.concat(
       password,
-      [temperatur],
-      [unit],
-      [isLightsOn ? 1 : 0]
+      [temprature.value],
+      [temprature.unit === "c" ? 0 : 1],
+      [lights ? 1 : 0]
     );
 
     const base64String = getBase64Data(data);
@@ -472,13 +510,13 @@ const BleProvider = ({ children }) => {
     }
   };
 
-  const writeTempUnitToDevice = async (unit = false) => {
+  const writeTempUnitToDevice = async (temprature, mode, lights) => {
     const prefix = [85, 3];
     const data = prefix.concat(
       password,
-      [temp.value],
-      [unit ? unit : temp.unit === "c" ? 0 : 1],
-      [isLightsOn ? 1 : 0]
+      [temprature.value],
+      [mode === "c" ? 1 : 0],
+      [lights ? 1 : 0]
     );
 
     const base64String = getBase64Data(data);
@@ -505,12 +543,12 @@ const BleProvider = ({ children }) => {
    * @param {number} lightsState - 0 for off, 1 for on (auto)
    * @returns
    */
-  const writeLightsToDevice = async (lightsState) => {
+  const writeLightsToDevice = async (lightsState, temprature) => {
     const prefix = [85, 3];
     const data = prefix.concat(
       password,
-      [temp.value],
-      [temp.unit === "c" ? 0 : 1],
+      [temprature.value],
+      [temprature.unit === "c" ? 0 : 1],
       [lightsState]
     );
 
@@ -536,7 +574,7 @@ const BleProvider = ({ children }) => {
   const writeLockToggleToDevice = async (data = false) => {
     const prefix = [85, 4];
     const prefixAndPass = prefix.concat(password, data);
-
+    console.log(prefixAndPass, "prefixAndPass");
     const base64String = getBase64Data(prefixAndPass);
 
     try {
@@ -640,7 +678,6 @@ const BleProvider = ({ children }) => {
           SPS_SERVICE_UUID,
           SPS_SERVER_RX_UUID // Use the appropriate UUID for reading
         );
-
       const data = getStatusFromBase64AndSetToState(characteristic.value);
 
       return data;
@@ -675,6 +712,7 @@ const BleProvider = ({ children }) => {
             ...prev,
             connecting: false,
             isOwner: false,
+            hasPassword: false,
             device: null,
           }));
           resetStat();

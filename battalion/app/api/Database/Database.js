@@ -35,8 +35,6 @@ const addUserToDevice = async (deviceId, userId) => {
         requestUpdateDate: new Date().getUTCDate(),
       }),
     });
-
-    console.log("User added to device successfully");
   } catch (error) {
     console.error("Error adding user to device:", error);
     throw error;
@@ -75,9 +73,14 @@ export const AddUserData = async (data) => {
     if (!deviceDoc.data()) {
       throw new Error("Device not found");
     }
+    if (
+      deviceDoc.data().usersIds &&
+      deviceDoc.data()?.usersIds?.includes(data.owner)
+    ) {
+      throw new Error("This user is already added to the device.");
+    }
     if (deviceDoc.data()) {
       if (deviceDoc.data()?.owner && deviceDoc.data()?.owner?.id !== null) {
-        console.log("as user", data);
         addUserToDevice(data.combinedSerialNum, data.owner);
         return true;
       } else {
@@ -94,7 +97,6 @@ export const AddUserData = async (data) => {
 
         const ownerData = ownerDoc.data();
         // Set the document data using setDoc
-        console.log("owner", ownerData);
         await deviceRef.update({
           modelNum,
           prodDate,
@@ -114,12 +116,10 @@ export const AddUserData = async (data) => {
           usersIds: firestore.FieldValue.arrayUnion(data.owner),
         });
 
-        console.log("Device data saved successfully");
         return true;
       }
     }
   } catch (error) {
-    console.log("Error saving device data:", error.message);
     throw error;
   }
 };
@@ -151,7 +151,6 @@ export const getUserAllDevices = async (ownerId) => {
     const devicesRef = firestore().collection("devices");
     // Query devices based on the owner ID
     const query = devicesRef.where("usersIds", "array-contains", ownerId);
-    console.log("ownerId", ownerId);
     // Get the documents that match the query
     const querySnapshot = await query.get();
 
@@ -252,7 +251,7 @@ export const checkIfUserIsOwner = async (ownerId, deviceId) => {
 
     // Get the documents that match the query
     const querySnapshot = await query.get();
-    console.log("/////////////", querySnapshot);
+
     // Extract data from the documents
     return querySnapshot.size > 0 ? true : false;
   } catch (error) {
@@ -261,33 +260,35 @@ export const checkIfUserIsOwner = async (ownerId, deviceId) => {
   }
 };
 
-export const getDeviceUsers = async (deviceId) => {
-  if (deviceId) {
-    try {
-      // Get a reference to the devices collection
-      const devicesRef = firestore().collection("devices");
-      // Query devices based on the owner ID
-      const query = devicesRef.where("deviceId", "==", deviceId);
+export const getDeviceUsers = async (deviceId, isOwner) => {
+  if (isOwner) {
+    if (deviceId) {
+      try {
+        // Get a reference to the devices collection
+        const devicesRef = firestore().collection("devices");
+        // Query devices based on the owner ID
+        const query = devicesRef.where("deviceId", "==", deviceId);
 
-      // Get the documents that match the query
-      const querySnapshot = await query.get();
+        // Get the documents that match the query
+        const querySnapshot = await query.get();
 
-      // Extract data from the documents
-      const devices = [];
-      querySnapshot.forEach((doc) => {
-        devices.push({ id: doc.id, ...doc.data() });
-      });
-      if (devices.length > 0) {
-        return devices[0].users;
-      } else {
-        throw new Error("Device not found");
+        // Extract data from the documents
+        const devices = [];
+        querySnapshot.forEach((doc) => {
+          devices.push({ id: doc.id, ...doc.data() });
+        });
+        if (devices.length > 0) {
+          return devices[0].users;
+        } else {
+          throw new Error("Device not found");
+        }
+      } catch (error) {
+        console.error("Error getting devices:", error);
+        throw error;
       }
-    } catch (error) {
-      console.error("Error getting devices:", error);
-      throw error;
     }
+    throw new Error("Device not found");
   }
-  throw new Error("Device not found");
 };
 export const aproveUser = async (deviceId, userId) => {
   // Get a reference to the devices collection
@@ -302,24 +303,22 @@ export const aproveUser = async (deviceId, userId) => {
   const deviceData = deviceChange.doc.data();
   // Get the document reference
   const deviceDocRef = deviceChange.doc.ref;
-  // Filter out the existing userId and user object
-  const filteredUsersIds = deviceData.usersIds.filter((id) => id !== userId);
-  const filteredUsers = deviceData.users.filter((user) => user.id !== userId);
-  // Add the new userId and user object
-  const updatedUsersIds = [...filteredUsersIds, userId];
-  const updatedUsers = [
-    ...filteredUsers,
 
-    {
-      ...deviceData.users.find((user) => user.id === userId),
-      approved: true,
-      status: "approved",
-    },
-  ];
+  const existingUserIndex = deviceData.users.findIndex(
+    (user) => user.id === userId
+  );
+  // Add the new userId and user object
+  const updatedUsersIds = [...deviceData.usersIds, userId];
+  // Replace the existing user object with the updated one
+  deviceData.users[existingUserIndex] = {
+    ...deviceData.users[existingUserIndex],
+    approved: true,
+    status: "approved",
+  };
   // Update the document
   await deviceDocRef.update({
     usersIds: updatedUsersIds,
-    users: updatedUsers,
+    users: deviceData.users,
   });
 };
 

@@ -14,22 +14,31 @@ import colors from "../../config/Colors/colors";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import FourDigitsCode from "../../component/FourDigitsCode";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
+import { useToast } from "react-native-toast-notifications";
 
 const DeviceSetting = ({ navigation }) => {
   const [show, setShow] = useState(false);
   const [passwordError, setPasswordError] = useState();
-  const { temp, setTempUnit, password, setDevicePassword } =
+  const { temp, setTempUnit, password, setDevicePassword, isLightsOn } =
     useAppSettingContext();
-  const { connectedDevice, writePasswordToDevice } = useBleContext();
+  const { connectedDevice, writePasswordToDevice, writeTempUnitToDevice } =
+    useBleContext();
   const [temperatureToggle, setTemperatureToggle] = useState(false);
-
+  const tost = useToast();
   const handleShowPassword = () => {
     setShow(!show);
   };
 
-  const handleTemperatureChange = () => {
-    setTemperatureToggle(!temperatureToggle);
-    setTempUnit(temp.unit === "c" ? "f" : "c");
+  const handleTemperatureChange = async () => {
+    try {
+      await writeTempUnitToDevice(temp, temp.unit, isLightsOn);
+      setTemperatureToggle(!temperatureToggle);
+      setTempUnit(temp.unit === "c" ? "f" : "c");
+    } catch (error) {
+      tost.show("Error writing to device, try to reconnect", {
+        type: "normal",
+      });
+    }
   };
 
   const submitPassword = async (pass) => {
@@ -39,16 +48,18 @@ const DeviceSetting = ({ navigation }) => {
         await writePasswordToDevice(pass);
         setDevicePassword(pass);
         setPasswordError();
+        tost.show("Password updated successfully", { type: "normal" });
       } catch (error) {
         console.log("Error writing password to device:", error);
         setPasswordError(
-          "Error writing password to device, please check device connection."
+          "Error writing password to device, please check device connection, and try again."
         );
+
         throw error;
       }
     } else {
       setPasswordError(
-        "Error writing password to device, please check device connection."
+        "Error writing password to device, please check device connection, and try again."
       );
       throw new Error("No device connected");
     }
@@ -66,27 +77,28 @@ const DeviceSetting = ({ navigation }) => {
         </TouchableWithoutFeedback>
         <Text style={styles.txtHeading}>Device Settings</Text>
       </View>
-
-      <View style={styles.systemContainer}>
-        <Text style={styles.metricTxt}>Metric System</Text>
-        <View style={styles.temperatureContainer}>
-          <Text style={styles.tempTxt}>Fahrenheit / Celsius</Text>
-          <TouchableWithoutFeedback onPress={handleTemperatureChange}>
-            <View
-              style={[
-                styles.switchOnOff,
-                temperatureToggle ? styles.flexEnd : styles.flexStart,
-              ]}
-            >
-              <View style={styles.iconBackgroundContainer}>
-                <Text style={styles.temperatureIndicatortxt}>
-                  {temp.unit === "c" ? "°C" : "°F"}
-                </Text>
+      {connectedDevice?.isOwner && (
+        <View style={styles.systemContainer}>
+          <Text style={styles.metricTxt}>Metric System</Text>
+          <View style={styles.temperatureContainer}>
+            <Text style={styles.tempTxt}>Fahrenheit / Celsius</Text>
+            <TouchableWithoutFeedback onPress={handleTemperatureChange}>
+              <View
+                style={[
+                  styles.switchOnOff,
+                  temp.unit === "c" ? styles.flexEnd : styles.flexStart,
+                ]}
+              >
+                <View style={styles.iconBackgroundContainer}>
+                  <Text style={styles.temperatureIndicatortxt}>
+                    {temp.unit === "c" ? "°C" : "°F"}
+                  </Text>
+                </View>
               </View>
-            </View>
-          </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback>
+          </View>
         </View>
-      </View>
+      )}
       <View style={styles.passwordContainer}>
         <View style={styles.passwordIcon}>
           <Text style={styles.digitTxt}>4 digit password</Text>
@@ -100,7 +112,9 @@ const DeviceSetting = ({ navigation }) => {
         </View>
         <View style={styles.boxContainer}>
           <FourDigitsCode
-            submitHandler={submitPassword}
+            submitHandler={
+              connectedDevice.isOwner ? submitPassword : () => false
+            }
             defaultValue={password}
             isVisible={show}
             passwordError={passwordError}
