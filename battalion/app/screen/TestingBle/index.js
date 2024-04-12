@@ -217,7 +217,6 @@ const TestingBleScreen = () => {
               }
               stopScanning();
               try {
-                console.log("device id", selectedDevice.device.id);
                 await connectToDevice(selectedDevice.device);
                 await setConnectedDevice(selectedDevice.device);
               } catch (err) {

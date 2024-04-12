@@ -18,7 +18,7 @@ export default function MainScreen({ navigation }) {
 
       <ImageBackground
         style={styles.background}
-        source={require("../../assets/background.png")}
+        source={require("../../assets/Battalion-home-screen.png")}
       >
         <View style={styles.headingTextContainer}>
           <Text style={styles.headingText}>make hard work easier</Text>
@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     alignItems: "center",
     fontSize: 55,
-    lineHeight: 60,
+    lineHeight: 55,
     width: "100%",
     maxWidth: 360,
   },

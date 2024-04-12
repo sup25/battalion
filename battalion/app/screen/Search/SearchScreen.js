@@ -193,7 +193,7 @@ const SearchScreen = ({ navigation }) => {
                   console.log("device id", selectedDevice.device.id);
                   await connectToDevice(selectedDevice.device);
                   await setConnectedDevice(selectedDevice.device);
-                  if (isFirstTime) {
+                  if (!connectedDevice.hasPassword) {
                     navigation.navigate("fourdigitcodeinsertscreen");
                   } else {
                     navigation.navigate("Home");

@@ -68,7 +68,7 @@ const ForgotPasswordScreen = ({ navigation }) => {
               navigation={navigation}
               onPress={handleResetPassword}
               title="Submit"
-              mainDesc="Already Have an account? "
+              mainDesc="Already have an account? "
               desc="Login"
               width={277}
               loginRoute="Login"

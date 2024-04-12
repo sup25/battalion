@@ -5,7 +5,7 @@
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
-    "scheme": "com.example.expo-ble",
+    "scheme": "com.battalion.app",
     "platforms": [
       "ios",
       "android",
@@ -21,7 +21,9 @@
     "assetBundlePatterns": [
       "**/*"
     ],
-    "plugins": ["react-native-ble-plx", 
+    "plugins": [
+      "expo-av",
+      "react-native-ble-plx", 
     "@react-native-firebase/app",
      "@react-native-firebase/auth",
     
@@ -36,19 +38,20 @@
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
-      "bundleIdentifier": "com.example.expo-ble",
+      "bundleIdentifier": "com.battalion.app",
       "infoPlist": {
         "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera.",
         "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos.",
         "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos."
-      }
+      },
+      "buildNumber": "1"
     },
     "android": {
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
         "backgroundColor": "#FFFFFF"
       },
-      "package": "com.suparna.expoble",
+      "package": "com.battalion.app",
       "permissions": [
         "android.permission.BLUETOOTH",
         "android.permission.BLUETOOTH_ADMIN",

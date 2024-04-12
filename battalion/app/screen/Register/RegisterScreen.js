@@ -130,7 +130,7 @@ export default function RegisterScreen({ navigation }) {
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         <TextLogo />
-        <Text style={styles.title}>Create your Account</Text>
+        <Text style={styles.title}>Create Your Account</Text>
       </View>
       <View style={styles.inputTextContainer}>
         <TextInput
@@ -175,7 +175,7 @@ export default function RegisterScreen({ navigation }) {
           onPress={(setIsLoading) => handleRegister(setIsLoading)}
           isLoading={isLoading}
           title="Continue"
-          mainDesc="Already Have an account? "
+          mainDesc="Already have an account? "
           desc="Login"
           width={277}
           loginRoute="Login"

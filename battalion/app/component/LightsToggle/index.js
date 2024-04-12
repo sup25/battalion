@@ -7,7 +7,7 @@ import { useToast } from "react-native-toast-notifications";
 
 const LightsToggle = () => {
   const toast = useToast();
-  const { isLightsOn, setDeviceIsLightsOn } = useAppSettingContext();
+  const { isLightsOn, setDeviceIsLightsOn, temp } = useAppSettingContext();
   const { writeLightsToDevice, connectedDevice } = useBleContext();
   return (
     <View style={styles.brightness}>
@@ -17,7 +17,7 @@ const LightsToggle = () => {
           { color: connectedDevice?.device ? "white" : "grey" },
         ]}
       >
-        Light Auto
+        {isLightsOn ? "Lights Auto" : "Lights Off"}
       </Text>
       <View
         style={[
@@ -25,25 +25,25 @@ const LightsToggle = () => {
           isLightsOn ? styles.flexEnd : styles.flexStart,
         ]}
       >
-        <View style={styles.iconBackgroundContainer}>
-          <TouchableWithoutFeedback
-            onPress={async () => {
-              if (connectedDevice?.device) {
-                try {
-                  await writeLightsToDevice([!isLightsOn === false ? 0 : 1]);
-                  setDeviceIsLightsOn(!isLightsOn);
-                } catch (err) {
-                  toast.show("Error writing to device, try to reconnect.", {
-                    type: "normal",
-                  });
-                }
-              } else {
-                toast.show("Please connect to a device.", {
+        <TouchableWithoutFeedback
+          onPress={async () => {
+            if (connectedDevice?.device) {
+              try {
+                await writeLightsToDevice([isLightsOn ? 0 : 1], temp);
+                setDeviceIsLightsOn(!isLightsOn);
+              } catch (err) {
+                toast.show("Error writing to device, try to reconnect.", {
                   type: "normal",
                 });
               }
-            }}
-          >
+            } else {
+              toast.show("Please connect to a device.", {
+                type: "normal",
+              });
+            }
+          }}
+        >
+          <View style={styles.iconBackgroundContainer}>
             {isLightsOn ? (
               <MaterialCommunityIcons
                 name="brightness-5"
@@ -52,13 +52,13 @@ const LightsToggle = () => {
               />
             ) : (
               <MaterialCommunityIcons
-                name="brightness-5"
+                name="brightness-2"
                 size={20}
                 color={connectedDevice?.device ? "black" : "#B0B0B0"}
               />
             )}
-          </TouchableWithoutFeedback>
-        </View>
+          </View>
+        </TouchableWithoutFeedback>
       </View>
     </View>
   );
@@ -76,10 +76,12 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
   brightnessTxt: {
+    width: 120,
     fontWeight: "500",
     fontSize: 14,
     color: "#B0B0B0",
     paddingLeft: 0,
+    textAlign: "right",
   },
   switchOnOff: {
     width: 60,

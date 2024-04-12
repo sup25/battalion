@@ -84,10 +84,10 @@ const LoginScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.watermarkText}>Battalion</Text>
+      <Text style={styles.watermarkText}></Text>
       <Image
         style={styles.productImage}
-        source={require("../../assets/device.png")}
+        source={require("../../assets/battalion-sign-in.png")}
       />
       <View style={styles.logoConatiner}>
         <TextLogoWhite />
@@ -188,12 +188,12 @@ const styles = StyleSheet.create({
   },
   watermarkText: {
     textTransform: "uppercase",
-    fontSize: 80,
+    fontSize: 60,
     fontWeight: "900",
     color: colors.white,
     textAlign: "center",
     opacity: 0.5,
-    width: 401,
+    height: 120,
     marginTop: 62,
     alignSelf: "center",
   },

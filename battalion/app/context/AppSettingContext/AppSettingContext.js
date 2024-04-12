@@ -93,7 +93,7 @@ export const AppSettingProvider = ({ children }) => {
   }, [temp, password, isLocked, isLightsOn]);
 
   const setBoxNameValue = async (value) => {
-    setBoxName((prev) => ({ ...prev, value }));
+    setBoxName(value);
     await AsyncStorage.mergeItem(
       "appSettings",
       JSON.stringify({ name: value })

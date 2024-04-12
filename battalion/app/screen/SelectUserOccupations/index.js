@@ -104,7 +104,7 @@ const SelectUserOccupations = ({ navigation }) => {
       <View style={styles.wrapper}>
         <View style={styles.logoTextContainer}>
           <TextLogoWhite />
-          <Text style={styles.textHeading}>What's your Occupation?</Text>
+          <Text style={styles.textHeading}>What's Your Occupation?</Text>
         </View>
         <View style={styles.categoryContainer}>
           {Categories.map((cat) => {
@@ -144,7 +144,9 @@ const SelectUserOccupations = ({ navigation }) => {
           })}
         </View>
         <View style={styles.InputContainer}>
-          <Text style={styles.otherText}>Other</Text>
+          <View style={styles.otherText}>
+            <Text>Other</Text>
+          </View>
           <TextInput
             style={styles.input}
             placeholder="Write here"
@@ -156,7 +158,7 @@ const SelectUserOccupations = ({ navigation }) => {
           <CarthagosLinkButton
             navigation={navigation}
             title="Continue"
-            mainDesc="Already Have an account? "
+            mainDesc="Already have an account? "
             desc="Login"
             width={277}
             loginRoute="Login"
@@ -219,6 +221,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   btnLink: {
+    marginTop: 60,
     alignItems: "center",
   },
 
@@ -246,7 +249,8 @@ const styles = StyleSheet.create({
     height: 37,
     borderRadius: 20,
     alignItems: "center",
-
+    justifyContent: "center",
+    display: "flex",
     fontSize: 18,
     fontWeight: "400",
     paddingLeft: 15,

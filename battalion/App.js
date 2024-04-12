@@ -15,11 +15,7 @@ export default function App() {
         animationType="slide-in"
       >
         <AuthProvider>
-          <AppSettingProvider>
-            <BleProvider>
-              <RoutesNavigator />
-            </BleProvider>
-          </AppSettingProvider>
+          <RoutesNavigator />
         </AuthProvider>
       </ToastProvider>
     </NavigationContainer>

@@ -15,7 +15,7 @@ const LocksToggle = () => {
       <Text
         style={[
           styles.lockedTxt,
-          { color: connectedDevice?.device ? "white" : "grey" },
+          { color: connectedDevice?.device ? "white" : "grey", width: 120 },
         ]}
       >
         {isLocked ? "Device Locked" : "Device Unlocked"}
@@ -26,25 +26,25 @@ const LocksToggle = () => {
           isLocked ? styles.flexEnd : styles.flexStart,
         ]}
       >
-        <View style={styles.iconBackgroundContainer}>
-          <TouchableWithoutFeedback
-            onPress={async () => {
-              if (connectedDevice?.device) {
-                try {
-                  await writeLockToggleToDevice([isLocked ? 1 : 0]);
-                  setDeviceIsLocked(!isLocked);
-                } catch (err) {
-                  toast.show("Error writing to device, try to reconnect", {
-                    type: "normal",
-                  });
-                }
-              } else {
-                toast.show("Please connect to a device.", {
+        <TouchableWithoutFeedback
+          onPress={async () => {
+            if (connectedDevice?.device) {
+              try {
+                await writeLockToggleToDevice([isLocked ? 0 : 1]);
+                setDeviceIsLocked(!isLocked);
+              } catch (err) {
+                toast.show("Error writing to device, try to reconnect", {
                   type: "normal",
                 });
               }
-            }}
-          >
+            } else {
+              toast.show("Please connect to a device.", {
+                type: "normal",
+              });
+            }
+          }}
+        >
+          <View style={styles.iconBackgroundContainer}>
             {isLocked ? (
               <MaterialCommunityIcons
                 name="lock"
@@ -58,8 +58,8 @@ const LocksToggle = () => {
                 color={connectedDevice?.device ? "black" : "#B0B0B0"}
               />
             )}
-          </TouchableWithoutFeedback>
-        </View>
+          </View>
+        </TouchableWithoutFeedback>
       </View>
     </View>
   );
@@ -78,7 +78,8 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 14,
     color: "#B0B0B0",
-    paddingRight: 11,
+    paddingRight: 0,
+    textAlign: "right",
   },
   switchOnOff: {
     width: 60,

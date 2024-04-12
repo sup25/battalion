@@ -19,6 +19,8 @@ import TestingBLE from "../../screen/Search/TestingBLE";
 import HalfCircleSlider from "../../screen/HalfCircleSlider";
 import Home from "../../screen/Home";
 import { View, Text } from "react-native";
+import { AppSettingProvider } from "../../context/AppSettingContext/AppSettingContext";
+import { BleProvider } from "../../utils/BLEProvider/BLEProvider";
 
 const Tab = createBottomTabNavigator();
 
@@ -29,7 +31,13 @@ const PrivateRoute = () => {
     return <PublicRoute />;
   }
 
-  return <PrivateStackNavigator />;
+  return (
+    <AppSettingProvider>
+      <BleProvider>
+        <PrivateStackNavigator />
+      </BleProvider>
+    </AppSettingProvider>
+  );
 };
 
 const PrivateStackNavigator = () => {

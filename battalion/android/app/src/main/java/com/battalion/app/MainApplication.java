@@ -1,4 +1,4 @@
-package com.suparna.expoble;
+package com.battalion.app;
 
 import android.app.Application;
 import android.content.res.Configuration;
