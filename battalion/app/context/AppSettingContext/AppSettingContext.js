@@ -57,7 +57,6 @@ export const AppSettingProvider = ({ children }) => {
     if (settings) {
       parsedSettings = JSON.parse(settings);
     }
-    console.log("appSettings:", parsedSettings);
     if (parsedSettings?.temp?.value) {
       setTemp((prev) => ({ ...prev, value: parsedSettings.temp.value }));
     }

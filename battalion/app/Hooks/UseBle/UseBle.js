@@ -104,7 +104,6 @@ function useBLE() {
         setScanning(false);
       }
       if (device) {
-        console.log(device);
         setScanning(false);
         setAllDevices((prevState) => {
           if (!isDuplicteDevice(prevState, device)) {
@@ -113,7 +112,6 @@ function useBLE() {
           return prevState;
         });
       }
-      console.log(seconds);
       if (seconds > 15) {
         bleManager.stopDeviceScan(); //stop scanning if more than 5 secs passed
       }
@@ -128,16 +126,11 @@ function useBLE() {
       const connectedDevice =
         await deviceConnection.discoverAllServicesAndCharacteristics();
       const services = await connectedDevice?.services();
-      console.log(services);
       // Log the UUIDs of services
       services.forEach(async (service) => {
-        console.log("Service UUID:", service.uuid);
-
         // Log the UUIDs of characteristics
         const characteristics = await service.characteristics();
-        characteristics.forEach((characteristic) => {
-          console.log("Characteristic UUID:", characteristic.uuid);
-        });
+        characteristics.forEach((characteristic) => {});
       });
       bleManager.stopDeviceScan();
       return;

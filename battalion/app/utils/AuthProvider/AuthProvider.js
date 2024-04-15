@@ -26,7 +26,6 @@ export const AuthProvider = ({ children }) => {
       await auth().signOut();
       setCurrentUser(null);
       await AsyncStorage.removeItem("currentUser");
-      console.log("Successfully logged out");
 
       // Use the passed navigation instance for navigation
       navigation.navigate("publicRoute");

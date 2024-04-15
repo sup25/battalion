@@ -7,7 +7,6 @@ function FetchUserProfile(currentUser = false) {
   useEffect(() => {
     const loadUserProfileData = async () => {
       if (currentUser) {
-        console.log("currentUser", currentUser.uid);
         firestore()
           .doc(`users/${currentUser.uid}`)
           .get()

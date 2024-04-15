@@ -150,8 +150,6 @@ const BleProvider = ({ children }) => {
   }, []);
 
   const handleAppStateChange = async (nextAppState) => {
-    console.log(nextAppState);
-
     if (
       currentUser &&
       navigation.getState().routes[0].state.routes[0].name === "MainTabs"
@@ -649,16 +647,7 @@ const BleProvider = ({ children }) => {
     if (temp.value < 0) {
       setTemp((prev) => ({ ...prev, value: temperature }));
     }
-    console.log({
-      password,
-      temperature,
-      temperatureMode,
-      deviceStatus,
-      batteryLevel,
-      chargerStatus,
-      lightStatus,
-      deviceLidOpen,
-    });
+
     return {
       password,
       temperature,
@@ -688,7 +677,6 @@ const BleProvider = ({ children }) => {
   };
 
   const startMonitoringDevice = () => {
-    console.log("monitoring");
     connectedDevice?.device?.monitorCharacteristicForService(
       SPS_SERVICE_UUID,
       SPS_SERVER_RX_UUID,

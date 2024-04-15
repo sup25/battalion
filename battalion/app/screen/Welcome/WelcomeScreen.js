@@ -9,6 +9,7 @@ import {
   ImageBackground,
   TouchableOpacity,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
@@ -28,20 +29,33 @@ import { useAppSettingContext } from "../../context/AppSettingContext/AppSetting
 import GradientBackground from "../../component/GradientBackground";
 import { FontsLoad } from "../../utils/FontsLoad";
 import ImageAndButton from "../../component/ImageAndButton";
+import { getUsersDevices } from "../../utils/getUsersDevices";
 
 const WelcomeScreen = ({ navigation }) => {
-  const isFirstTime = true;
-
+  const [isFirstTime, setIsFirstTime] = useState(true);
   const { currentUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const { boxName, setBoxNameValue } = useAppSettingContext();
   const { connectedDevice, disconnectFromDevice } = useBleContext();
   const [deviceName, setDeviceName] = useState(boxName);
 
+  const [devices, setDevices] = useState([]);
+  const [isLoaded, setIsLoaded] = useState(true);
+
   const toast = useToast();
   useEffect(() => {
+    getUsersDevices(currentUser.uid, connectedDevice, setDevices, setIsLoaded);
     FontsLoad();
+    if (connectedDevice?.device) {
+      setIsFirstTime(false);
+    }
   }, []);
+
+  useEffect(() => {
+    if (devices.length > 0) {
+      setIsFirstTime(false);
+    }
+  }, [devices]);
 
   const handleSubmitName = async () => {
     if (deviceName === "") {
@@ -152,12 +166,12 @@ const WelcomeScreen = ({ navigation }) => {
                 <Text
                   style={styles.addDevice}
                   onPress={() => {
-                    navigation.navigate("searchscreen", {
+                    navigation.navigate("home", {
                       isFirstTime: isFirstTime,
                     });
                   }}
                 >
-                  Add Device +
+                  Your devices
                 </Text>
               </View>
             )}
@@ -245,7 +259,7 @@ const WelcomeScreen = ({ navigation }) => {
           )}
         </View>
       )}
-      {isFirstTime && (
+      {isFirstTime && !isLoaded && (
         <View
           style={{
             flex: 1,
@@ -260,6 +274,7 @@ const WelcomeScreen = ({ navigation }) => {
           <ImageAndButton />
         </View>
       )}
+      {isLoaded && <ActivityIndicator size="small" color="#ffffff" />}
     </View>
   );
 };
@@ -334,6 +349,7 @@ const styles = StyleSheet.create({
     fontWeight: "900",
   },
   container: {
+    backgroundColor: colors.black,
     flex: 1,
   },
   TemptextIconWrapper: {

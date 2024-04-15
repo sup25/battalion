@@ -18,6 +18,7 @@ import {
 } from "../../api/Database/Database";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { useToast } from "react-native-toast-notifications";
+import { getUsersDevices } from "../../utils/getUsersDevices";
 
 const DeviceList = ({ ownerId, navigation }) => {
   const { getTempValueAndUnit, temp, boxBatteryLevel, isLocked, boxLocked } =
@@ -29,63 +30,9 @@ const DeviceList = ({ ownerId, navigation }) => {
   const [isLoaded, setIsLoaded] = useState(true);
   const [connecting, setConnecting] = useState({ device: null, status: false });
   const toast = useToast();
-  function removeDuplicates(array1, array2) {
-    const uniqueObjects = [];
-    const ids = new Set();
 
-    // Iterate over array1
-    array1.forEach((obj) => {
-      // Check if the id is not present in array2
-      if (!ids.has(obj.id)) {
-        // If not present, add the object to uniqueObjects
-        uniqueObjects.push(obj);
-        // Add this id to the set to prevent duplicates
-        ids.add(obj.id);
-      }
-    });
-
-    // Iterate over array2
-    array2.forEach((obj) => {
-      // Check if the id is not already present
-      if (!ids.has(obj.id)) {
-        // If not present, add the object to uniqueObjects
-        uniqueObjects.push(obj);
-        // Add this id to the set to prevent duplicates
-        ids.add(obj.id);
-      }
-    });
-
-    return uniqueObjects;
-  }
-
-  const getDevices = async () => {
-    try {
-      const ownerArray = await getOwnerAllDevices(ownerId);
-      const userArray = await getUserAllDevices(ownerId);
-
-      const combinedArr = removeDuplicates(ownerArray, userArray);
-
-      const newDevices = combinedArr.map((item) => {
-        const isCurrentDevice = item.deviceId === connectedDevice?.device?.id;
-        return {
-          ...item,
-          name: item?.name ? item.name : item.deviceId,
-          isLocked: isCurrentDevice ? isLocked : false,
-          isMain: isCurrentDevice ? true : false,
-          isEnabled: true,
-          temp: isCurrentDevice ? temp : false,
-          batteryLevel: isCurrentDevice ? boxBatteryLevel : false,
-        };
-      });
-      setDevices(newDevices);
-      setIsLoaded(false);
-    } catch (err) {
-      setIsLoaded(false);
-      console.log(err);
-    }
-  };
   useEffect(() => {
-    getDevices();
+    getUsersDevices(ownerId, connectedDevice, setDevices, setIsLoaded);
     setConnecting({ device: null, status: false });
     requestPermissions();
   }, []);
@@ -126,7 +73,12 @@ const DeviceList = ({ ownerId, navigation }) => {
               }}
               style={[
                 styles.DeviceInfoWrapper,
-                { marginTop: index > 0 ? 15 : 0, position: "relative" },
+                {
+                  marginTop: index > 0 ? 15 : 0,
+                  position: "relative",
+                  opacity:
+                    item.deviceId === connectedDevice?.device?.id ? 1 : 0.7,
+                },
               ]}
               key={item.id}
             >
@@ -136,12 +88,30 @@ const DeviceList = ({ ownerId, navigation }) => {
                     source={require("../../assets/product.png")}
                     style={{ width: 30, height: 25 }}
                   />
-                  <Text style={styles.DeviceInformation}>
-                    {item.name}{" "}
-                    {item.deviceId === connectedDevice?.device?.id &&
-                      "(Connected)"}
-                    {user.status === "pending" && "(Pending)"}
-                  </Text>
+                  <View style={styles.DeviceInformation}>
+                    <Text style={{ color: colors.white, overflow: "hidden" }}>
+                      {item.name}{" "}
+                    </Text>
+                    {user.status === "pending" && (
+                      <View
+                        style={{
+                          backgroundColor: "#D8D017",
+                          paddingHorizontal: 5,
+                          paddingVertical: 2.5,
+                          borderRadius: 50,
+                        }}
+                      >
+                        <Text style={{ fontSize: 14 }}>
+                          Pending Approval{" "}
+                          <MaterialCommunityIcons
+                            name="lock"
+                            size={14}
+                            color="#000000"
+                          />
+                        </Text>
+                      </View>
+                    )}
+                  </View>
 
                   {connecting.device === item.deviceId &&
                     connectedDevice.connecting && (
@@ -199,9 +169,19 @@ const DeviceList = ({ ownerId, navigation }) => {
                       { opacity: item.isEnabled ? 1 : 0.5 },
                     ]}
                   >
-                    <Text style={styles.lockedTxt}>
-                      Device{"\n"}
-                      {item.isLocked ? "Locked" : "Unlocked"}
+                    <Text
+                      style={{
+                        ...styles.lockedTxt,
+                        fontSize:
+                          item.deviceId === connectedDevice?.device?.id
+                            ? 12
+                            : 22,
+                      }}
+                    >
+                      {item.deviceId === connectedDevice?.device?.id
+                        ? `Device
+                      ${item.isLocked ? "Locked" : "Unlocked"}`
+                        : "--"}
                     </Text>
                     <View style={styles.IconWrapper}>
                       {item.isLocked ? (
@@ -265,7 +245,12 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
     color: colors.white,
-    paddingRight: 14,
+
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    flex: 1,
+    justifyContent: "space-between",
   },
   Wrapper: {
     flexDirection: "row",
@@ -291,7 +276,7 @@ const styles = StyleSheet.create({
   },
   lockedTxt: {
     color: colors.white,
-    fontSize: 12,
+
     fontWeight: "bold",
   },
   IconWrapper: {

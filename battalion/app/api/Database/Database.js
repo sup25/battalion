@@ -399,7 +399,6 @@ export const disconnectUser = async (deviceId, userId) => {
 };
 
 export const setNameToDevice = async (name, deviceId) => {
-  console.log("deviceid", deviceId);
   // Add the 'name' parameter
   const deviceRef = firestore()
     .collection("devices")

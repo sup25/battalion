@@ -204,7 +204,6 @@ const SearchScreen = ({ navigation }) => {
                 }
                 stopScanning();
                 try {
-                  console.log("device id", selectedDevice.device.id);
                   await connectToDevice(selectedDevice.device);
                   await setConnectedDevice(selectedDevice.device);
                   if (!connectedDevice.hasPassword) {

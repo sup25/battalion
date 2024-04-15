@@ -67,7 +67,6 @@ const FourDigitsCode = ({
             const valAsArr = val.split("").map(Number);
             if (submitHandler) {
               let res = await submitHandler(valAsArr);
-              console.log("inner res", res);
             }
           }
         }}

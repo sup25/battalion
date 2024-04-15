@@ -1,8 +1,10 @@
 import { StyleSheet, Text, View, Image } from "react-native";
 import React from "react";
 import CarthagosButton from "../CarthagosButton/CarthagosButton";
+import { useNavigation } from "@react-navigation/native";
 
 const ImageAndButton = () => {
+  const navigation = useNavigation();
   return (
     <View
       style={{
@@ -17,7 +19,14 @@ const ImageAndButton = () => {
         style={{ marginBottom: 37 }}
         source={require("../../assets/PRODUCTS.png")}
       />
-      <CarthagosButton title="Connect Device" textColor="white" width={267} />
+      <CarthagosButton
+        title="Connect Device"
+        textColor="white"
+        width={267}
+        onPress={() => {
+          navigation.navigate("addDevice");
+        }}
+      />
     </View>
   );
 };
