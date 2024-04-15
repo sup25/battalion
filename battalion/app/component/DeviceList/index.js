@@ -66,7 +66,14 @@ const DeviceList = ({ ownerId, navigation }) => {
                     } catch (err) {
                       console.log("connecting to the device err:", err);
                       setConnecting({ device: null, status: false });
-                      toast.show("Failed to connect to the device");
+                      toast.show(
+                        "Failed to connect to the device, please check your bluetooth connection and try again."
+                      );
+                      // return navigation.navigate("searchscreen", {
+                      //   isFirstTime: false,
+                      //   serialNum: false,
+                      //   id: item.deviceId,
+                      // });
                     }
                   }
                 }

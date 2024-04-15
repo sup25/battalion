@@ -84,6 +84,7 @@ const AddDevice = ({ navigation }) => {
       navigation.navigate("searchscreen", {
         isFirstTime: true,
         serialNum: combinedSerialNum,
+        id: null,
       });
     } else {
       navigation.navigate("home");

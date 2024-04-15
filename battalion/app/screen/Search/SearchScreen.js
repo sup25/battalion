@@ -24,7 +24,7 @@ import { FontsLoad } from "../../utils/FontsLoad";
 const SearchScreen = ({ navigation }) => {
   const toast = useToast();
   const route = useRoute();
-  const { isFirstTime, serialNum } = route.params;
+  const { isFirstTime = false, serialNum = false, id = false } = route.params;
   const [retry, setRetry] = useState(false);
 
   const [selectedDevice, setSelectedDevice] = useState({
@@ -123,51 +123,53 @@ const SearchScreen = ({ navigation }) => {
               : "No devices found"}
           </Text>
           {scan.devices &&
-            scan.devices.map((device, index) => {
-              return (
-                <TouchableWithoutFeedback
-                  onPress={() => {
-                    setSelectedDevice({ index, device });
-                  }}
-                  key={index}
-                >
-                  <View
-                    style={[
-                      styles.button,
-                      {
-                        borderColor:
-                          selectedDevice.index === index
-                            ? "white"
-                            : "transparent",
-                        borderWidth: 1,
-                      },
-                    ]}
+            scan.devices
+              .filter((item) => (id ? item.id === id : true))
+              .map((device, index) => {
+                return (
+                  <TouchableWithoutFeedback
+                    onPress={() => {
+                      setSelectedDevice({ index, device });
+                    }}
+                    key={index}
                   >
                     <View
-                      style={{ flexDirection: "row", alignItems: "center" }}
+                      style={[
+                        styles.button,
+                        {
+                          borderColor:
+                            selectedDevice.index === index
+                              ? "white"
+                              : "transparent",
+                          borderWidth: 1,
+                        },
+                      ]}
                     >
-                      <Image
-                        source={require("../../assets/product.png")}
-                        style={{ width: 71, height: 60 }}
+                      <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        <Image
+                          source={require("../../assets/product.png")}
+                          style={{ width: 71, height: 60 }}
+                        />
+                        <Text style={styles.buttonText}>
+                          {device?.name || "no name"}
+                        </Text>
+                      </View>
+                      <MaterialCommunityIcons
+                        name="check-circle"
+                        color="white"
+                        size={20}
+                        style={{
+                          zIndex: 999,
+                          marginLeft: 5,
+                          opacity: selectedDevice.index === index ? 1 : 0,
+                        }}
                       />
-                      <Text style={styles.buttonText}>
-                        {device?.name || "no name"}
-                      </Text>
                     </View>
-                    <MaterialCommunityIcons
-                      name="check-circle"
-                      color="white"
-                      size={20}
-                      style={{
-                        zIndex: 999,
-                        marginLeft: 5,
-                        opacity: selectedDevice.index === index ? 1 : 0,
-                      }}
-                    />
-                  </View>
-                </TouchableWithoutFeedback>
-              );
-            })}
+                  </TouchableWithoutFeedback>
+                );
+              })}
         </View>
         <View>
           {toShowRetry() && (

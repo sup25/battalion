@@ -344,6 +344,7 @@ const BleProvider = ({ children }) => {
   };
 
   const connectToDevice = async (device, setDevice) => {
+    console.log("connecting to device", device);
     setConnectedDevice((prev) => ({ ...prev, connecting: true }));
     bleManager.stopDeviceScan();
     let setTimeOut = setTimeout(async () => {
