@@ -15,14 +15,12 @@ import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection
 import auth from "@react-native-firebase/auth";
 import { useToast } from "react-native-toast-notifications";
 import { FontsLoad } from "../../utils/FontsLoad";
-
 const SelectUserOccupations = ({ navigation }) => {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [otherOccupation, setOtherOccupation] = useState("");
+
   useEffect(() => {
     FontsLoad();
-  }, []);
-  useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       function () {
@@ -146,10 +144,16 @@ const SelectUserOccupations = ({ navigation }) => {
             );
           })}
         </View>
-
         <View style={styles.InputContainer}>
           <View style={styles.otherText}>
-            <Text style={{ fontSize: 18, lineHeight: 37, color: colors.white }}>
+            <Text
+              style={{
+                fontSize: 18,
+                lineHeight: 37,
+                color: colors.white,
+                fontFamily: "SF-Pro-Display",
+              }}
+            >
               Other
             </Text>
           </View>
@@ -197,7 +201,6 @@ const styles = StyleSheet.create({
     marginTop: 18,
     fontSize: 24,
     fontWeight: "500",
-    fontFamily: "SF-Pro-Display",
   },
 
   categoryContainer: {
@@ -224,7 +227,6 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     fontSize: 18,
     fontWeight: "400",
-    fontFamily: "SF-Pro-Display",
     display: "flex",
     alignItems: "center",
   },
@@ -240,10 +242,7 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     backgroundColor: colors.white,
     fontSize: 18,
-    right: 270,
-    fontSize: 16,
-    fontFamily: "SF-Pro-Display",
-    fontWeight: "400",
+    right: 275,
   },
 
   InputContainer: {
@@ -254,22 +253,15 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 15,
   },
-  otherTextContainer: {
+  otherText: {
     backgroundColor: "#2D2D2D",
     color: colors.white,
     height: 37,
     borderRadius: 20,
-    justifyContent: "center",
-    display: "flex",
+
     fontWeight: "400",
     paddingLeft: 15,
     width: "100%",
-  },
-  othertxt: {
-    color: colors.white,
-    fontSize: 16,
-    fontWeight: "400",
-    fontFamily: "SF-Pro-Display",
   },
 
   txtBtnContainer: {

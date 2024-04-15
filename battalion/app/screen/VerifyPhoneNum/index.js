@@ -10,12 +10,8 @@ import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import auth from "@react-native-firebase/auth";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
-import { FontsLoad } from "../../utils/FontsLoad";
 
 const VerifyPhoneNum = ({ navigation }) => {
-  useEffect(() => {
-    FontsLoad();
-  }, []);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("+1");
   const { currentUser } = useAuth();
@@ -73,22 +69,16 @@ const VerifyPhoneNum = ({ navigation }) => {
         phoneNumber: fullPhoneNumber,
         countryCode: countryCode,
       });
-      toast.show("Verification code has been sent to your phone", {
+      toast.show("Success: Verification code has been sent to your phone", {
         type: "normal",
       });
     } catch (error) {
       setIsLoading(false);
 
-      toast.show(
-        "Please enter a different phone number and try again. (format: +1 1234567890)",
-        {
-          type: "normal",
-        }
-      );
-      console.log(
-        "error msg",
-        "Please enter a different phone number and try again. (format: +1 1234567890)"
-      );
+      toast.show(`${error.message}`, {
+        type: "normal",
+      });
+      console.log("error msg", error.message);
     }
   };
 
@@ -155,7 +145,6 @@ const styles = StyleSheet.create({
     padding: 10,
     marginLeft: 10,
     fontSize: 24,
-    fontFamily: "SF-Pro-Display",
   },
   countryCodetxt: {
     width: 70,
@@ -167,7 +156,6 @@ const styles = StyleSheet.create({
     marginTop: 31,
     padding: 10,
     fontSize: 24,
-    fontFamily: "SF-Pro-Display",
   },
   txtInputContainer: {
     width: "100%",
@@ -180,7 +168,6 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 24,
     fontWeight: "500",
-    fontFamily: "SF-Pro-Display",
     textAlign: "center",
     maxWidth: 181,
     alignItems: "center",
@@ -191,7 +178,6 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "center",
     marginTop: 8,
-    maxWidth: 200,
-    fontFamily: "SF-Pro-Display",
+    maxWidth: 170,
   },
 });

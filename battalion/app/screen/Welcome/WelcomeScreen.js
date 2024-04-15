@@ -29,6 +29,8 @@ import GradientBackground from "../../component/GradientBackground";
 import { FontsLoad } from "../../utils/FontsLoad";
 
 const WelcomeScreen = ({ navigation }) => {
+  const isFirstTime = true;
+
   const { currentUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
   const { boxName, setBoxNameValue } = useAppSettingContext();
@@ -62,6 +64,7 @@ const WelcomeScreen = ({ navigation }) => {
       setDeviceName(boxName);
     }
   }, [boxName]);
+
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
@@ -74,147 +77,188 @@ const WelcomeScreen = ({ navigation }) => {
         }}
         source={require("../../assets/Header-home-battalion.png")}
       >
-        <View
-          style={{
-            paddingHorizontal: 15,
-            width: "100%",
-            marginTop: 75,
-
-            paddingBottom: 10,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            flexDirection: "row",
-          }}
-        >
+        {isFirstTime && (
+          <View style={{ height: 230 }}>
+            <Text
+              style={{
+                ...styles.textWelcome,
+                paddingHorizontal: 15,
+                width: "100%",
+                marginTop: 75,
+              }}
+            >
+              device details
+            </Text>
+          </View>
+        )}
+        {!isFirstTime && (
           <View
             style={{
+              paddingHorizontal: 15,
+              width: "100%",
+              marginTop: 75,
+
+              paddingBottom: 10,
               display: "flex",
-              flexDirection: "row",
               alignItems: "center",
+              justifyContent: "space-between",
+              flexDirection: "row",
             }}
           >
-            <TouchableWithoutFeedback
-              onPress={() => navigation.navigate("home")}
-            >
-              <MaterialCommunityIcons
-                name="arrow-left"
-                size={24}
-                color="#B0B0B0"
-              />
-            </TouchableWithoutFeedback>
-            <Text style={styles.textWelcome}>device details</Text>
-          </View>
-
-          <TouchableWithoutFeedback
-            onPress={() =>
-              connectedDevice?.device
-                ? navigation.navigate("devicesetting")
-                : toast.show("Please connect to a device.", {
-                    type: "error",
-                  })
-            }
-          >
-            <Ionicons name="settings-sharp" size={30} color="#fff" />
-          </TouchableWithoutFeedback>
-        </View>
-        <View style={styles.deviceContainer}>
-          {!connectedDevice?.device && (
             <View
               style={{
+                display: "flex",
                 flexDirection: "row",
-                width: "100%",
-                justifyContent: "space-between",
+                alignItems: "center",
               }}
             >
-              <Text style={styles.connDevice}>Devices Connected</Text>
-              <Text
-                style={styles.addDevice}
-                onPress={() => {
-                  navigation.navigate("searchscreen", { isFirstTime: true });
+              <TouchableWithoutFeedback
+                onPress={() => navigation.navigate("home")}
+              >
+                <MaterialCommunityIcons
+                  name="arrow-left"
+                  size={24}
+                  color="#B0B0B0"
+                />
+              </TouchableWithoutFeedback>
+              <Text style={styles.textWelcome}>device details</Text>
+            </View>
+
+            <TouchableWithoutFeedback
+              onPress={() =>
+                connectedDevice?.device
+                  ? navigation.navigate("devicesetting")
+                  : toast.show("Please connect to a device.", {
+                      type: "error",
+                    })
+              }
+            >
+              <Ionicons name="settings-sharp" size={30} color="#fff" />
+            </TouchableWithoutFeedback>
+          </View>
+        )}
+        {!isFirstTime && (
+          <View style={styles.deviceContainer}>
+            {!connectedDevice?.device && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  width: "100%",
+                  justifyContent: "space-between",
                 }}
               >
-                Add Device +
-              </Text>
-            </View>
-          )}
-        </View>
-
-        <View>
-          <GradientBackground color1={"#060606"} color2={"#000000"} />
-          <View style={styles.battalionId}>
-            <TextInput
-              editable={isEditing}
-              onBlur={() => setIsEditing(false)}
-              style={styles.input}
-              placeholder="Battalion Device name"
-              placeholderTextColor="#656565"
-              value={deviceName}
-              focusable={true}
-              onChangeText={(text) => {
-                console.log(text);
-                setDeviceName(text);
-              }}
-            />
-            {connectedDevice.isOwner && (
-              <View style={styles.icon}>
-                {isEditing ? (
-                  <MaterialCommunityIcons
-                    name="check"
-                    color="white"
-                    size={30}
-                    onPress={handleSubmitName}
-                  />
-                ) : (
-                  <MaterialCommunityIcons
-                    name="pencil"
-                    color="#5A5A5A"
-                    size={30}
-                    onPress={handleEdit}
-                  />
-                )}
+                <Text style={styles.connDevice}>Devices Connected</Text>
+                <Text
+                  style={styles.addDevice}
+                  onPress={() => {
+                    navigation.navigate("searchscreen", {
+                      isFirstTime: isFirstTime,
+                    });
+                  }}
+                >
+                  Add Device +
+                </Text>
               </View>
             )}
           </View>
+        )}
+
+        <View>
+          <GradientBackground color1={"#060606"} color2={"#000000"} />
+          {!isFirstTime && (
+            <View style={styles.battalionId}>
+              <TextInput
+                editable={isEditing}
+                onBlur={() => setIsEditing(false)}
+                style={styles.input}
+                placeholder="Battalion Device name"
+                placeholderTextColor="#656565"
+                value={deviceName}
+                focusable={isFirstTime}
+                onChangeText={(text) => {
+                  console.log(text);
+                  setDeviceName(text);
+                }}
+              />
+              {connectedDevice.isOwner && (
+                <View style={styles.icon}>
+                  {isEditing ? (
+                    <MaterialCommunityIcons
+                      name="check"
+                      color="white"
+                      size={30}
+                      onPress={handleSubmitName}
+                    />
+                  ) : (
+                    <MaterialCommunityIcons
+                      name="pencil"
+                      color="#5A5A5A"
+                      size={30}
+                      onPress={handleEdit}
+                    />
+                  )}
+                </View>
+              )}
+            </View>
+          )}
         </View>
       </ImageBackground>
 
-      <View style={styles.wrapper}>
-        <View style={styles.unlockedImageContainer}>
-          <Image
-            style={styles.productImage}
-            source={require("../../assets/battalion-rover-heat-device-details.png")}
-          />
+      {!isFirstTime && (
+        <View style={styles.wrapper}>
+          <View style={styles.unlockedImageContainer}>
+            <Image
+              style={styles.productImage}
+              source={require("../../assets/battalion-rover-heat-device-details.png")}
+            />
 
-          <View style={{ display: "flex" }}>
-            <LocksToggle />
-            <LightsToggle />
+            <View style={{ display: "flex" }}>
+              <LocksToggle />
+              <LightsToggle />
+            </View>
           </View>
-        </View>
-        <View style={styles.unlockedTempContainer}>
-          <BoxTemp />
-          <SetBoxTemp />
-        </View>
-        <BatteryPercent />
-        {connectedDevice?.device && (
-          <View style={styles.btn}>
-            <TouchableOpacity
-              style={{
-                width: "100%",
-                height: "100%",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-              }}
-              onPress={() => disconnectFromDevice()}
-            >
-              <Text style={{ color: "white", fontSize: 14, fontWeight: "500" }}>
-                Disconnect from device
-              </Text>
-            </TouchableOpacity>
+          <View style={styles.unlockedTempContainer}>
+            <BoxTemp />
+            <SetBoxTemp />
           </View>
-        )}
-      </View>
+          <BatteryPercent />
+          {connectedDevice?.device && (
+            <View style={styles.btn}>
+              <TouchableOpacity
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+                onPress={() => disconnectFromDevice()}
+              >
+                <Text
+                  style={{ color: "white", fontSize: 14, fontWeight: "500" }}
+                >
+                  Disconnect from device
+                </Text>
+              </TouchableOpacity>
+            </View>
+          )}
+        </View>
+      )}
+      {isFirstTime && (
+        <View
+          style={{
+            flex: 1,
+            backgroundColor: colors.black,
+            paddingHorizontal: 15,
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "center",
+            alignItems: "center",
+          }}
+        >
+          <Text style={{ color: "white" }}>Test</Text>
+        </View>
+      )}
     </View>
   );
 };

@@ -17,10 +17,10 @@ function CarthagosLinkButton({
   textColor,
   isLoading = false,
 }) {
+  useEffect(() => {
+    FontsLoad();
+  }, []);
   const handleLinkPress = () => {
-    useEffect(() => {
-      FontsLoad();
-    }, []);
     if (isLoading) return;
     if (registerRoute) {
       navigation.navigate("Register");
