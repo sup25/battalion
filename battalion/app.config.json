@@ -6,11 +6,7 @@
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "scheme": "com.battalion.app",
-    "platforms": [
-      "ios",
-      "android",
-      "web"
-    ],
+    "platforms": ["ios", "android", "web"],
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
@@ -18,23 +14,22 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "plugins": [
       "expo-av",
-      "react-native-ble-plx", 
-    "@react-native-firebase/app",
-     "@react-native-firebase/auth",
-    
-    [
-      "expo-build-properties",
-      {
-        "ios": {
-          "useFrameworks": "static"
+      "react-native-ble-plx",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+
+      [
+        "expo-build-properties",
+        {
+          "ios": {
+            "useFrameworks": "static"
+          }
         }
-      }
-    ]],
+      ]
+    ],
     "ios": {
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,

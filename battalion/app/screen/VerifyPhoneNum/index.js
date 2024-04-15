@@ -10,8 +10,12 @@ import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import auth from "@react-native-firebase/auth";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const VerifyPhoneNum = ({ navigation }) => {
+  useEffect(() => {
+    FontsLoad();
+  }, []);
   const [phoneNumber, setPhoneNumber] = useState("");
   const [countryCode, setCountryCode] = useState("+1");
   const { currentUser } = useAuth();
@@ -146,6 +150,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginLeft: 10,
     fontSize: 24,
+    fontFamily: "SF-Pro-Display",
   },
   countryCodetxt: {
     width: 70,
@@ -157,6 +162,7 @@ const styles = StyleSheet.create({
     marginTop: 31,
     padding: 10,
     fontSize: 24,
+    fontFamily: "SF-Pro-Display",
   },
   txtInputContainer: {
     width: "100%",
@@ -169,6 +175,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 24,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Display",
     textAlign: "center",
     maxWidth: 181,
     alignItems: "center",
@@ -179,6 +186,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "center",
     marginTop: 8,
-    maxWidth: 170,
+    maxWidth: 200,
+    fontFamily: "SF-Pro-Display",
   },
 });

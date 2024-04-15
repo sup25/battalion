@@ -6,7 +6,7 @@ import {
   TextInput,
 } from "react-native";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../../config/Colors/colors";
@@ -15,6 +15,7 @@ import { useAppSettingContext } from "../../context/AppSettingContext/AppSetting
 import FourDigitsCode from "../../component/FourDigitsCode";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { useToast } from "react-native-toast-notifications";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const DeviceSetting = ({ navigation }) => {
   const [show, setShow] = useState(false);
@@ -28,6 +29,9 @@ const DeviceSetting = ({ navigation }) => {
   const handleShowPassword = () => {
     setShow(!show);
   };
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   const handleTemperatureChange = async () => {
     try {
@@ -153,6 +157,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: "500",
     fontSize: 18,
+    fontFamily: "SF-Pro-Display",
   },
   flexEnd: {
     justifyContent: "flex-end",

@@ -27,6 +27,7 @@ import {
 } from "../../api/Database/Database";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { Toast } from "react-native-toast-notifications";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const ProfileScreen = (props) => {
   const { currentUser, logout } = useAuth();
@@ -42,6 +43,10 @@ const ProfileScreen = (props) => {
   const [userProfileData, setUserProfileData] = useState();
   const [users, setUsers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   const fetchDeviceUsers = async () => {
     setRefreshing(true);
@@ -137,7 +142,7 @@ const ProfileScreen = (props) => {
         <Text style={styles.profileTxt}>My profile</Text>
         <View style={styles.bigRectangle}>
           <View>
-            <Text style={styles.userName}>UserName</Text>
+            <Text style={styles.userName}>User Name</Text>
             {isEditingUsername ? (
               <TextInput
                 style={styles.inputs}
@@ -461,6 +466,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
     color: colors.white,
+    fontFamily: "SF-Pro-Display",
   },
   btn: {
     backgroundColor: colors.primary,
@@ -484,6 +490,7 @@ const styles = StyleSheet.create({
     width: 100,
     fontSize: 18,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Display",
   },
   forgotpasswordTxtIcon: {
     backgroundColor: colors.primary,
@@ -504,6 +511,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
     color: colors.white,
     justifyContent: "center",
+    fontFamily: "SF-Pro-Display",
+    fontWeight: "400",
   },
   icon: {
     position: "absolute",
@@ -530,6 +539,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
     color: colors.white,
+    fontFamily: "SF-Pro-Display",
   },
   profileTxt: {
     color: colors.white,
@@ -537,6 +547,7 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     textTransform: "uppercase",
     alignSelf: "flex-start",
+    fontFamily: "Alternate-Gothic",
   },
   resetPasswordBox: {
     width: 126,
@@ -547,12 +558,14 @@ const styles = StyleSheet.create({
     fontWeight: "800",
     color: colors.white,
     width: 126,
+    fontFamily: "Alternate-Gothic",
   },
 
   userName: {
     fontSize: 14,
     fontWeight: "500",
     color: colors.white,
+    fontFamily: "SF-Pro-Display",
   },
   wrapper: {
     marginTop: 55,

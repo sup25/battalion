@@ -26,6 +26,7 @@ import { useToast } from "react-native-toast-notifications";
 import { setNameToDevice } from "../../api/Database/Database";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import GradientBackground from "../../component/GradientBackground";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const WelcomeScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
@@ -35,6 +36,9 @@ const WelcomeScreen = ({ navigation }) => {
   const [deviceName, setDeviceName] = useState(boxName);
 
   const toast = useToast();
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   const handleSubmitName = async () => {
     if (deviceName === "") {
@@ -263,6 +267,7 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 14,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Display",
   },
 
   battalionId: {
@@ -294,6 +299,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "500",
     color: colors.white,
+    fontFamily: "SF-Pro-Display",
   },
   degree: {
     fontWeight: "800",
@@ -323,6 +329,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
     backgroundColor: "#1B1B1B",
+    fontFamily: "SF-Pro-Display",
+    fontSize: 16,
   },
   icon: {
     position: "absolute",
@@ -378,6 +386,7 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     alignItems: "flex-start",
     marginLeft: 10,
+    fontFamily: "Alternate-Gothic",
   },
 
   unlockedImageContainer: {

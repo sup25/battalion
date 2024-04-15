@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,8 +10,12 @@ import {
 import colors from "../../config/Colors/colors";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import GradientBackground from "../../component/GradientBackground";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 export default function MainScreen({ navigation }) {
+  useEffect(() => {
+    FontsLoad();
+  }, []);
   return (
     <View style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
@@ -69,6 +73,7 @@ const styles = StyleSheet.create({
   headingText: {
     textTransform: "uppercase",
     fontWeight: "900",
+    fontFamily: "Alternate-Gothic",
     color: colors.white,
     alignItems: "center",
     fontSize: 55,
@@ -90,6 +95,7 @@ const styles = StyleSheet.create({
   },
   textParagraph: {
     fontWeight: "400",
+    fontFamily: "SF-Pro-Display",
     fontSize: 16,
     color: "#8F8F8F",
     width: 300,
@@ -97,6 +103,7 @@ const styles = StyleSheet.create({
   },
   textWelcome: {
     fontWeight: "400",
+    fontFamily: "Alternate-Gothic",
     fontSize: 20,
     color: colors.white,
   },

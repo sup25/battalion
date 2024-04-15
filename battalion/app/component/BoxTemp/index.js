@@ -1,13 +1,17 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import colors from "../../config/Colors/colors";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const BoxTemp = () => {
   const { getTempValueAndUnit, temp, boxTemp } = useAppSettingContext();
   const { connectedDevice } = useBleContext();
+  useEffect(() => {
+    FontsLoad();
+  }, []);
   return (
     <View>
       <View style={styles.TempConatinerBg}>
@@ -68,5 +72,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 15,
     color: "#5A5A5A",
+    fontFamily: "SF-Pro-Display",
   },
 });

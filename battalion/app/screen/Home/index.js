@@ -5,12 +5,16 @@ import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import FetchUserProfile from "../../Hooks/UserProfile/UserProfile";
 import DeviceList from "../../component/DeviceList";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const Home = ({ navigation }) => {
   const { currentUser } = useAuth();
   const { connectedDevice } = useBleContext();
   const [userName, setUserName] = useState();
   const userData = FetchUserProfile(currentUser);
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   useEffect(() => {
     if (userData) {
@@ -79,6 +83,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontWeight: "900",
     alignItems: "flex-start",
+    fontFamily: "Alternate-Gothic",
   },
   deviceContainer: {
     position: "relative",
@@ -94,6 +99,7 @@ const styles = StyleSheet.create({
     fontSize: 15,
     fontWeight: "500",
     color: colors.white,
+    fontFamily: "SF-Pro-Display",
   },
   addDevice: {
     backgroundColor: colors.primary,
@@ -103,5 +109,6 @@ const styles = StyleSheet.create({
     padding: 5,
     fontSize: 14,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Display",
   },
 });

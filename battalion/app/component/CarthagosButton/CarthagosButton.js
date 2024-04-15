@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   TouchableOpacity,
@@ -6,6 +6,7 @@ import {
   ActivityIndicator,
 } from "react-native";
 import colors from "../../config/Colors/colors";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 function CarthagosButton({
   title,
@@ -15,6 +16,9 @@ function CarthagosButton({
   textColor,
 }) {
   const [isLoading, setIsLoading] = useState(false);
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   return (
     <TouchableOpacity
@@ -48,7 +52,8 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 20,
     textTransform: "uppercase",
-    fontWeight: "700",
+    fontWeight: "500",
+    fontFamily: "Alternate-Gothic",
   },
 });
 

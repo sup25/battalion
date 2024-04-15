@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -19,8 +19,13 @@ import SetBoxTemp from "../../component/SetBoxTemp";
 import BoxTemp from "../../component/BoxTemp";
 import BatteryPercent from "../../component/BatteryPercent";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const DeviceDetails = ({ navigation }) => {
+  useEffect(() => {
+    FontsLoad();
+  }, []);
+
   const { disconnectFromDevice } = useBleContext();
   return (
     <View style={styles.container}>
@@ -121,6 +126,7 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     marginLeft: 10,
     alignItems: "flex-start",
+    fontFamily: "Alternate-Gothic",
   },
 
   battalionId: {
@@ -137,6 +143,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
     borderRadius: 5,
     backgroundColor: "#1B1B1B",
+    fontFamily: "SF-Pro-Display",
+    fontWeight: "500",
   },
 
   icon: {

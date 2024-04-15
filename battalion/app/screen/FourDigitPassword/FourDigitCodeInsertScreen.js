@@ -9,6 +9,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { storeFourDigitsToTheDb } from "../../api/Database/Database";
 import { useToast } from "react-native-toast-notifications";
+import { FontsLoad } from "../../utils/FontsLoad";
 export default function FourDigitCodeInsertScreen({ navigation }) {
   const { setDevicePassword } = useAppSettingContext();
   const { writePasswordToDevice, connectedDevice } = useBleContext();
@@ -35,6 +36,9 @@ export default function FourDigitCodeInsertScreen({ navigation }) {
     };
 
     fetchCombinedSerialNum();
+  }, []);
+  useEffect(() => {
+    FontsLoad();
   }, []);
 
   const handleConfirm = async (setIsLoading) => {
@@ -136,16 +140,18 @@ const styles = StyleSheet.create({
     letterSpacing: 0.02,
     textAlign: "center",
     color: colors.white,
+    fontFamily: "SF-Pro-Display",
   },
   paragraph: {
     fontSize: 16,
-    fontWeight: "500",
+    fontWeight: "400",
     lineHeight: 19,
     color: "#8F8F8F",
     width: 300,
     textAlign: "center",
     marginTop: 8,
     alignSelf: "center",
+    fontFamily: "SF-Pro-Display",
   },
   icon: {
     alignSelf: "flex-end",

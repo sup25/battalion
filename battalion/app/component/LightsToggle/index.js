@@ -4,11 +4,16 @@ import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { useToast } from "react-native-toast-notifications";
+import { FontsLoad } from "../../utils/FontsLoad";
+import { useEffect } from "react";
 
 const LightsToggle = () => {
   const toast = useToast();
   const { isLightsOn, setDeviceIsLightsOn, temp } = useAppSettingContext();
   const { writeLightsToDevice, connectedDevice } = useBleContext();
+  useEffect(() => {
+    FontsLoad();
+  }, []);
   return (
     <View style={styles.brightness}>
       <Text
@@ -82,6 +87,7 @@ const styles = StyleSheet.create({
     color: "#B0B0B0",
     paddingLeft: 0,
     textAlign: "right",
+    fontFamily: "SF-Pro-Display",
   },
   switchOnOff: {
     width: 60,

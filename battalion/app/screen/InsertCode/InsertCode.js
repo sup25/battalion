@@ -7,6 +7,7 @@ import { useRoute } from "@react-navigation/native";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
 import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const InsertCode = ({ navigation }) => {
   const toast = useToast();
@@ -24,7 +25,9 @@ const InsertCode = ({ navigation }) => {
     "",
     "",
   ]);
-
+  useEffect(() => {
+    FontsLoad();
+  }, []);
   // Extract the verificationId from the route parameters
   useEffect(() => {
     if (route.params && route.params.confirmation) {
@@ -223,6 +226,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginLeft: 10,
     fontSize: 24,
+    fontFamily: "SF-Pro-Display",
   },
   txtInputContainer: {
     width: "100%",
@@ -240,6 +244,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     maxWidth: 181,
     alignItems: "center",
+    fontFamily: "SF-Pro-Display",
   },
   txtSecond: {
     color: "#8F8F8F",
@@ -247,6 +252,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "center",
     marginTop: 8,
-    maxWidth: 200,
+    maxWidth: 230,
+    fontFamily: "SF-Pro-Display",
   },
 });

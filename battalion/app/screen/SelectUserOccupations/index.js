@@ -14,11 +14,14 @@ import CarthagosScreen from "../../component/CarthagosScreen/CarthagosScreen";
 import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection";
 import auth from "@react-native-firebase/auth";
 import { useToast } from "react-native-toast-notifications";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const SelectUserOccupations = ({ navigation }) => {
   const [selectedCategory, setSelectedCategory] = useState([]);
   const [otherOccupation, setOtherOccupation] = useState("");
-
+  useEffect(() => {
+    FontsLoad();
+  }, []);
   useEffect(() => {
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
@@ -145,7 +148,7 @@ const SelectUserOccupations = ({ navigation }) => {
         </View>
         <View style={styles.InputContainer}>
           <View style={styles.otherText}>
-            <Text>Other</Text>
+            <Text style={styles.othertxt}>Other</Text>
           </View>
           <TextInput
             style={styles.input}
@@ -191,6 +194,7 @@ const styles = StyleSheet.create({
     marginTop: 18,
     fontSize: 24,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Display",
   },
 
   categoryContainer: {
@@ -217,6 +221,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     fontSize: 18,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Display",
     display: "flex",
     alignItems: "center",
   },
