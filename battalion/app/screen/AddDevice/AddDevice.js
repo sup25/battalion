@@ -49,7 +49,7 @@ const AddDevice = ({ navigation }) => {
 
       // Call AddUserData to send combinedSerialNum
       try {
-        await AddUserData(updatedUserData);
+        const isOwner = await AddUserData(updatedUserData);
 
         toast.show("Data saved successfully!", {
           type: "normal",
@@ -59,7 +59,7 @@ const AddDevice = ({ navigation }) => {
         setUserData({
           combinedSerialNum: "",
         });
-        handleNavigation();
+        handleNavigation(isOwner);
       } catch (error) {
         setIsLoading(false);
         toast.show(error.message, {
@@ -71,7 +71,7 @@ const AddDevice = ({ navigation }) => {
     }
   };
 
-  const handleNavigation = async () => {
+  const handleNavigation = async (isOwner) => {
     const combinedSerialNum = combinedSerialNumRef.current;
     if (!combinedSerialNum || combinedSerialNum.length !== 12) {
       console.log("Invalid combinedSerialNum:", combinedSerialNum);
@@ -79,10 +79,15 @@ const AddDevice = ({ navigation }) => {
     }
     await AsyncStorage.setItem("combinedSerialNum", combinedSerialNum);
     console.log("Entered combined serial number:", combinedSerialNum);
-    navigation.navigate("searchscreen", {
-      isFirstTime: true,
-      serialNum: combinedSerialNum,
-    });
+
+    if (isOwner) {
+      navigation.navigate("searchscreen", {
+        isFirstTime: true,
+        serialNum: combinedSerialNum,
+      });
+    } else {
+      navigation.navigate("home");
+    }
   };
 
   const handleChangeText = (key, value) => {

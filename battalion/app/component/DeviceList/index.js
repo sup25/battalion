@@ -99,123 +99,131 @@ const DeviceList = ({ ownerId, navigation }) => {
         </View>
       )}
       <ScrollView style={{ width: "100%" }}>
-        {devices.map((item, index) => (
-          <TouchableOpacity
-            onPress={async () => {
-              if (item.deviceId === connectedDevice?.device?.id) {
-                return navigation.navigate("Home");
-              }
-              if (!connecting.status) {
-                if (item.deviceId !== connectedDevice?.device?.id) {
-                  setConnecting({ device: item.deviceId, status: true });
-                  try {
-                    await connectToDevice({ id: item.deviceId });
-                    return navigation.navigate("Home");
-                  } catch (err) {
-                    console.log("connecting to the device err:", err);
-                    setConnecting({ device: null, status: false });
-                    toast.show("Failed to connect to the device");
+        {devices.map((item, index) => {
+          const user = item.users.find((user) => user.id === ownerId);
+          return (
+            <TouchableOpacity
+              onPress={async () => {
+                if (!user.approved) {
+                  return toast.show("Device not approved by the owner");
+                }
+                if (item.deviceId === connectedDevice?.device?.id) {
+                  return navigation.navigate("Home");
+                }
+                if (!connecting.status) {
+                  if (item.deviceId !== connectedDevice?.device?.id) {
+                    setConnecting({ device: item.deviceId, status: true });
+                    try {
+                      await connectToDevice({ id: item.deviceId });
+                      return navigation.navigate("Home");
+                    } catch (err) {
+                      console.log("connecting to the device err:", err);
+                      setConnecting({ device: null, status: false });
+                      toast.show("Failed to connect to the device");
+                    }
                   }
                 }
-              }
-            }}
-            style={[
-              styles.DeviceInfoWrapper,
-              { marginTop: index > 0 ? 15 : 0, position: "relative" },
-            ]}
-            key={item.id}
-          >
-            <View style={styles.Section}>
-              <View style={styles.IconTxtWrapper}>
-                <Image
-                  source={require("../../assets/product.png")}
-                  style={{ width: 30, height: 25 }}
-                />
-                <Text style={styles.DeviceInformation}>
-                  {item.name}{" "}
-                  {item.deviceId === connectedDevice?.device?.id &&
-                    "(Connected)"}
-                </Text>
-                {connecting.device === item.deviceId &&
-                  connectedDevice.connecting && (
-                    <ActivityIndicator size="small" color="#ffffff" />
-                  )}
-              </View>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
+              }}
+              style={[
+                styles.DeviceInfoWrapper,
+                { marginTop: index > 0 ? 15 : 0, position: "relative" },
+              ]}
+              key={item.id}
+            >
+              <View style={styles.Section}>
+                <View style={styles.IconTxtWrapper}>
+                  <Image
+                    source={require("../../assets/product.png")}
+                    style={{ width: 30, height: 25 }}
+                  />
+                  <Text style={styles.DeviceInformation}>
+                    {item.name}{" "}
+                    {item.deviceId === connectedDevice?.device?.id &&
+                      "(Connected)"}
+                    {user.status === "pending" && "(Pending)"}
+                  </Text>
 
-                  width: "100%",
-                  paddingTop: 14,
-                  paddingBottom: 14,
-                }}
-              >
-                <View
-                  style={[
-                    styles.Wrapper,
-                    { opacity: item.isEnabled ? 1 : 0.5 },
-                  ]}
-                >
-                  <MaterialCommunityIcons
-                    name="thermometer-bluetooth"
-                    size={32}
-                    color={colors.icon}
-                  />
-                  <Text style={styles.Degree}>
-                    {item.temp
-                      ? getTempValueAndUnit({
-                          value: item.temp.value,
-                          unit: item.temp.unit,
-                        })
-                      : `--${temp.unit === "c" ? "℃" : "°F"}`}
-                  </Text>
-                </View>
-                <View
-                  style={[
-                    styles.Wrapper,
-                    { opacity: item.isEnabled ? 1 : 0.5 },
-                  ]}
-                >
-                  <ChargingProgressCircle
-                    percents={item?.batteryLevel ? item.batteryLevel : 0}
-                    circleRadius={10}
-                    strokeWidth={3}
-                  />
-                  <Text style={styles.BatteryAndPercents}>
-                    {item?.batteryLevel ? item.batteryLevel : "--"}%
-                  </Text>
-                </View>
-                <View
-                  style={[
-                    styles.Wrapper,
-                    { opacity: item.isEnabled ? 1 : 0.5 },
-                  ]}
-                >
-                  <Text style={styles.lockedTxt}>
-                    Device{"\n"}
-                    {item.isLocked ? "Locked" : "Unlocked"}
-                  </Text>
-                  <View style={styles.IconWrapper}>
-                    {item.isLocked ? (
-                      <MaterialCommunityIcons
-                        name="lock"
-                        size={20}
-                        color="#B0B0B0"
-                      />
-                    ) : (
-                      <MaterialCommunityIcons
-                        name="lock-open"
-                        size={20}
-                        color="white"
-                      />
+                  {connecting.device === item.deviceId &&
+                    connectedDevice.connecting && (
+                      <ActivityIndicator size="small" color="#ffffff" />
                     )}
+                </View>
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+
+                    width: "100%",
+                    paddingTop: 14,
+                    paddingBottom: 14,
+                  }}
+                >
+                  <View
+                    style={[
+                      styles.Wrapper,
+                      { opacity: item.isEnabled ? 1 : 0.5 },
+                    ]}
+                  >
+                    <MaterialCommunityIcons
+                      name="thermometer-bluetooth"
+                      size={32}
+                      color={colors.icon}
+                    />
+                    <Text style={styles.Degree}>
+                      {item.temp
+                        ? getTempValueAndUnit({
+                            value: item.temp.value,
+                            unit: item.temp.unit,
+                          })
+                        : `--${temp.unit === "c" ? "℃" : "°F"}`}
+                    </Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.Wrapper,
+                      { opacity: item.isEnabled ? 1 : 0.5 },
+                    ]}
+                  >
+                    <ChargingProgressCircle
+                      percents={item?.batteryLevel ? item.batteryLevel : 0}
+                      circleRadius={10}
+                      strokeWidth={3}
+                    />
+                    <Text style={styles.BatteryAndPercents}>
+                      {item?.batteryLevel ? item.batteryLevel : "--"}%
+                    </Text>
+                  </View>
+                  <View
+                    style={[
+                      styles.Wrapper,
+                      { opacity: item.isEnabled ? 1 : 0.5 },
+                    ]}
+                  >
+                    <Text style={styles.lockedTxt}>
+                      Device{"\n"}
+                      {item.isLocked ? "Locked" : "Unlocked"}
+                    </Text>
+                    <View style={styles.IconWrapper}>
+                      {item.isLocked ? (
+                        <MaterialCommunityIcons
+                          name="lock"
+                          size={20}
+                          color="#B0B0B0"
+                        />
+                      ) : (
+                        <MaterialCommunityIcons
+                          name="lock-open"
+                          size={20}
+                          color="white"
+                        />
+                      )}
+                    </View>
                   </View>
                 </View>
               </View>
-            </View>
-          </TouchableOpacity>
-        ))}
+            </TouchableOpacity>
+          );
+        })}
       </ScrollView>
     </View>
   );

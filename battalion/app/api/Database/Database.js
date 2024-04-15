@@ -25,16 +25,27 @@ const addUserToDevice = async (deviceId, userId) => {
       throw new Error("User not found");
     }
 
-    // Add the user to the device's users array
-    await deviceRef.update({
-      users: firestore.FieldValue.arrayUnion({
-        id: userId,
-        ...userDoc.data(),
-        approved: false,
-        requestDate: new Date().getUTCDate(),
-        requestUpdateDate: new Date().getUTCDate(),
-      }),
-    });
+    const isUserExistInUsersArr = deviceDoc
+      .data()
+      .users.find((user) => user.id === userId);
+
+    const updatedUsersIds = [...deviceDoc.data().usersIds, userId];
+    if (!isUserExistInUsersArr) {
+      // Add the user to the device's users array
+      await deviceRef.update({
+        usersIds: updatedUsersIds,
+        users: firestore.FieldValue.arrayUnion({
+          id: userId,
+          ...userDoc.data(),
+          approved: false,
+          requestDate: new Date().getUTCDate(),
+          requestUpdateDate: new Date().getUTCDate(),
+          status: "pending",
+        }),
+      });
+    } else {
+      throw new Error("User already exists in the device.");
+    }
   } catch (error) {
     console.error("Error adding user to device:", error);
     throw error;
@@ -82,7 +93,6 @@ export const AddUserData = async (data) => {
     if (deviceDoc.data()) {
       if (deviceDoc.data()?.owner && deviceDoc.data()?.owner?.id !== null) {
         addUserToDevice(data.combinedSerialNum, data.owner);
-        return true;
       } else {
         // Get a reference to the users collection
         const usersRef = firestore().collection("users");
@@ -115,10 +125,10 @@ export const AddUserData = async (data) => {
         await deviceRef.update({
           usersIds: firestore.FieldValue.arrayUnion(data.owner),
         });
-
-        return true;
       }
     }
+
+    return deviceDoc.data()?.owner?.id === data.owner;
   } catch (error) {
     throw error;
   }

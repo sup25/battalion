@@ -148,8 +148,10 @@ const SelectUserOccupations = ({ navigation }) => {
         </View>
 
         <View style={styles.InputContainer}>
-          <View style={styles.otherTextContainer}>
-            <Text style={styles.othertxt}>Other</Text>
+          <View style={styles.otherText}>
+            <Text style={{ fontSize: 18, lineHeight: 37, color: colors.white }}>
+              Other
+            </Text>
           </View>
           <TextInput
             style={styles.input}
@@ -259,6 +261,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     justifyContent: "center",
     display: "flex",
+    fontWeight: "400",
     paddingLeft: 15,
     width: "100%",
   },

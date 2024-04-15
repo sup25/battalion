@@ -85,8 +85,6 @@ const InsertCode = ({ navigation }) => {
   }
 
   const handleVerifyVerificationCode = async (setIsLoading) => {
-    console.log(auth());
-    console.log(currentUser);
     setIsLoading(true);
     try {
       const code = verificationCode.join("");
@@ -96,7 +94,7 @@ const InsertCode = ({ navigation }) => {
           route.params.confirmation.verificationId,
           code
         );
-        console.log(credential);
+
         await auth().currentUser.linkWithCredential(credential);
         await auth().currentUser.updateProfile({ phoneNumber });
       } else {
@@ -177,14 +175,6 @@ const InsertCode = ({ navigation }) => {
             />
           ))}
         </View>
-
-        <CarthagosButton
-          title="resend code"
-          width={277}
-          textColor={colors.black}
-          color="white"
-          onPress={(setIsLoading) => handleResendCode(setIsLoading)}
-        />
       </View>
       <View style={styles.btn}>
         <CarthagosButton
@@ -193,6 +183,16 @@ const InsertCode = ({ navigation }) => {
           textColor={colors.white}
           onPress={(setIsLoading) => handleVerifyVerificationCode(setIsLoading)}
         />
+        <View style={{ display: "flex" }}>
+          <CarthagosButton
+            style={{ color: "white" }}
+            textStyle={{ color: "white", textDecoration: "underline" }}
+            title="Didn't receive verification code? resend code"
+            textColor={colors.white}
+            color="white"
+            onPress={(setIsLoading) => handleResendCode(setIsLoading)}
+          />
+        </View>
       </View>
     </View>
   );
@@ -202,7 +202,7 @@ export default InsertCode;
 
 const styles = StyleSheet.create({
   btn: {
-    marginTop: 247,
+    marginTop: 230,
     alignItems: "center",
   },
   container: {

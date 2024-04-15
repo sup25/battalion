@@ -66,10 +66,6 @@ const VerifyPhoneNum = ({ navigation }) => {
         });
       }
 
-      toast.show("Success: Verification code has been sent to your phone", {
-        type: "normal",
-      });
-
       const confirmation = await auth().signInWithPhoneNumber(fullPhoneNumber);
       console.log("Verification ID sent:", confirmation.verificationId);
       navigation.navigate("ConfirmCode", {
@@ -77,13 +73,22 @@ const VerifyPhoneNum = ({ navigation }) => {
         phoneNumber: fullPhoneNumber,
         countryCode: countryCode,
       });
+      toast.show("Verification code has been sent to your phone", {
+        type: "normal",
+      });
     } catch (error) {
       setIsLoading(false);
 
-      toast.show(`${error.message}`, {
-        type: "normal",
-      });
-      console.log("error msg", error.message);
+      toast.show(
+        "Please enter a different phone number and try again. (format: +1 1234567890)",
+        {
+          type: "normal",
+        }
+      );
+      console.log(
+        "error msg",
+        "Please enter a different phone number and try again. (format: +1 1234567890)"
+      );
     }
   };
 

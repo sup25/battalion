@@ -14,6 +14,8 @@ function CarthagosButton({
   color = "primary",
   width,
   textColor,
+  style = false,
+  textStyle = false,
 }) {
   const [isLoading, setIsLoading] = useState(false);
   useEffect(() => {
@@ -22,17 +24,28 @@ function CarthagosButton({
 
   return (
     <TouchableOpacity
-      style={[
-        styles.button,
-        { backgroundColor: isLoading ? colors.medium : colors[color], width },
-      ]}
+      style={
+        style
+          ? style
+          : [
+              styles.button,
+              {
+                backgroundColor: isLoading ? colors.medium : colors[color],
+                width,
+              },
+            ]
+      }
       onPress={() => (isLoading ? false : onPress(setIsLoading))}
       disabled={isLoading} // Disable the button while loading
     >
       {isLoading ? (
         <ActivityIndicator color={colors.primary} /> // Show the loading indicator
       ) : (
-        <Text style={[styles.text, { color: textColor }]}>{title}</Text>
+        <Text
+          style={textStyle ? textStyle : [styles.text, { color: textColor }]}
+        >
+          {title}
+        </Text>
       )}
     </TouchableOpacity>
   );
