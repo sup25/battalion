@@ -25,16 +25,6 @@ export default function RegisterScreen({ navigation }) {
 
   const { currentUser, modifyUser } = useAuth();
 
-  useEffect(() => {
-    console.log("currentUser", currentUser);
-    if (currentUser && !currentUser.phoneNumber && currentUser.email) {
-      navigation.navigate("selectUserOccupations");
-    }
-  }, []);
-
-  useEffect(() => {
-    console.log("name:", name, ". email:", email);
-  }, [name, email]);
   // Handle user state changes
   const onAuthStateChanged = async (user) => {
     try {
@@ -46,10 +36,6 @@ export default function RegisterScreen({ navigation }) {
       });
       modifyUser({ uid: user.uid, name, email });
       if (addedToFirestore) {
-        console.log(
-          "User data added to Firestore successfully.",
-          addedToFirestore
-        );
         navigation.navigate("selectUserOccupations");
       } else {
         setIsLoading(false);

@@ -38,22 +38,22 @@ const LoginScreen = ({ navigation }) => {
       const biometricResult = await UseBioMetric();
 
       if (biometricResult) {
+        await auth().signInWithEmailAndPassword(email, password);
         if (currentUser && !currentUser.phoneNumber) {
           navigation.navigate("Phoneverify");
           return toast.show("User doesnt have a phone number attached.", {
             type: "normal",
           });
         }
-        await auth().signInWithEmailAndPassword(email, password);
         navigation.navigate("privateRoute", { screen: "MainTabs" });
       } else {
+        await auth().signInWithEmailAndPassword(email, password);
         if (currentUser && !currentUser.phoneNumber) {
           navigation.navigate("Phoneverify");
           return toast.show("User doesnt have a phone number attached.", {
             type: "normal",
           });
         }
-        await auth().signInWithEmailAndPassword(email, password);
         navigation.navigate("privateRoute", { screen: "MainTabs" });
         toast.show("Biometric authentication failed", {
           type: "normal",
