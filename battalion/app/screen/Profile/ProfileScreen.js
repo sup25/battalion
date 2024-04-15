@@ -156,7 +156,7 @@ const ProfileScreen = (props) => {
               <MaterialCommunityIcons
                 name="check"
                 color="#5A5A5A"
-                size={30}
+                size={25}
                 style={styles.icon}
                 onPress={handleUpdateUserName}
               />
@@ -164,7 +164,7 @@ const ProfileScreen = (props) => {
               <MaterialCommunityIcons
                 name="pencil"
                 color="#5A5A5A"
-                size={20}
+                size={25}
                 style={styles.icon}
                 onPress={handleUsernameEdit}
               />
@@ -396,7 +396,7 @@ const ProfileScreen = (props) => {
             <Text style={styles.resetText}>Reset password</Text>
             <MaterialCommunityIcons
               name="arrow-right"
-              size={30}
+              size={25}
               color="white"
             />
           </TouchableOpacity>
@@ -457,7 +457,6 @@ const styles = StyleSheet.create({
   deviceTxtContainer: {
     flexDirection: "row",
     alignItems: "center",
-
     width: "100%",
     marginTop: 27,
   },
@@ -483,7 +482,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 90,
     justifyContent: "space-between",
-    padding: 18,
+    padding: 16,
   },
   resetText: {
     color: colors.white,
@@ -551,11 +550,11 @@ const styles = StyleSheet.create({
   },
 
   forgetPasswordTxt: {
-    fontSize: 24,
+    fontSize: 23,
     textTransform: "uppercase",
     fontWeight: "800",
     color: colors.white,
-    width: 126,
+    width: 135,
     fontFamily: "Alternate-Gothic",
   },
 
