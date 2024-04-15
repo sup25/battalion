@@ -156,6 +156,8 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     marginTop: 31,
     padding: 10,
+    fontFamily: "SF-Pro-Display",
+    fontSize: 16,
   },
   txtFirst: {
     color: colors.white,

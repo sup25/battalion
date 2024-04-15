@@ -183,7 +183,17 @@ const SearchScreen = ({ navigation }) => {
                 fontSize: 20,
               }}
             >
-              <Text style={{ color: "white" }}>Retry</Text>
+              <Text
+                style={{
+                  color: "white",
+                  fontFamily: "Alternate-Gothic",
+                  textTransform: "uppercase",
+                  fontWeight: "700",
+                  fontSize: 20,
+                }}
+              >
+                Retry
+              </Text>
             </TouchableOpacity>
           )}
           {selectedDevice.device && (
@@ -220,6 +230,7 @@ const SearchScreen = ({ navigation }) => {
                 alignItems: "center",
                 borderRadius: 5,
                 fontSize: 20,
+                fontFamily: "Alternate-Gothic",
               }}
             >
               <Text style={{ color: "white", fontFamily: "SF-Pro-Display" }}>
@@ -248,6 +259,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
+
   container: {
     flex: 1,
     backgroundColor: colors.dark,
@@ -271,7 +283,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "500",
     textAlign: "center",
-    width: 171,
+    width: 300,
     marginBottom: 30,
     alignItems: "center",
     alignSelf: "center",

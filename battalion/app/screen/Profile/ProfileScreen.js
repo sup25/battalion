@@ -164,7 +164,7 @@ const ProfileScreen = (props) => {
               <MaterialCommunityIcons
                 name="pencil"
                 color="#5A5A5A"
-                size={30}
+                size={20}
                 style={styles.icon}
                 onPress={handleUsernameEdit}
               />
@@ -385,16 +385,15 @@ const ProfileScreen = (props) => {
         )}
 
         <View style={styles.ForgetPasswordBox}>
-          <View style={styles.resetPasswordBox}>
-            <Text style={styles.resetPasswordTxt}>reset{"\n"}Password</Text>
-          </View>
+          <Text style={styles.forgetPasswordTxt}>FORGOT PASSWORD?</Text>
+
           <TouchableOpacity
             onPress={() => {
               props.navigation.navigate("forgotpasswordprivate");
             }}
-            style={styles.forgotpasswordTxtIcon}
+            style={styles.resetpasswordTxtIcon}
           >
-            <Text style={styles.forgetText}>Forgot the Password?</Text>
+            <Text style={styles.resetText}>Reset password</Text>
             <MaterialCommunityIcons
               name="arrow-right"
               size={30}
@@ -433,7 +432,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 239,
     backgroundColor: colors.soft,
-    paddingHorizontal: 13,
+    paddingHorizontal: 15,
     paddingVertical: 12,
     justifyContent: "space-between",
   },
@@ -467,6 +466,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: colors.white,
     fontFamily: "SF-Pro-Display",
+    marginBottom: 4,
   },
   btn: {
     backgroundColor: colors.primary,
@@ -485,21 +485,20 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     padding: 18,
   },
-  forgetText: {
+  resetText: {
     color: colors.white,
-    width: 100,
-    fontSize: 18,
+    fontSize: 15,
     fontWeight: "500",
     fontFamily: "SF-Pro-Display",
   },
-  forgotpasswordTxtIcon: {
+  resetpasswordTxtIcon: {
     backgroundColor: colors.primary,
-    padding: 5,
+    padding: 10,
     borderRadius: 5,
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: 138,
+    width: 154,
   },
   inputs: {
     backgroundColor: "#1B1B1B",
@@ -540,6 +539,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: colors.white,
     fontFamily: "SF-Pro-Display",
+    marginBottom: 4,
   },
   profileTxt: {
     color: colors.white,
@@ -549,10 +549,8 @@ const styles = StyleSheet.create({
     alignSelf: "flex-start",
     fontFamily: "Alternate-Gothic",
   },
-  resetPasswordBox: {
-    width: 126,
-  },
-  resetPasswordTxt: {
+
+  forgetPasswordTxt: {
     fontSize: 24,
     textTransform: "uppercase",
     fontWeight: "800",
@@ -566,6 +564,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: colors.white,
     fontFamily: "SF-Pro-Display",
+    marginBottom: 4,
   },
   wrapper: {
     marginTop: 55,
