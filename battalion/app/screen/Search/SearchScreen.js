@@ -19,6 +19,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useToast } from "react-native-toast-notifications";
 import { useRoute } from "@react-navigation/native";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const SearchScreen = ({ navigation }) => {
   const toast = useToast();
@@ -79,6 +80,9 @@ const SearchScreen = ({ navigation }) => {
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [retry]);
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   const toShowRetry = () => {
     console.log("scan", scan);
@@ -218,7 +222,7 @@ const SearchScreen = ({ navigation }) => {
                 fontSize: 20,
               }}
             >
-              <Text style={{ color: "white" }}>
+              <Text style={{ color: "white", fontFamily: "SF-Pro-Display" }}>
                 {connectedDevice?.connecting
                   ? "CONNECTING..."
                   : "CONNECT DEVICE"}
@@ -271,6 +275,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     alignItems: "center",
     alignSelf: "center",
+    fontFamily: "SF-Pro-Display",
   },
   button: {
     backgroundColor: "#131313",

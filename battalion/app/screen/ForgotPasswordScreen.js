@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CarthagosButton from "../component/CarthagosButton/CarthagosButton";
 import { StyleSheet, View, TextInput, Text } from "react-native";
 import auth from "@react-native-firebase/auth";
@@ -6,12 +6,15 @@ import colors from "../config/Colors/colors";
 import TextLogo from "../assets/TextLogo";
 import CarthagosScreen from "../component/CarthagosScreen/CarthagosScreen";
 import CarthagosLinkButton from "../component/CarthagosLinkButton/CarthagosLinkButton";
+import { FontsLoad } from "../utils/FontsLoad";
 
 const ForgotPasswordScreen = ({ navigation }) => {
   const [email, setEmail] = useState("");
   const [emailSent, setEmailSent] = useState(false);
   const [errormsg, setErrorMsg] = useState("");
-
+  useEffect(() => {
+    FontsLoad();
+  }, []);
   const handleResetPassword = () => {
     auth()
       .sendPasswordResetEmail(email)
@@ -116,6 +119,8 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     height: 50,
     color: "#656565",
+    fontFamily: "SF-Pro-Display",
+    fontWeight: "400",
   },
   logoContainer: {
     justifyContent: "flex-start",
@@ -132,5 +137,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: colors.white,
     marginTop: 18,
+    fontFamily: "SF-Pro-Display",
   },
 });

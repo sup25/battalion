@@ -1,17 +1,21 @@
 import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import colors from "../../config/Colors/colors";
 import { useNavigation } from "@react-navigation/native";
 import { useToast } from "react-native-toast-notifications";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const SetBoxTemp = () => {
   const toast = useToast();
   const { connectedDevice } = useBleContext();
   const { getTempValueAndUnit, temp } = useAppSettingContext();
   const navigation = useNavigation();
+  useEffect(() => {
+    FontsLoad();
+  }, []);
   return (
     <TouchableOpacity
       style={styles.TempConatinerBg}
@@ -52,7 +56,7 @@ const SetBoxTemp = () => {
             { color: connectedDevice?.device ? "white" : "grey" },
           ]}
         >
-          Set the box Temperature
+          Set the box temperature
         </Text>
         <MaterialCommunityIcons name="arrow-right" size={20} color="white" />
       </View>
@@ -96,5 +100,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 15,
     color: colors.white,
+    fontFamily: "SF-Pro-Display",
   },
 });

@@ -13,6 +13,7 @@ import {
 
 import { useToast } from "react-native-toast-notifications";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
@@ -24,6 +25,9 @@ export default function RegisterScreen({ navigation }) {
   const toast = useToast();
 
   const { currentUser, modifyUser } = useAuth();
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   // Handle user state changes
   const onAuthStateChanged = async (user) => {
@@ -221,6 +225,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Display",
     color: colors.white,
     marginTop: 18,
   },

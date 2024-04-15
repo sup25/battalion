@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import colors from "../../config/Colors/colors";
 import CarthagosButton from "../CarthagosButton/CarthagosButton";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 function CarthagosLinkButton({
   navigation,
@@ -17,6 +18,9 @@ function CarthagosLinkButton({
   isLoading = false,
 }) {
   const handleLinkPress = () => {
+    useEffect(() => {
+      FontsLoad();
+    }, []);
     if (isLoading) return;
     if (registerRoute) {
       navigation.navigate("Register");
@@ -60,11 +64,13 @@ const styles = StyleSheet.create({
     color: colors.white,
     fontSize: 16,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Display",
   },
   footerLinkText: {
     color: colors.primary,
     fontSize: 16,
     fontWeight: "400",
+    fontFamily: "SF-Pro-Display",
   },
 });
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import { StyleSheet, View, TextInput, Text } from "react-native";
 import auth from "@react-native-firebase/auth";
@@ -6,6 +6,7 @@ import colors from "../../config/Colors/colors";
 import TextLogo from "../../assets/TextLogo";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const ForgotPasswordPrivate = ({ navigation }) => {
   const { currentUser } = useAuth();
@@ -13,6 +14,9 @@ const ForgotPasswordPrivate = ({ navigation }) => {
   const toast = useToast();
   const [errormsg, setErrorMsg] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   const handleResetPassword = async (setIsLoading) => {
     setIsLoading(true);
@@ -104,6 +108,8 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     height: 50,
     color: colors.white,
+    fontFamily: "SF-Pro-Display",
+    fontWeight: "400",
   },
   logoContainer: {
     justifyContent: "flex-start",
@@ -125,5 +131,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     color: colors.white,
     marginTop: 18,
+    fontFamily: "SF-Pro-Display",
   },
 });

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,9 +10,13 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import colors from "../../config/Colors/colors";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const FoundDevices = ({ navigation }) => {
   const [clicks, setClicks] = useState([false, false]);
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   const handlePress = (index) => {
     setClicks((prevClicks) => {
@@ -93,6 +97,7 @@ const styles = StyleSheet.create({
     color: colors.white,
     marginBottom: 20,
     width: 120,
+    fontFamily: "SF-Pro-Display",
   },
   btn: {
     paddingHorizontal: 15,
@@ -126,5 +131,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     textAlign: "center",
     maxWidth: 181,
+    fontFamily: "SF-Pro-Display",
   },
 });

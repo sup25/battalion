@@ -10,8 +10,12 @@ import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { useToast } from "react-native-toast-notifications";
 import TempOuterCircle from "../../component/TempCircleProgress/comps/OuterCircle";
 import TempInnerCircle from "../../component/TempCircleProgress/comps/InnerCircle";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const HalfCircleSlider = ({ navigation }) => {
+  useEffect(() => {
+    FontsLoad();
+  }, []);
   const tost = useToast();
   const { temp, setTempValue, getTempValueAndUnit, isLightsOn } =
     useAppSettingContext();
@@ -124,6 +128,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     paddingLeft: 4,
     textTransform: "uppercase",
+    fontFamily: "Alternate-Gothic",
   },
   IconAndTemp: {
     position: "absolute",
@@ -137,6 +142,7 @@ const styles = StyleSheet.create({
     fontSize: 38,
     fontWeight: "900",
     color: colors.white,
+    fontFamily: "Alternate-Gothic",
   },
   tempTextWrapper: {
     position: "absolute",

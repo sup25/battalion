@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -21,6 +21,7 @@ import Home from "../../screen/Home";
 import { View, Text } from "react-native";
 import { AppSettingProvider } from "../../context/AppSettingContext/AppSettingContext";
 import { BleProvider } from "../../utils/BLEProvider/BLEProvider";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const Tab = createBottomTabNavigator();
 
@@ -30,6 +31,9 @@ const PrivateRoute = () => {
   if (!currentUser || !currentUser?.phoneNumber) {
     return <PublicRoute />;
   }
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   return (
     <AppSettingProvider>
@@ -110,7 +114,12 @@ const MainTabs = () => {
       screenOptions={() => ({
         tabBarLabelPosition: "beside-icon",
         headerShown: false,
-        tabBarLabelStyle: { fontSize: 14, color: "#fff" },
+        tabBarLabelStyle: {
+          fontSize: 14,
+          color: "#fff",
+          fontFamily: "SF-Pro-Display",
+          fontWeight: "500",
+        },
         tabBarStyle: {
           height: 50,
 

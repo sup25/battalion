@@ -1,14 +1,18 @@
 import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import colors from "../../config/Colors/colors";
 import ChargingProgressCircle from "../ChargingProgressCircle";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const BatteryPercent = () => {
   const { connectedDevice } = useBleContext();
   const { boxBatteryLevel, boxIsCharging } = useAppSettingContext();
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   const getIconBasedOnBatteryLevel = () => {
     if (!boxBatteryLevel) return "battery-10-bluetooth";
@@ -34,10 +38,15 @@ const BatteryPercent = () => {
       return "battery-90-bluetooth";
     if (boxBatteryLevel > 90) return "battery-bluetooth";
   };
+
   return (
     <View style={styles.perTxtContainer}>
       <View style={styles.percentageText}>
-        <Text style={{ color: "white", fontSize: 16 }}>Device Battery</Text>
+        <Text
+          style={{ color: "white", fontSize: 16, fontFamily: "SF-Pro-Display" }}
+        >
+          Device Battery
+        </Text>
         <Text
           style={[
             styles.textOne,
@@ -96,6 +105,8 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "800",
     color: "#5A5A5A",
+    fontFamily: "Alternate-Gothic",
+    textTransform: "uppercase",
   },
   BatteryTxtPercent: {
     flexDirection: "row",

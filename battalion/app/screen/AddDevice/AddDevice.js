@@ -6,6 +6,7 @@ import { AddUserData } from "../../api/Database/Database";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const AddDevice = ({ navigation }) => {
   const { currentUser } = useAuth();
@@ -14,6 +15,9 @@ const AddDevice = ({ navigation }) => {
   const [userData, setUserData] = useState({
     combinedSerialNum: "",
   });
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   const handleConfirm = async (setIsLoading) => {
     setIsLoading(true);
@@ -158,6 +162,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "500",
     textAlign: "center",
+    fontFamily: "SF-Pro-Display",
   },
   txtSecond: {
     color: colors.white,
@@ -165,6 +170,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "center",
     marginTop: 8,
+    fontFamily: "SF-Pro-Display",
   },
   message: {
     color: colors.white,

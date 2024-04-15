@@ -17,6 +17,7 @@ import { UseBioMetric } from "../../Hooks/UseBioMetric";
 import TextLogoWhite from "../../assets/TextLogoWhite";
 import { useToast } from "react-native-toast-notifications";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const LoginScreen = ({ navigation }) => {
   const { currentUser } = useAuth();
@@ -32,6 +33,9 @@ const LoginScreen = ({ navigation }) => {
       setEmail(phoneNumber);
     }
   }, [route]);
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   const handleLogin = async () => {
     try {
@@ -95,7 +99,7 @@ const LoginScreen = ({ navigation }) => {
       </View>
       <View style={styles.inputTextContainer}>
         <TextInput
-          style={[styles.input, { fontSize: 18 }]}
+          style={[styles.input, { fontSize: 18, fontFamily: "SF-Pro-Display" }]}
           placeholder="Email"
           placeholderTextColor="white"
           onChangeText={(text) => setEmail(text)}
@@ -104,7 +108,7 @@ const LoginScreen = ({ navigation }) => {
           autoCapitalize="none"
         />
         <TextInput
-          style={[styles.input, { fontSize: 18 }]}
+          style={[styles.input, { fontSize: 18, fontFamily: "SF-Pro-Display" }]}
           placeholderTextColor="white"
           placeholder="Password"
           onChangeText={(text) => setPassword(text)}
@@ -155,6 +159,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     marginTop: 4,
     marginBottom: 4,
+    fontFamily: "SF-Pro-Display",
   },
   input: {
     height: 50,
@@ -183,6 +188,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 24,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Display",
     color: colors.white,
     marginTop: 9,
   },

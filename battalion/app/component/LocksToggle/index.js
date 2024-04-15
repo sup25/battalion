@@ -1,15 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { View, StyleSheet, Text, TouchableWithoutFeedback } from "react-native";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import colors from "../../config/Colors/colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { useToast } from "react-native-toast-notifications";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const LocksToggle = () => {
   const toast = useToast();
   const { isLocked, setDeviceIsLocked } = useAppSettingContext();
   const { writeLockToggleToDevice, connectedDevice } = useBleContext();
+  useEffect(() => {
+    FontsLoad();
+  }, []);
   return (
     <View style={styles.deviceLocked}>
       <Text
@@ -80,6 +84,7 @@ const styles = StyleSheet.create({
     color: "#B0B0B0",
     paddingRight: 0,
     textAlign: "right",
+    fontFamily: "SF-Pro-Display",
   },
   switchOnOff: {
     width: 60,

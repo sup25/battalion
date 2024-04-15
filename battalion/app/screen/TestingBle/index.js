@@ -14,6 +14,7 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../../config/Colors/colors";
 import { useToast } from "react-native-toast-notifications";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const TestingBleScreen = () => {
   const toast = useToast();
@@ -22,6 +23,9 @@ const TestingBleScreen = () => {
     device: null,
     index: null,
   });
+  useEffect(() => {
+    FontsLoad();
+  }, []);
 
   const [message, setMessage] = useState("");
   const [title, setTitle] = useState("Press on the button to start testing.");
@@ -295,6 +299,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     alignItems: "center",
     alignSelf: "center",
+    fontFamily: "SF-Pro-Display",
   },
   button: {
     backgroundColor: "#131313",

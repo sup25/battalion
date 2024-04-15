@@ -1,10 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, ImageBackground, View } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import CarthagosButton from "../../component/CarthagosButton";
 import colors from "../config/Colors/colors";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const ConnectionScreen = ({ navigation }) => {
+  useEffect(() => {
+    FontsLoad();
+  }, []);
   return (
     <View style={styles.container}>
       <ImageBackground
@@ -60,5 +64,6 @@ const styles = StyleSheet.create({
     width: "100%",
     marginTop: 63,
     marginBottom: 39,
+    fontFamily: "SF-Pro-Display",
   },
 });
