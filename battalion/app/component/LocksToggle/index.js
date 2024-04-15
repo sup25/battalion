@@ -22,7 +22,7 @@ const LocksToggle = () => {
           { color: connectedDevice?.device ? "white" : "grey", width: 120 },
         ]}
       >
-        {isLocked ? "Device Locked" : "Device Unlocked"}
+        {isLocked ? "Device locked" : "Device unlocked"}
       </Text>
       <View
         style={[

@@ -22,7 +22,7 @@ const LightsToggle = () => {
           { color: connectedDevice?.device ? "white" : "grey" },
         ]}
       >
-        {isLightsOn ? "Lights Auto" : "Lights Off"}
+        {isLightsOn ? "Lights auto" : "Lights off"}
       </Text>
       <View
         style={[

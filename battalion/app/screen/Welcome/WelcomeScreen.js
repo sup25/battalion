@@ -27,6 +27,7 @@ import { setNameToDevice } from "../../api/Database/Database";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import GradientBackground from "../../component/GradientBackground";
 import { FontsLoad } from "../../utils/FontsLoad";
+import ImageAndButton from "../../component/ImageAndButton";
 
 const WelcomeScreen = ({ navigation }) => {
   const isFirstTime = true;
@@ -78,7 +79,7 @@ const WelcomeScreen = ({ navigation }) => {
         source={require("../../assets/Header-home-battalion.png")}
       >
         {isFirstTime && (
-          <View style={{ height: 230 }}>
+          <View style={{ height: 200 }}>
             <Text
               style={{
                 ...styles.textWelcome,
@@ -133,7 +134,7 @@ const WelcomeScreen = ({ navigation }) => {
                     })
               }
             >
-              <Ionicons name="settings-sharp" size={30} color="#fff" />
+              <Ionicons name="settings-sharp" size={25} color="#fff" />
             </TouchableWithoutFeedback>
           </View>
         )}
@@ -256,7 +257,7 @@ const WelcomeScreen = ({ navigation }) => {
             alignItems: "center",
           }}
         >
-          <Text style={{ color: "white" }}>Test</Text>
+          <ImageAndButton />
         </View>
       )}
     </View>
@@ -312,6 +313,7 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontWeight: "500",
     fontFamily: "SF-Pro-Display",
+    paddingHorizontal: 10,
   },
 
   battalionId: {

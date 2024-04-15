@@ -4,7 +4,7 @@ import Svg, { Path } from "react-native-svg";
 function TextLogo(props) {
   return (
     <Svg
-      width={198}
+      width={178}
       height={20}
       viewBox="0 0 198 20"
       fill="none"

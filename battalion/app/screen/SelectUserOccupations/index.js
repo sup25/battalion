@@ -148,7 +148,7 @@ const SelectUserOccupations = ({ navigation }) => {
           <View style={styles.otherText}>
             <Text
               style={{
-                fontSize: 18,
+                fontSize: 16,
                 lineHeight: 37,
                 color: colors.white,
                 fontFamily: "SF-Pro-Display",
@@ -201,6 +201,7 @@ const styles = StyleSheet.create({
     marginTop: 18,
     fontSize: 24,
     fontWeight: "500",
+    fontFamily: "SF-Pro-Display",
   },
 
   categoryContainer: {
@@ -225,7 +226,7 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 10,
     borderRadius: 20,
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "400",
     display: "flex",
     alignItems: "center",
@@ -241,8 +242,8 @@ const styles = StyleSheet.create({
     width: 273,
     paddingLeft: 15,
     backgroundColor: colors.white,
-    fontSize: 18,
-    right: 275,
+    fontSize: 16,
+    right: 270,
   },
 
   InputContainer: {
@@ -258,7 +259,6 @@ const styles = StyleSheet.create({
     color: colors.white,
     height: 37,
     borderRadius: 20,
-
     fontWeight: "400",
     paddingLeft: 15,
     width: "100%",

@@ -10,6 +10,7 @@ import CarthagosButton from "../../component/CarthagosButton/CarthagosButton";
 import auth from "@react-native-firebase/auth";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
+import { FontsLoad } from "../../utils/FontsLoad";
 
 const VerifyPhoneNum = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -29,6 +30,7 @@ const VerifyPhoneNum = ({ navigation }) => {
   }
 
   useEffect(() => {
+    FontsLoad();
     const backHandler = BackHandler.addEventListener(
       "hardwareBackPress",
       function () {
@@ -156,6 +158,7 @@ const styles = StyleSheet.create({
     marginTop: 31,
     padding: 10,
     fontSize: 24,
+    paddingLeft: 15,
   },
   txtInputContainer: {
     width: "100%",
@@ -171,6 +174,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
     maxWidth: 181,
     alignItems: "center",
+    fontFamily: "SF-Pro-Display",
   },
   txtSecond: {
     color: "#8F8F8F",
@@ -178,6 +182,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "center",
     marginTop: 8,
-    maxWidth: 170,
+    maxWidth: 200,
+    fontFamily: "SF-Pro-Display",
   },
 });

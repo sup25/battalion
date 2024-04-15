@@ -25,7 +25,7 @@ const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
-        <Text style={styles.textWelcome}>Welcome, {userName}</Text>
+        <Text style={styles.textWelcome}>your devices</Text>
       </View>
       <View style={styles.deviceContainer}>
         <View

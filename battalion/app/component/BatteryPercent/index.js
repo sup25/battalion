@@ -43,9 +43,13 @@ const BatteryPercent = () => {
     <View style={styles.perTxtContainer}>
       <View style={styles.percentageText}>
         <Text
-          style={{ color: "white", fontSize: 16, fontFamily: "SF-Pro-Display" }}
+          style={{
+            color: connectedDevice?.device ? "white" : "grey",
+            fontSize: 16,
+            fontFamily: "SF-Pro-Display",
+          }}
         >
-          Device Battery
+          Device battery
         </Text>
         <Text
           style={[
