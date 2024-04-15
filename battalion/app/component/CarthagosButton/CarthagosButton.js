@@ -54,6 +54,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontWeight: "500",
     fontFamily: "Alternate-Gothic",
+    textAlign: "center",
   },
 });
 

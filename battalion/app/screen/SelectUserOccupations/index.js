@@ -146,8 +146,9 @@ const SelectUserOccupations = ({ navigation }) => {
             );
           })}
         </View>
+
         <View style={styles.InputContainer}>
-          <View style={styles.otherText}>
+          <View style={styles.otherTextContainer}>
             <Text style={styles.othertxt}>Other</Text>
           </View>
           <TextInput
@@ -237,7 +238,10 @@ const styles = StyleSheet.create({
     paddingLeft: 15,
     backgroundColor: colors.white,
     fontSize: 18,
-    right: 275,
+    right: 270,
+    fontSize: 16,
+    fontFamily: "SF-Pro-Display",
+    fontWeight: "400",
   },
 
   InputContainer: {
@@ -248,18 +252,21 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     paddingHorizontal: 15,
   },
-  otherText: {
+  otherTextContainer: {
     backgroundColor: "#2D2D2D",
     color: colors.white,
     height: 37,
     borderRadius: 20,
-    alignItems: "center",
     justifyContent: "center",
     display: "flex",
-    fontSize: 18,
-    fontWeight: "400",
     paddingLeft: 15,
     width: "100%",
+  },
+  othertxt: {
+    color: colors.white,
+    fontSize: 16,
+    fontWeight: "400",
+    fontFamily: "SF-Pro-Display",
   },
 
   txtBtnContainer: {

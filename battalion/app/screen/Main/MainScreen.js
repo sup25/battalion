@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
     fontFamily: "Alternate-Gothic",
     fontSize: 20,
     color: colors.white,
+    textAlign: "center",
   },
   buttonsContainer: {
     padding: 20,
