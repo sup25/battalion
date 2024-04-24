@@ -128,7 +128,7 @@ export const AddUserData = async (data) => {
       }
     }
 
-    return deviceDoc.data()?.owner?.id === data.owner;
+    return deviceDoc.data()?.owner ? false : true;
   } catch (error) {
     throw error;
   }

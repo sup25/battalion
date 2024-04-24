@@ -32,7 +32,15 @@ const DeviceList = ({ ownerId, navigation }) => {
   const toast = useToast();
 
   useEffect(() => {
-    getUsersDevices(ownerId, connectedDevice, setDevices, setIsLoaded);
+    getUsersDevices(
+      ownerId,
+      connectedDevice,
+      setDevices,
+      setIsLoaded,
+      isLocked,
+      temp,
+      boxBatteryLevel
+    );
     setConnecting({ device: null, status: false });
     requestPermissions();
   }, []);
@@ -51,30 +59,29 @@ const DeviceList = ({ ownerId, navigation }) => {
           return (
             <TouchableOpacity
               onPress={async () => {
-                if (!user.approved) {
+                if (!user?.approved && item?.owner?.id !== ownerId) {
                   return toast.show("Device not approved by the owner");
                 }
+
                 if (item.deviceId === connectedDevice?.device?.id) {
                   return navigation.navigate("Home");
                 }
                 if (!connecting.status) {
-                  if (item.deviceId !== connectedDevice?.device?.id) {
-                    setConnecting({ device: item.deviceId, status: true });
-                    try {
-                      await connectToDevice({ id: item.deviceId });
-                      return navigation.navigate("Home");
-                    } catch (err) {
-                      console.log("connecting to the device err:", err);
-                      setConnecting({ device: null, status: false });
-                      toast.show(
-                        "Failed to connect to the device, please check your bluetooth connection and try again."
-                      );
-                      // return navigation.navigate("searchscreen", {
-                      //   isFirstTime: false,
-                      //   serialNum: false,
-                      //   id: item.deviceId,
-                      // });
-                    }
+                  setConnecting({ device: item.deviceId, status: true });
+                  try {
+                    await connectToDevice({ id: item.deviceId });
+                    return navigation.navigate("Home");
+                  } catch (err) {
+                    console.log("connecting to the device err:", err);
+                    setConnecting({ device: null, status: false });
+                    toast.show(
+                      "Failed to connect to the device, please check your bluetooth connection and try again."
+                    );
+                    // return navigation.navigate("searchscreen", {
+                    //   isFirstTime: false,
+                    //   serialNum: false,
+                    //   id: item.deviceId,
+                    // });
                   }
                 }
               }}
@@ -99,7 +106,7 @@ const DeviceList = ({ ownerId, navigation }) => {
                     <Text style={{ color: colors.white, overflow: "hidden" }}>
                       {item.name}{" "}
                     </Text>
-                    {user.status === "pending" && (
+                    {user?.status === "pending" && (
                       <View
                         style={{
                           backgroundColor: "#D8D017",
@@ -185,13 +192,12 @@ const DeviceList = ({ ownerId, navigation }) => {
                             : 22,
                       }}
                     >
-                      {item.deviceId === connectedDevice?.device?.id
-                        ? `Device
-                      ${item.isLocked ? "Locked" : "Unlocked"}`
+                      {item?.deviceId === connectedDevice?.device?.id
+                        ? `Device ${item?.isLocked ? "Locked" : "Unlocked"}`
                         : "--"}
                     </Text>
                     <View style={styles.IconWrapper}>
-                      {item.isLocked ? (
+                      {item?.isLocked ? (
                         <MaterialCommunityIcons
                           name="lock"
                           size={20}

@@ -36,7 +36,10 @@ export const getUsersDevices = async (
   ownerId,
   connectedDevice,
   setDevices,
-  setIsLoaded
+  setIsLoaded,
+  isLocked = false,
+  temp = false,
+  boxBatteryLevel = false
 ) => {
   try {
     const ownerArray = await getOwnerAllDevices(ownerId);

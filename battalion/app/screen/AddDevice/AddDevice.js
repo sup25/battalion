@@ -60,6 +60,7 @@ const AddDevice = ({ navigation }) => {
           combinedSerialNum: "",
         });
         handleNavigation(isOwner);
+        setIsLoading(false);
       } catch (error) {
         setIsLoading(false);
         toast.show(error.message, {
@@ -72,6 +73,7 @@ const AddDevice = ({ navigation }) => {
   };
 
   const handleNavigation = async (isOwner) => {
+    console.log(isOwner);
     const combinedSerialNum = combinedSerialNumRef.current;
     if (!combinedSerialNum || combinedSerialNum.length !== 12) {
       console.log("Invalid combinedSerialNum:", combinedSerialNum);

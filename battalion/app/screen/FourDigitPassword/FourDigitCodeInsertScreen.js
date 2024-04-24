@@ -15,7 +15,7 @@ export default function FourDigitCodeInsertScreen({ navigation }) {
   const { writePasswordToDevice, connectedDevice } = useBleContext();
   const [digitValues, setDigitValues] = useState([]);
   const [combinedSerialNum, setCombinedSerialNum] = useState("");
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState(true);
 
   const toast = useToast();
   useEffect(() => {
@@ -87,26 +87,37 @@ export default function FourDigitCodeInsertScreen({ navigation }) {
       <View style={styles.wrapper}>
         <Text style={styles.heading}>4 digit password</Text>
         <Text style={styles.paragraph}>
-          Input the password to unlock the box in the digital display, you can
-          change this password later in the settings.
+          Input a customizable password to your liking that you will use to
+          unlock this box.
         </Text>
-        <TouchableWithoutFeedback
-          onPress={() => setShow((prevShow) => !prevShow)}
+        <Text style={styles.paragraph}>
+          Note: you can change this password later in your settings.
+        </Text>
+        <View
+          style={{
+            backgroundColor: "#131313",
+            borderRadius: 5,
+            height: 167,
+            marginTop: 20,
+          }}
         >
-          <View style={styles.icon}>
-            <MaterialCommunityIcons
-              name={show ? "eye" : "eye-off"}
-              size={30}
-              color={colors.white}
-            />
-          </View>
-        </TouchableWithoutFeedback>
-        <FourDigitsCode
-          defaultValue={digitValues}
-          isVisible={show}
-          submitHandler={setDigitValues}
-        />
-
+          <TouchableWithoutFeedback
+            onPress={() => setShow((prevShow) => !prevShow)}
+          >
+            <View style={styles.icon}>
+              <MaterialCommunityIcons
+                name={show ? "eye-off" : "eye"}
+                size={30}
+                color={colors.white}
+              />
+            </View>
+          </TouchableWithoutFeedback>
+          <FourDigitsCode
+            defaultValue={digitValues}
+            isVisible={show}
+            submitHandler={setDigitValues}
+          />
+        </View>
         <View style={styles.button}>
           <CarthagosButton
             title="confirm"
@@ -122,9 +133,8 @@ export default function FourDigitCodeInsertScreen({ navigation }) {
 
 const styles = StyleSheet.create({
   button: {
-    position: "absolute",
+    marginTop: 100,
     alignSelf: "center",
-    bottom: 20,
   },
   container: {
     flex: 1,
@@ -156,7 +166,7 @@ const styles = StyleSheet.create({
   icon: {
     alignSelf: "flex-end",
     paddingTop: 33,
-    paddingRight: 49,
+    paddingRight: 25,
   },
   textInput: {
     height: 65,

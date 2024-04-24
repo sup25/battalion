@@ -56,7 +56,7 @@ const BleProvider = ({ children }) => {
   const [device, setDevice] = useState(null);
   const [scan, setScan] = useState({
     scanning: false,
-    devices,
+    devices: [],
     error: null,
   });
   const [connectedDevice, setConnectedDevice] = useState({
@@ -277,6 +277,7 @@ const BleProvider = ({ children }) => {
     setConnectedDevice((prev) => ({ ...prev, connecting: false }));
     setScan((prev) => ({
       ...prev,
+      devices: [],
       scanning: true,
     }));
     bleManager.startDeviceScan(
@@ -296,6 +297,7 @@ const BleProvider = ({ children }) => {
         if (error) {
           setScan((prev) => ({
             ...prev,
+            devices: [],
             error: error.message,
             scanning: false,
           }));
@@ -336,7 +338,7 @@ const BleProvider = ({ children }) => {
         if (startTime) {
           if (seconds > 18) {
             setScan((prev) => ({ ...prev, scanning: false }));
-            bleManager.stopDeviceScan(); //stop scanning if more than 5 secs passed
+            bleManager.stopDeviceScan(); //stop scanning if more than 18 secs passed
           }
         }
       }
@@ -409,16 +411,21 @@ const BleProvider = ({ children }) => {
     }
   };
 
-  const disconnectFromDevice = () => {
+  const disconnectFromDevice = async (showToast = false) => {
     if (connectedDevice?.device) {
       bleManager.stopDeviceScan();
-      bleManager.cancelDeviceConnection(connectedDevice?.device.id);
+      await bleManager.cancelDeviceConnection(connectedDevice?.device.id);
       setConnectedDevice((prev) => ({
         ...prev,
         isOwner: false,
         hasPassword: false,
         device: null,
       }));
+      if (showToast) {
+        Toast.show("Device disconnected", {
+          type: "normal",
+        });
+      }
     }
   };
 
@@ -697,6 +704,7 @@ const BleProvider = ({ children }) => {
       startMonitoringDevice();
       connectedDevice?.device.onDisconnected(
         async (error, disconnectedDevice) => {
+          setBoxNameValue("");
           setConnectedDevice((prev) => ({
             ...prev,
             connecting: false,

@@ -103,6 +103,10 @@ const SearchScreen = ({ navigation }) => {
           justifyContent: "center",
           alignItems: "center",
           zIndex: 2,
+          opacity:
+            scan.scanning || (scan?.devices?.length === 0 && !scan.scanning)
+              ? 1
+              : 0,
         }}
       >
         <View style={styles.circle}>
@@ -111,6 +115,7 @@ const SearchScreen = ({ navigation }) => {
           </View>
         </View>
       </View>
+
       {scan.scanning && <PulseAnimation />}
 
       <View style={styles.FoundDeviceAndTxtWrapper}>
@@ -284,7 +289,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "500",
     textAlign: "center",
-    width: 300,
+
     marginBottom: 30,
     alignItems: "center",
     alignSelf: "center",

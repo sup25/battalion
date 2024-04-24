@@ -15,7 +15,11 @@ import {
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import FetchUserProfile from "../../Hooks/UserProfile/UserProfile";
 import colors from "../../config/Colors/colors";
-import { MaterialCommunityIcons, Ionicons } from "@expo/vector-icons";
+import {
+  MaterialCommunityIcons,
+  MaterialIcons,
+  Ionicons,
+} from "@expo/vector-icons";
 
 import LocksToggle from "../../component/LocksToggle";
 import LightsToggle from "../../component/LightsToggle";
@@ -49,7 +53,7 @@ const WelcomeScreen = ({ navigation }) => {
     if (connectedDevice?.device) {
       setIsFirstTime(false);
     }
-  }, []);
+  }, [connectedDevice]);
 
   useEffect(() => {
     if (devices.length > 0) {
@@ -94,16 +98,33 @@ const WelcomeScreen = ({ navigation }) => {
       >
         {isFirstTime && (
           <View style={{ height: 200 }}>
-            <Text
+            <View
               style={{
-                ...styles.textWelcome,
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
                 paddingHorizontal: 15,
                 width: "100%",
                 marginTop: 75,
               }}
             >
-              device details
-            </Text>
+              <TouchableWithoutFeedback
+                onPress={() => navigation.navigate("home")}
+              >
+                <MaterialCommunityIcons
+                  name="arrow-left"
+                  size={24}
+                  color="#B0B0B0"
+                />
+              </TouchableWithoutFeedback>
+              <Text
+                style={{
+                  ...styles.textWelcome,
+                }}
+              >
+                device details
+              </Text>
+            </View>
           </View>
         )}
         {!isFirstTime && (
@@ -138,18 +159,30 @@ const WelcomeScreen = ({ navigation }) => {
               </TouchableWithoutFeedback>
               <Text style={styles.textWelcome}>device details</Text>
             </View>
-
-            <TouchableWithoutFeedback
-              onPress={() =>
-                connectedDevice?.device
-                  ? navigation.navigate("devicesetting")
-                  : toast.show("Please connect to a device.", {
-                      type: "error",
-                    })
-              }
-            >
-              <Ionicons name="settings-sharp" size={25} color="#fff" />
-            </TouchableWithoutFeedback>
+            <View style={{ display: "flex", flexDirection: "row", gap: 5 }}>
+              {connectedDevice?.device && (
+                <TouchableWithoutFeedback
+                  onPress={async () => await disconnectFromDevice(true)}
+                >
+                  <MaterialIcons
+                    name="bluetooth-disabled"
+                    size={25}
+                    color="#fff"
+                  />
+                </TouchableWithoutFeedback>
+              )}
+              <TouchableWithoutFeedback
+                onPress={() =>
+                  connectedDevice?.device
+                    ? navigation.navigate("devicesetting")
+                    : toast.show("Please connect to a device.", {
+                        type: "error",
+                      })
+                }
+              >
+                <Ionicons name="settings-sharp" size={25} color="#fff" />
+              </TouchableWithoutFeedback>
+            </View>
           </View>
         )}
         {!isFirstTime && (
@@ -237,26 +270,6 @@ const WelcomeScreen = ({ navigation }) => {
             <SetBoxTemp />
           </View>
           <BatteryPercent />
-          {connectedDevice?.device && (
-            <View style={styles.btn}>
-              <TouchableOpacity
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-                onPress={() => disconnectFromDevice()}
-              >
-                <Text
-                  style={{ color: "white", fontSize: 14, fontWeight: "500" }}
-                >
-                  Disconnect from device
-                </Text>
-              </TouchableOpacity>
-            </View>
-          )}
         </View>
       )}
       {isFirstTime && !isLoaded && (

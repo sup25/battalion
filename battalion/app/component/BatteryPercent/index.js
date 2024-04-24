@@ -68,7 +68,7 @@ const BatteryPercent = () => {
           {boxIsCharging
             ? "Charging"
             : boxBatteryLevel < 20 && connectedDevice?.device
-            ? "Plug your Device"
+            ? "Plug Your Device"
             : ""}
         </Text>
       </View>

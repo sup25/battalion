@@ -1,12 +1,17 @@
 {
   "expo": {
-    "name": "expo-ble",
+    "name": "Battalion tool",
     "slug": "expo-ble",
     "version": "1.0.0",
     "orientation": "portrait",
     "userInterfaceStyle": "light",
     "scheme": "com.battalion.app",
-    "platforms": ["ios", "android", "web"],
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "icon": "./app/assets/appIcon.png",
     "splash": {
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
@@ -14,36 +19,43 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "plugins": [
-      "expo-av",
+     
       "react-native-ble-plx",
       "@react-native-firebase/app",
       "@react-native-firebase/auth",
-
       [
         "expo-build-properties",
         {
           "ios": {
-            "useFrameworks": "static"
+            "useFrameworks": "static",
+            "deploymentTarget": "12.0"
           }
         }
-      ]
+      ],
+      "expo-font"
     ],
     "ios": {
+      "icon": "./app/assets/appIcon.png",
       "googleServicesFile": "./GoogleService-Info.plist",
       "supportsTablet": true,
       "bundleIdentifier": "com.battalion.app",
       "infoPlist": {
+        "CFBundleIconName": "Battalion tool icon",
         "NSCameraUsageDescription": "$(PRODUCT_NAME) needs access to your Camera.",
         "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos.",
         "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos."
       },
-      "buildNumber": "1"
+      "buildNumber": "7"
     },
     "android": {
+      "icon": "./app/assets/appIcon.png",
       "googleServicesFile": "./google-services.json",
       "adaptiveIcon": {
+        "foregroundImage": "./app/assets/appIcon.png",
         "backgroundColor": "#FFFFFF"
       },
       "package": "com.battalion.app",
@@ -61,6 +73,7 @@
       "eas": {
         "projectId": "e21fa6c8-385a-4f9c-9309-b003a68092a0"
       }
-    }
+    },
+    "owner": "elnatan"
   }
 }

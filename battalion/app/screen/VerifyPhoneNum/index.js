@@ -14,7 +14,7 @@ import { FontsLoad } from "../../utils/FontsLoad";
 
 const VerifyPhoneNum = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [countryCode, setCountryCode] = useState("+1");
+  const [countryCode, setCountryCode] = useState("1");
   const { currentUser } = useAuth();
   const recaptchaVerifier = useRef(null);
   const toast = useToast();
@@ -49,7 +49,7 @@ const VerifyPhoneNum = ({ navigation }) => {
     setIsLoading(true);
 
     try {
-      const fullPhoneNumber = `${countryCode} ${phoneNumber.substring(
+      const fullPhoneNumber = `+${countryCode} ${phoneNumber.substring(
         0,
         3
       )}-${phoneNumber.substring(3, 6)}-${phoneNumber.substring(6)}`;
@@ -69,7 +69,7 @@ const VerifyPhoneNum = ({ navigation }) => {
       navigation.navigate("ConfirmCode", {
         confirmation,
         phoneNumber: fullPhoneNumber,
-        countryCode: countryCode,
+        countryCode: `+${countryCode}`,
       });
       toast.show("Success: Verification code has been sent to your phone", {
         type: "normal",
@@ -92,11 +92,38 @@ const VerifyPhoneNum = ({ navigation }) => {
           We’ll send you a code to keep your account secure
         </Text>
         <View style={styles.txtInputContainer}>
-          <TextInput
-            style={styles.countryCodetxt}
-            defaultValue={countryCode}
-            onChangeText={setCountryCode}
-          />
+          <View
+            style={{
+              position: "relative",
+              display: "flex",
+              alignItems: "center",
+              flexDirection: "row",
+              width: 85,
+              backgroundColor: "#1E1E1E",
+              color: colors.white,
+              borderRadius: 5,
+              height: 55,
+              alignSelf: "center",
+              marginTop: 31,
+            }}
+          >
+            <Text
+              style={{
+                position: "absolute",
+                left: 15,
+                color: "white",
+                zIndex: 999,
+                fontSize: 24,
+              }}
+            >
+              +
+            </Text>
+            <TextInput
+              style={styles.countryCodetxt}
+              defaultValue={countryCode}
+              onChangeText={setCountryCode}
+            />
+          </View>
           <TextInput
             style={styles.phoneNumberInput}
             autoCompleteType="tel"
@@ -149,16 +176,10 @@ const styles = StyleSheet.create({
     fontSize: 24,
   },
   countryCodetxt: {
-    width: 70,
-    backgroundColor: "#1E1E1E",
-    color: colors.white,
-    borderRadius: 5,
-    height: 55,
-    alignSelf: "center",
-    marginTop: 31,
     padding: 10,
     fontSize: 24,
-    paddingLeft: 15,
+    color: colors.white,
+    paddingLeft: 30,
   },
   txtInputContainer: {
     width: "100%",
