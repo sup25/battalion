@@ -10,6 +10,7 @@
         "buildType": "apk"
       }
     },
+    
     "release": {
       "android": {
         "buildType": "apk"
