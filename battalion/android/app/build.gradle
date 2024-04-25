@@ -83,7 +83,7 @@ android {
     buildToolsVersion rootProject.ext.buildToolsVersion
     compileSdk rootProject.ext.compileSdkVersion
 
-    namespace "com.battalion.app"
+    namespace 'com.battalion.app'
     defaultConfig {
         applicationId 'com.battalion.app'
         minSdkVersion rootProject.ext.minSdkVersion
