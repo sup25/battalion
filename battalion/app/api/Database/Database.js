@@ -225,14 +225,14 @@ export const storeFourDigitsToTheDb = async (
   }
 };
 
-export const checkIfUserHasPermissionToConnect = async (ownerId, deviceId) => {
+export const checkIfUserHasPermissionToConnect = async (ownerId, deviceSerialNumber) => {
   try {
     // Get a reference to the devices collection
     const devicesRef = firestore().collection("devices");
     // Query devices based on the owner ID
     const query = devicesRef
       .where("usersIds", "array-contains", ownerId)
-      .where("deviceId", "==", deviceId);
+      .where("combinedSerialNum", "==", deviceSerialNumber);
 
     // Get the documents that match the query
     const querySnapshot = await query.get();
@@ -256,7 +256,7 @@ export const checkIfUserIsOwner = async (ownerId, deviceId) => {
     const devicesRef = firestore().collection("devices");
     // Query devices based on the owner ID
     const query = devicesRef
-      .where("deviceId", "==", deviceId)
+      // .where("deviceId", "==", deviceId)
       .where("owner.id", "==", ownerId);
 
     // Get the documents that match the query
@@ -402,7 +402,7 @@ export const setNameToDevice = async (name, deviceId) => {
   // Add the 'name' parameter
   const deviceRef = firestore()
     .collection("devices")
-    .where("deviceId", "==", deviceId);
+    .doc(deviceId)
   try {
     await deviceRef.get().then((querySnapshot) => {
       // Use 'get' instead of 'update' to fetch the document

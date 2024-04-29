@@ -110,10 +110,11 @@ const SelectUserOccupations = ({ navigation }) => {
         <View style={styles.categoryContainer}>
           {Categories.map((cat) => {
             return (
-              <View key={cat.id} style={styles.categoryItem}>
-                <TouchableWithoutFeedback
+              <TouchableWithoutFeedback
+                 key={cat.id}
                   onPress={() => {
                     setSelectedCategory((prevSelected) => {
+                      
                       if (prevSelected?.length) {
                         if (!prevSelected.includes(cat.id)) {
                           return [...prevSelected, cat.id];
@@ -124,23 +125,24 @@ const SelectUserOccupations = ({ navigation }) => {
                     });
                   }}
                 >
+                          <View  style={[styles.categoryItem,  {
+                                    backgroundColor: selectedCategory.includes(cat.id)
+                                      ? "white"
+                                      : "#2D2D2D"
+                                    
+                                  }]}>
                   <Text
                     style={[
                       styles.category,
-                      {
-                        backgroundColor: selectedCategory.includes(cat.id)
-                          ? "white"
-                          : "#2D2D2D",
-                        color: selectedCategory.includes(cat.id)
+                     {color: selectedCategory.includes(cat.id)
                           ? "black"
-                          : colors.white,
-                      },
+                          : colors.white,}
                     ]}
                   >
                     {cat.occupation}
                   </Text>
-                </TouchableWithoutFeedback>
               </View>
+                </TouchableWithoutFeedback>
             );
           })}
         </View>
@@ -149,7 +151,8 @@ const SelectUserOccupations = ({ navigation }) => {
             <Text
               style={{
                 fontSize: 16,
-                lineHeight: 37,
+                height: "100%",
+                lineHeight:45,
                 color: colors.white,
                 fontFamily: "SF-Pro-Display",
               }}
@@ -157,12 +160,16 @@ const SelectUserOccupations = ({ navigation }) => {
               Other
             </Text>
           </View>
+          <View style={styles.inputView}>
           <TextInput
             style={styles.input}
+            
             placeholder="Write here"
+            value={otherOccupation}
             placeholderTextColor="#989898"
             onChangeText={setOtherOccupation}
           />
+          </View>
         </View>
         <View style={styles.btnLink}>
           <CarthagosLinkButton
@@ -189,7 +196,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
   },
   wrapper: {
-    paddingTop: 30,
+    flex:1,
+    display:'flex',
+    justifyContent:'center'
   },
 
   logoTextContainer: {
@@ -211,57 +220,76 @@ const styles = StyleSheet.create({
     flexWrap: "wrap",
     paddingLeft: 18,
     paddingRight: 20,
-    marginTop: 46,
+    marginTop: 30,
     alignItems: "center",
   },
   categoryItem: {
-    marginRight: 8,
-    marginTop: 8,
+    marginRight: 10,
+    marginTop: 10,
+     color: colors.white,
+    backgroundColor: "#2D2D2D",
+    height: 44,
+    width: "fit-content",
+    
+    borderRadius: 20,
+    paddingLeft: 10,
+    paddingRight:10,  
+    display: "flex",
+    alignItems: "center",
+    justifyContent:"center"
   },
 
   category: {
-    color: colors.white,
-    backgroundColor: "#2D2D2D",
-    height: 47,
-    width: "100%",
-    padding: 10,
-    borderRadius: 20,
     fontSize: 16,
+    lineHeight:16,
     fontWeight: "400",
-    display: "flex",
-    alignItems: "center",
   },
   btnLink: {
-    marginTop: 60,
+    marginTop: 25,
     alignItems: "center",
   },
 
-  input: {
-    height: 37,
-    borderRadius: 20,
-    width: 273,
+  inputView:{
+    borderEndEndRadius: 50,
+    borderStartEndRadius: 50,
+    
     paddingLeft: 15,
     backgroundColor: colors.white,
     fontSize: 16,
-    right: 270,
+    flex:1,
+    lineHeight:45,
+    border:0,
+     height: "100%",
+     display:'flex',
+     flexDirection:'row',
+     alignItems:'center'
+  },
+  input: {
+    color: '#000',
+    fontSize: 16,
+    padding:0,
+    lineHeight:16
+    
   },
 
   InputContainer: {
     flexDirection: "row",
-    alignItems: "center",
-    width: "100%",
+   
+   borderRadius: 50,
     marginTop: 34,
     marginBottom: 20,
-    paddingHorizontal: 15,
+   height: 45,
+    marginHorizontal:15,
+    backgroundColor: "#2D2D2D",
   },
   otherText: {
-    backgroundColor: "#2D2D2D",
+   
     color: colors.white,
-    height: 37,
-    borderRadius: 20,
+   fontSize: 16,
+    borderRadius: 50,
     fontWeight: "400",
-    paddingLeft: 15,
-    width: "100%",
+    paddingHorizontal: 15,
+
   },
 
   txtBtnContainer: {

@@ -183,11 +183,11 @@ const InsertCode = ({ navigation }) => {
           textColor={colors.white}
           onPress={(setIsLoading) => handleVerifyVerificationCode(setIsLoading)}
         />
-        <View style={{ display: "flex" }}>
+        <View style={{ display: "flex", marginTop: 15 }}>
           <CarthagosButton
             style={{ color: "white" }}
             textStyle={{ color: "white", textDecoration: "underline" }}
-            title="Didn't receive verification code? resend code"
+            title="Didn't receive a code?"
             textColor={colors.white}
             color="white"
             onPress={(setIsLoading) => handleResendCode(setIsLoading)}
@@ -217,6 +217,7 @@ const styles = StyleSheet.create({
 
   txtInput: {
     width: 50,
+    textAlign:'center',
     backgroundColor: "#1E1E1E",
     color: colors.white,
     borderRadius: 5,
@@ -242,7 +243,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "500",
     textAlign: "center",
-    maxWidth: 181,
+   
     alignItems: "center",
     fontFamily: "SF-Pro-Display",
   },
@@ -252,7 +253,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "center",
     marginTop: 8,
-    maxWidth: 230,
+    
     fontFamily: "SF-Pro-Display",
   },
 });

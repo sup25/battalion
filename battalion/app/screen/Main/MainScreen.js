@@ -38,7 +38,7 @@ export default function MainScreen({ navigation }) {
         </View>
         <View style={styles.buttonsContainer}>
           <CarthagosButton
-            title="new member"
+            title="Register"
             color="white"
             width={168}
             onPress={() => navigation.navigate("Register")}
@@ -68,22 +68,24 @@ const styles = StyleSheet.create({
 
   headingTextContainer: {
     position: "absolute",
-    top: 200,
+    top: 100,
   },
   headingText: {
-    textTransform: "uppercase",
-    fontWeight: "900",
-    fontFamily: "Alternate-Gothic",
+    textTransform: "uppercase",  
+    fontWeight:'800',
+    fontFamily: "Alternate-Gothic-Bold",
     color: colors.white,
     alignItems: "center",
-    fontSize: 55,
-    lineHeight: 55,
+    fontSize: 50,
+    lineHeight: 50,
     width: "100%",
-    maxWidth: 360,
+    maxWidth: 380,
+    paddingHorizontal: 3,
+
   },
   textAndButton: {
     backgroundColor: colors.black,
-    paddingBottom: 50,
+    
   },
   textContainer: {
     display: "flex",
@@ -102,8 +104,8 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   textWelcome: {
-    fontWeight: "400",
-    fontFamily: "Alternate-Gothic",
+    fontWeight: "800",
+    fontFamily: "Alternate-Gothic-bold",
     fontSize: 20,
     color: colors.white,
     textAlign: "center",
@@ -115,6 +117,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     backgroundColor: colors.black,
-    paddingBottom: 80,
+    paddingBottom: 100,
   },
 });

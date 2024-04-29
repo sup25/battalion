@@ -75,7 +75,7 @@ const DeviceSetting = ({ navigation }) => {
         <TouchableWithoutFeedback onPress={() => navigation.goBack(null)}>
           <MaterialCommunityIcons
             name="arrow-left"
-            size={30}
+            size={25}
             color="#FFFFFF82"
           />
         </TouchableWithoutFeedback>
@@ -145,7 +145,7 @@ const styles = StyleSheet.create({
   boxContainer: {
     flexDirection: "row",
     justifyContent: "center",
-    gap: 5,
+    gap: 10,
     marginTop: 5,
   },
 
@@ -158,6 +158,7 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 18,
     fontFamily: "SF-Pro-Display",
+    
   },
   flexEnd: {
     justifyContent: "flex-end",
@@ -195,12 +196,14 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginTop: 14,
+    
     flexDirection: "column",
   },
   passwordIcon: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+    paddingBottom:20
   },
   switchOnOff: {
     width: 60,
@@ -237,11 +240,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   txtHeading: {
-    fontSize: 32,
-    fontWeight: "900",
+    fontSize: 26,
+    fontWeight: "800",
     textTransform: "uppercase",
     color: colors.white,
     marginLeft: 9,
+    fontFamily:"Alternate-Gothic-bold",
+   
   },
   textInput: {
     fontSize: 32,

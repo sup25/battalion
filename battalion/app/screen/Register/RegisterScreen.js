@@ -6,6 +6,8 @@ import auth from "@react-native-firebase/auth";
 
 import CarthagosLinkButton from "../../component/CarthagosLinkButton/CarthagosLinkButton";
 
+import DismissMyKeyboard from "../../component/DismissMyKeyboard"
+
 import {
   addUserToFirestore,
   createUser,
@@ -17,6 +19,7 @@ import { FontsLoad } from "../../utils/FontsLoad";
 
 export default function RegisterScreen({ navigation }) {
   const [name, setName] = useState("");
+  const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmPassword] = useState("");
@@ -36,6 +39,7 @@ export default function RegisterScreen({ navigation }) {
 
       const addedToFirestore = await createUser(user.uid, {
         name,
+        lastName,
         email,
       });
       modifyUser({ uid: user.uid, name, email });
@@ -117,6 +121,7 @@ export default function RegisterScreen({ navigation }) {
   };
 
   return (
+    <DismissMyKeyboard>
     <View style={styles.container}>
       <View style={styles.logoContainer}>
         <TextLogo />
@@ -126,9 +131,19 @@ export default function RegisterScreen({ navigation }) {
         <TextInput
           style={styles.input}
           placeholderTextColor="#656565"
-          placeholder="Name"
+          placeholder="First Name"
           onChangeText={(text) => setName(text)}
           value={name}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+        />
+        <TextInput
+          style={styles.input}
+          placeholderTextColor="#656565"
+          placeholder="Last Name"
+          onChangeText={(text) => setLastName(text)}
+          value={lastName}
           keyboardType="email-address"
           autoCapitalize="none"
           autoCorrect={false}
@@ -174,18 +189,21 @@ export default function RegisterScreen({ navigation }) {
       </View>
       <StatusBar translucent backgroundColor="transparent" />
     </View>
+    </DismissMyKeyboard>
   );
 }
 
 const styles = StyleSheet.create({
   btnLink: {
     alignItems: "center",
-    marginTop: 139,
+    marginTop: 50,
   },
   container: {
     backgroundColor: colors.black,
     flex: 1,
     paddingHorizontal: 15,
+    display:'flex',
+    justifyContent:'center'
   },
   errorText: {
     color: colors.primary,
@@ -212,7 +230,7 @@ const styles = StyleSheet.create({
     marginTop: 36,
   },
   logoContainer: {
-    marginTop: 66,
+    
     justifyContent: "center",
     alignItems: "center",
   },

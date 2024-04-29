@@ -13,6 +13,8 @@ import colors from "../../config/Colors/colors";
 import CarthagosLinkButton from "../../component/CarthagosLinkButton/CarthagosLinkButton";
 import { useRoute } from "@react-navigation/native";
 
+import DismissMyKeyboard from "../../component/DismissMyKeyboard"
+
 import { UseBioMetric } from "../../Hooks/UseBioMetric";
 import TextLogoWhite from "../../assets/TextLogoWhite";
 import { useToast } from "react-native-toast-notifications";
@@ -20,7 +22,6 @@ import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { FontsLoad } from "../../utils/FontsLoad";
 
 const LoginScreen = ({ navigation }) => {
-  const { currentUser } = useAuth();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -42,8 +43,8 @@ const LoginScreen = ({ navigation }) => {
       const biometricResult = await UseBioMetric();
 
       if (biometricResult) {
-        await auth().signInWithEmailAndPassword(email, password);
-        if (currentUser && !currentUser.phoneNumber) {
+        const res = await auth().signInWithEmailAndPassword(email, password);
+        if (res?.user && !res?.user?.phoneNumber) {
           navigation.navigate("Phoneverify");
           return toast.show("User doesnt have a phone number attached.", {
             type: "normal",
@@ -51,8 +52,9 @@ const LoginScreen = ({ navigation }) => {
         }
         navigation.navigate("privateRoute", { screen: "MainTabs" });
       } else {
-        await auth().signInWithEmailAndPassword(email, password);
-        if (currentUser && !currentUser.phoneNumber) {
+        const res = await auth().signInWithEmailAndPassword(email, password);
+       
+        if (res?.user && !res?.user?.phoneNumber) {
           navigation.navigate("Phoneverify");
           return toast.show("User doesnt have a phone number attached.", {
             type: "normal",
@@ -87,6 +89,7 @@ const LoginScreen = ({ navigation }) => {
   };
 
   return (
+    <DismissMyKeyboard>
     <View style={styles.container}>
       <Text style={styles.watermarkText}></Text>
       <Image
@@ -116,7 +119,8 @@ const LoginScreen = ({ navigation }) => {
           secureTextEntry
         />
         <TouchableOpacity
-          style={{ alignSelf: "flex-start", paddingLeft: 20 }}
+          style={{ alignSelf: "flex-start", paddingLeft: 20 ,alignSelf:'center',
+          textAlign: 'center',}}
           onPress={handleForgotPassword}
         >
           <Text style={styles.forgotPasswordText}>Forgot your password?</Text>
@@ -135,6 +139,7 @@ const LoginScreen = ({ navigation }) => {
         />
       </View>
     </View>
+     </DismissMyKeyboard>
   );
 };
 
@@ -146,7 +151,7 @@ const styles = StyleSheet.create({
   container: {
     backgroundColor: colors.black,
     flex: 1,
-    justifyContent: "flex-start",
+    justifyContent: "center",
   },
   errorText: {
     color: colors.primary,
@@ -160,6 +165,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 4,
     fontFamily: "SF-Pro-Display",
+    
   },
   input: {
     height: 50,
@@ -176,9 +182,10 @@ const styles = StyleSheet.create({
     bottom: 160,
   },
   productImage: {
-    height: 360,
-    width: 355,
-    bottom: 100,
+    height: 310,
+    width: 305,
+    bottom: 150,
+    alignSelf:"center"
   },
   inputTextContainer: {
     paddingHorizontal: 15,

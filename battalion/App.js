@@ -4,6 +4,12 @@ import { RoutesNavigator } from "./app/navigation/RoutesNavigator";
 import { BleProvider } from "./app/utils/BLEProvider/BLEProvider";
 import { AppSettingProvider } from "./app/context/AppSettingContext/AppSettingContext";
 import { ToastProvider } from "react-native-toast-notifications";
+import {
+  
+  TouchableWithoutFeedback,
+  
+  Keyboard,
+} from "react-native";
 
 export default function App() {
   return (
@@ -15,7 +21,9 @@ export default function App() {
         animationType="slide-in"
       >
         <AuthProvider>
+           
           <RoutesNavigator />
+          
         </AuthProvider>
       </ToastProvider>
     </NavigationContainer>

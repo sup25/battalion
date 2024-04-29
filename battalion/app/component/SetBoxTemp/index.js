@@ -53,7 +53,7 @@ const SetBoxTemp = () => {
         <Text
           style={[
             styles.setText,
-            { color: connectedDevice?.device ? "white" : "grey" },
+            { color: connectedDevice?.device ? "white" : "#ffffff" },
           ]}
         >
           Set the box temperature

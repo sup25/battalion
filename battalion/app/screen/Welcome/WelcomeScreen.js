@@ -122,7 +122,7 @@ const WelcomeScreen = ({ navigation }) => {
                   ...styles.textWelcome,
                 }}
               >
-                device details
+               Welcome, {currentUser.name}
               </Text>
             </View>
           </View>
@@ -195,7 +195,9 @@ const WelcomeScreen = ({ navigation }) => {
                   justifyContent: "space-between",
                 }}
               >
+                
                 <Text style={styles.connDevice}>Devices Connected</Text>
+                <View style={styles.addDeviceTextWrapper}>
                 <Text
                   style={styles.addDevice}
                   onPress={() => {
@@ -206,6 +208,7 @@ const WelcomeScreen = ({ navigation }) => {
                 >
                   Your devices
                 </Text>
+              </View>
               </View>
             )}
           </View>
@@ -275,13 +278,8 @@ const WelcomeScreen = ({ navigation }) => {
       {isFirstTime && !isLoaded && (
         <View
           style={{
-            flex: 1,
-            backgroundColor: colors.black,
-            paddingHorizontal: 15,
-            display: "flex",
-            flexDirection: "column",
-            justifyContent: "center",
-            alignItems: "center",
+            flex: 0.8,
+            
           }}
         >
           <ImageAndButton />
@@ -332,13 +330,21 @@ const styles = StyleSheet.create({
     height: 30,
     marginTop: 50,
   },
+  addDeviceTextWrapper:{
+    backgroundColor: colors.primary,
+    color: colors.white,
+    borderRadius:20,
+    alignItems: "center",
+    padding: 5,
+  },
   addDevice: {
     backgroundColor: colors.primary,
     color: colors.white,
-    borderRadius: 20,
+   
     alignItems: "center",
-    padding: 5,
+    
     fontSize: 14,
+    lineHeight: 14,
     fontWeight: "500",
     fontFamily: "SF-Pro-Display",
     paddingHorizontal: 10,
@@ -454,14 +460,13 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   textWelcome: {
-    fontSize: 28,
-    fontWeight: "800",
+    fontSize: 26,    
     textTransform: "uppercase",
     color: colors.white,
-    fontWeight: "900",
+    fontWeight: "800",
     alignItems: "flex-start",
     marginLeft: 10,
-    fontFamily: "Alternate-Gothic",
+    fontFamily: "Alternate-Gothic-bold",
   },
 
   unlockedImageContainer: {

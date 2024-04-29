@@ -18,28 +18,28 @@ export default function FourDigitCodeInsertScreen({ navigation }) {
   const [show, setShow] = useState(true);
 
   const toast = useToast();
-  useEffect(() => {
-    const fetchCombinedSerialNum = async () => {
-      try {
-        const storedCombinedSerialNum = await AsyncStorage.getItem(
-          "combinedSerialNum"
-        );
-        if (storedCombinedSerialNum !== null) {
-          setCombinedSerialNum(storedCombinedSerialNum);
-        }
-      } catch (error) {
-        console.log(
-          "Error fetching combinedSerialNum from AsyncStorage:",
-          error
-        );
+  
+  const fetchCombinedSerialNum = async () => {
+    try {
+      const storedCombinedSerialNum = await AsyncStorage.getItem(
+        "combinedSerialNum"
+      );
+      if (storedCombinedSerialNum !== null) {
+        setCombinedSerialNum(storedCombinedSerialNum);
       }
-    };
+    } catch (error) {
+      console.log(
+        "Error fetching combinedSerialNum from AsyncStorage:",
+        error
+      );
+    }
+  };
+  useEffect(() => {
 
     fetchCombinedSerialNum();
-  }, []);
-  useEffect(() => {
     FontsLoad();
   }, []);
+ 
 
   const handleConfirm = async (setIsLoading) => {
     setIsLoading(true);

@@ -59,6 +59,7 @@ const DeviceList = ({ ownerId, navigation }) => {
           return (
             <TouchableOpacity
               onPress={async () => {
+                
                 if (!user?.approved && item?.owner?.id !== ownerId) {
                   return toast.show("Device not approved by the owner");
                 }
@@ -69,7 +70,7 @@ const DeviceList = ({ ownerId, navigation }) => {
                 if (!connecting.status) {
                   setConnecting({ device: item.deviceId, status: true });
                   try {
-                    await connectToDevice({ id: item.deviceId });
+                    await connectToDevice({ id: item.deviceId }, item.combinedSerialNum);
                     return navigation.navigate("Home");
                   } catch (err) {
                     console.log("connecting to the device err:", err);
@@ -110,9 +111,10 @@ const DeviceList = ({ ownerId, navigation }) => {
                       <View
                         style={{
                           backgroundColor: "#D8D017",
-                          paddingHorizontal: 5,
-                          paddingVertical: 2.5,
+                          paddingHorizontal: 7,
+                          paddingVertical: 3,
                           borderRadius: 50,
+                          fontSize: 12
                         }}
                       >
                         <Text style={{ fontSize: 14 }}>

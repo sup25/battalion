@@ -42,7 +42,7 @@ const HalfCircleSlider = ({ navigation }) => {
           <MaterialCommunityIcons
             style={{ alignSelf: "flex-end", paddingBottom: 5 }}
             name="arrow-left"
-            size={32}
+            size={25}
             color="#B0B0B0"
           />
         </TouchableWithoutFeedback>
@@ -121,14 +121,14 @@ const styles = StyleSheet.create({
   },
 
   Heading: {
-    fontSize: 32,
-    fontWeight: "900",
+    fontSize: 28,
+    fontWeight: "800",
     color: colors.white,
     marginTop: 35,
     alignSelf: "center",
     paddingLeft: 4,
     textTransform: "uppercase",
-    fontFamily: "Alternate-Gothic",
+    fontFamily: "Alternate-Gothic-bold",
   },
   IconAndTemp: {
     position: "absolute",
@@ -139,10 +139,10 @@ const styles = StyleSheet.create({
     width: "100%",
   },
   Temptext: {
-    fontSize: 38,
-    fontWeight: "900",
+    fontSize: 32,
+    fontWeight: "800",
     color: colors.white,
-    fontFamily: "Alternate-Gothic",
+    fontFamily: "Alternate-Gothic-bold",
   },
   tempTextWrapper: {
     position: "absolute",

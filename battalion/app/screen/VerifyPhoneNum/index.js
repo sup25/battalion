@@ -186,6 +186,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
+    justifyContent:'center',
     paddingHorizontal: 15,
   },
   txtFirst: {
@@ -193,7 +194,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "500",
     textAlign: "center",
-    maxWidth: 181,
+    // maxWidth: 181,
     alignItems: "center",
     fontFamily: "SF-Pro-Display",
   },
@@ -203,7 +204,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "center",
     marginTop: 8,
-    maxWidth: 200,
+    // maxWidth: 200,
     fontFamily: "SF-Pro-Display",
   },
 });

@@ -106,8 +106,7 @@ const styles = StyleSheet.create({
     color: "#5A5A5A",
   },
   textTwo: {
-    fontSize: 16,
-    fontWeight: "800",
+    fontSize: 16,    
     color: "#5A5A5A",
     fontFamily: "Alternate-Gothic",
     textTransform: "uppercase",

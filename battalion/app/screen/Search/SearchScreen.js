@@ -45,7 +45,7 @@ const SearchScreen = ({ navigation }) => {
     scan,
     connectedDevice,
   } = useBleContext();
-
+  
   let timer = null;
 
   const init = async () => {
@@ -111,7 +111,7 @@ const SearchScreen = ({ navigation }) => {
       >
         <View style={styles.circle}>
           <View style={styles.logo}>
-            <TextLogo />
+            <TextLogo color="#000" />
           </View>
         </View>
       </View>
@@ -129,7 +129,7 @@ const SearchScreen = ({ navigation }) => {
           </Text>
           {scan.devices &&
             scan.devices
-              .filter((item) => (id ? item.id === id : true))
+              // .filter((item) => (id ? item.id === id : true))
               .map((device, index) => {
                 return (
                   <TouchableWithoutFeedback
@@ -211,7 +211,7 @@ const SearchScreen = ({ navigation }) => {
                 }
                 stopScanning();
                 try {
-                  await connectToDevice(selectedDevice.device);
+                  await connectToDevice(selectedDevice.device, serialNum);
                   await setConnectedDevice(selectedDevice.device);
                   if (!connectedDevice.hasPassword) {
                     navigation.navigate("fourdigitcodeinsertscreen");
@@ -265,7 +265,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-
+  logo:{
+    display:'flex',
+    alignItems: "center",
+    justifyContent: "center",
+    width: '100%',
+    height:'100%'
+  },
   container: {
     flex: 1,
     backgroundColor: colors.dark,

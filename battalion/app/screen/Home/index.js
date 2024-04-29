@@ -1,4 +1,10 @@
-import { SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+  TouchableWithoutFeedback,
+} from "react-native";
 import React, { useState, useEffect } from "react";
 import colors from "../../config/Colors/colors";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
@@ -6,14 +12,23 @@ import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import FetchUserProfile from "../../Hooks/UserProfile/UserProfile";
 import DeviceList from "../../component/DeviceList";
 import { FontsLoad } from "../../utils/FontsLoad";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const Home = ({ navigation }) => {
   const { currentUser } = useAuth();
   const { connectedDevice } = useBleContext();
   const [userName, setUserName] = useState();
   const userData = FetchUserProfile(currentUser);
+  const loadFont = async () => {
+    try {
+      const font = await FontsLoad();
+      console.log("test///", font);
+    } catch (e) {
+      console.log(e);
+    }
+  };
   useEffect(() => {
-    FontsLoad();
+    loadFont();
   }, []);
 
   useEffect(() => {
@@ -25,7 +40,18 @@ const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
-        <Text style={styles.textWelcome}>Your devices</Text>
+        <View style={{ display: "flex",flexDirection:'row',flex:1, alignItems: "center" }}>
+          <View style={{ width: 24 }}>
+            <TouchableWithoutFeedback onPress={() => navigation.goBack(null)}>
+              <MaterialCommunityIcons
+                name="arrow-left"
+                size={24}
+                color="#B0B0B0"
+              />
+            </TouchableWithoutFeedback>
+          </View>
+          <Text style={styles.textWelcome}>Your devices</Text>
+        </View>
       </View>
       <View style={styles.deviceContainer}>
         <View
@@ -36,14 +62,16 @@ const Home = ({ navigation }) => {
           }}
         >
           <Text style={styles.connDevice}>Devices Connected</Text>
-          <Text
-            style={styles.addDevice}
-            onPress={() => {
-              navigation.navigate("addDevice");
-            }}
-          >
-            Add Device +
-          </Text>
+          <View style={styles.addDevice}>
+            <Text
+              style={{ color: colors.white }}
+              onPress={() => {
+                navigation.navigate("addDevice");
+              }}
+            >
+              Add Device +
+            </Text>
+          </View>
         </View>
       </View>
       <DeviceList navigation={navigation} ownerId={currentUser.uid} />
@@ -77,13 +105,13 @@ const styles = StyleSheet.create({
     paddingTop: 35,
   },
   textWelcome: {
-    fontSize: 28,
-    fontWeight: "800",
+    fontSize: 26,
+    letterSpacing: -1,
     textTransform: "uppercase",
     color: colors.white,
-    fontWeight: "900",
+    fontWeight: "800",
     alignItems: "flex-start",
-    fontFamily: "Alternate-Gothic",
+    fontFamily: "Alternate-Gothic-bold",
   },
   deviceContainer: {
     position: "relative",

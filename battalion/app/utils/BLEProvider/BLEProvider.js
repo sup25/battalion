@@ -23,12 +23,12 @@ import { useNavigation } from "@react-navigation/native";
 const BleContext = createContext();
 
 const BleProvider = ({ children }) => {
-  const SPS_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
-  const SPS_SERVER_TX_UUID = "19B10001-E8F2-537E-4F6C-D104768A1214";
-  const SPS_SERVER_RX_UUID = "19B10002-E8F2-537E-4F6C-D104768A1214";
-  // const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
-  // const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
-  // const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
+  // const SPS_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
+  // const SPS_SERVER_TX_UUID = "19B10001-E8F2-537E-4F6C-D104768A1214";
+  // const SPS_SERVER_RX_UUID = "19B10002-E8F2-537E-4F6C-D104768A1214";
+  const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
+  const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
+  const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
 
   const navigation = useNavigation();
 
@@ -88,7 +88,8 @@ const BleProvider = ({ children }) => {
   };
 
   const connectToDeviceOnStart = async () => {
-    console.log(navigation.getState(), "screen");
+    
+    const serialNum = await AsyncStorage.getItem('combinedSerialNum');
     if (
       currentUser &&
       navigation.getState().routes[0].state.routes[0].name === "MainTabs"
@@ -107,7 +108,7 @@ const BleProvider = ({ children }) => {
           }
         );
         try {
-          await connectToDevice(storedDeviceId?.device);
+          await connectToDevice(storedDeviceId?.device,serialNum);
           Toast.show("Device reconnected successfuly.", {
             type: "normal",
           });
@@ -154,6 +155,7 @@ const BleProvider = ({ children }) => {
       currentUser &&
       navigation.getState().routes[0].state.routes[0].name === "MainTabs"
     ) {
+      const serialNum = await AsyncStorage.getItem("combinedSerialNum");
       setConnectedDevice((prev) => ({
         ...prev,
         device: null,
@@ -175,7 +177,7 @@ const BleProvider = ({ children }) => {
           });
 
           try {
-            await connectToDevice(storedDeviceId?.device);
+            await connectToDevice(storedDeviceId?.device, serialNum);
             Toast.show("Device reconnected successfuly.", {
               type: "normal",
             });
@@ -345,13 +347,16 @@ const BleProvider = ({ children }) => {
     );
   };
 
-  const connectToDevice = async (device, setDevice) => {
+  const connectToDevice = async (device, deviceSerialNumber = false) => {
+    if (Platform.OS === "ios") {
+      device.id = SPS_SERVICE_UUID;
+    }
     console.log("connecting to device", device);
     setConnectedDevice((prev) => ({ ...prev, connecting: true }));
     bleManager.stopDeviceScan();
     let setTimeOut = setTimeout(async () => {
       await bleManager.cancelDeviceConnection(device.id);
-      setConnectedDevice((prev) => ({
+      setConnectedDevice(() => ({
         device: null,
         isOwner: false,
         hasPassword: false,
@@ -365,7 +370,7 @@ const BleProvider = ({ children }) => {
     try {
       const deviceFromDb = await checkIfUserHasPermissionToConnect(
         currentUser.uid,
-        device.id
+        deviceSerialNumber
       );
       if (!deviceFromDb) {
         setConnectedDevice({
@@ -394,6 +399,9 @@ const BleProvider = ({ children }) => {
         isOwner: isOwner,
         connecting: false,
       });
+      if(deviceSerialNumber){
+        await AsyncStorage.setItem("combinedSerialNum", deviceSerialNumber);
+      }
       clearTimeout(setTimeOut);
       return deviceConnection;
     } catch (e) {

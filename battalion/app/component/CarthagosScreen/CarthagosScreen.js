@@ -1,9 +1,13 @@
 import React from "react";
 import Constants from "expo-constants";
-import { SafeAreaView, StyleSheet } from "react-native";
-
+import { SafeAreaView, StyleSheet, View } from "react-native";
+import DismissMyKeyboard from "../DismissMyKeyboard";
 function CarthagosScreen({ children, style }) {
-  return <SafeAreaView style={[styles.screen, style]}>{children}</SafeAreaView>;
+  return (
+    <View style={[styles.screen, style]}>
+      <DismissMyKeyboard>{children}</DismissMyKeyboard>
+    </View>
+  );
 }
 const styles = StyleSheet.create({
   screen: {

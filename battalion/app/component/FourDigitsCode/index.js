@@ -19,12 +19,12 @@ import colors from "../../config/Colors/colors";
 
 const styles = StyleSheet.create({
   root: { flex: 1, padding: 20 },
-  title: { textAlign: "center", fontSize: 30 },
+  title: { textAlign: "center", fontSize: 30  },
 
   cell: {
-    width: 40,
-    height: 40,
-    lineHeight: 38,
+    width: 60,
+    height: 60,
+    lineHeight: 50,
     fontSize: 24,
     borderWidth: 1,
     borderColor: "rgba(255,255,255,0.2)",

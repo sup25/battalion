@@ -110,9 +110,11 @@ const PrivateStackNavigator = () => {
 
 const MainTabs = () => {
   return (
+    
     <Tab.Navigator
       screenOptions={() => ({
         tabBarLabelPosition: "beside-icon",
+       
         headerShown: false,
         tabBarLabelStyle: {
           fontSize: 14,
@@ -121,15 +123,16 @@ const MainTabs = () => {
           fontWeight: "500",
         },
         tabBarStyle: {
-          height: 50,
-
+          height: 110,
           backgroundColor: "#000",
           flexDirection: "row",
         },
       })}
     >
+      
       <Tab.Screen
         name="Home"
+        
         component={WelcomeScreen}
         options={{
           tabBarIcon: ({ size, focused }) => (
@@ -144,6 +147,7 @@ const MainTabs = () => {
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
+        
         options={{
           tabBarIcon: ({ size, focused }) => (
             <MaterialCommunityIcons
@@ -155,6 +159,7 @@ const MainTabs = () => {
         }}
       />
     </Tab.Navigator>
+   
   );
 };
 

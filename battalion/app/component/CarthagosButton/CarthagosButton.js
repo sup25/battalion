@@ -63,11 +63,11 @@ const styles = StyleSheet.create({
   },
   text: {
     color: colors.white,
-    fontSize: 20,
+    fontSize: 16,
     lineHeight: 20,
     textTransform: "uppercase",
-    fontWeight: "500",
-    fontFamily: "Alternate-Gothic",
+    fontWeight: "800",
+    fontFamily: "Alternate-Gothic-bold",
     textAlign: "center",
   },
 });

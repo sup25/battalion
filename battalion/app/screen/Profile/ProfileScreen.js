@@ -142,7 +142,7 @@ const ProfileScreen = (props) => {
         <Text style={styles.profileTxt}>My profile</Text>
         <View style={styles.bigRectangle}>
           <View>
-            <Text style={styles.userName}>User Name</Text>
+            <Text style={styles.userName}>Name</Text>
             {isEditingUsername ? (
               <TextInput
                 style={styles.inputs}
@@ -184,7 +184,7 @@ const ProfileScreen = (props) => {
           </View>
 
           <View>
-            <Text style={styles.phoneNumber}>Phone Number</Text>
+            <Text style={styles.phoneNumber}>Phone number</Text>
             <TextInput
               style={styles.inputs}
               placeholder="+10000"
@@ -405,6 +405,7 @@ const ProfileScreen = (props) => {
           <CarthagosButton
             width={"100%"}
             textColor="white"
+            
             onPress={() => {
               logout();
             }}
@@ -543,20 +544,21 @@ const styles = StyleSheet.create({
   },
   profileTxt: {
     color: colors.white,
-    fontSize: 32,
-    fontWeight: "900",
+    fontSize: 26,
+    fontWeight: "800",
     textTransform: "uppercase",
     alignSelf: "flex-start",
-    fontFamily: "Alternate-Gothic",
+    fontFamily: "Alternate-Gothic-bold",
+    paddingBottom:10
   },
 
   forgetPasswordTxt: {
-    fontSize: 23,
+    fontSize: 20,
     textTransform: "uppercase",
     fontWeight: "800",
     color: colors.white,
     width: 135,
-    fontFamily: "Alternate-Gothic",
+    fontFamily: "Alternate-Gothic-bold",
   },
 
   userName: {
