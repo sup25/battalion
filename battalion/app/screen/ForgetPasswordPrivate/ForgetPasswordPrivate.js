@@ -44,32 +44,34 @@ const ForgotPasswordPrivate = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container} behavior="height">
-      <View style={styles.textLogo}>
-        <View style={styles.logoContainer}>
-          <TextLogo />
-          <Text style={styles.title}>Forgot Password?</Text>
+    <DismissMyKeyboard>
+      <View style={styles.container} behavior="height">
+        <View style={styles.textLogo}>
+          <View style={styles.logoContainer}>
+            <TextLogo />
+            <Text style={styles.title}>Forgot Password?</Text>
+          </View>
+          <TextInput
+            placeholder="Email"
+            placeholderTextColor="#656565"
+            value={email}
+            onChangeText={(text) => setEmail(text)}
+            style={styles.input}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            color="white"
+          />
         </View>
-        <TextInput
-          placeholder="Email"
-          placeholderTextColor="#656565"
-          value={email}
-          onChangeText={(text) => setEmail(text)}
-          style={styles.input}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          color="white"
-        />
+        <View style={styles.btnContainer}>
+          <CarthagosButton
+            onPress={(setIsLoading) => handleResetPassword(setIsLoading)}
+            title="Submit"
+            width={277}
+            textColor="white"
+          />
+        </View>
       </View>
-      <View style={styles.btnContainer}>
-        <CarthagosButton
-          onPress={(setIsLoading) => handleResetPassword(setIsLoading)}
-          title="Submit"
-          width={277}
-          textColor="white"
-        />
-      </View>
-    </View>
+    </DismissMyKeyboard>
   );
 };
 

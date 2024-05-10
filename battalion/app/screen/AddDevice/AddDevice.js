@@ -7,6 +7,8 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
 import { FontsLoad } from "../../utils/FontsLoad";
+import DismissMyKeyboard from "../../component/DismissMyKeyboard";
+import BackButton from "../../component/BackButton";
 
 const AddDevice = ({ navigation }) => {
   const { currentUser } = useAuth();
@@ -49,6 +51,7 @@ const AddDevice = ({ navigation }) => {
 
       // Call AddUserData to send combinedSerialNum
       try {
+        console.log("Updated user data:", currentUser);
         const isOwner = await AddUserData(updatedUserData);
 
         toast.show("Data saved successfully!", {
@@ -104,26 +107,31 @@ const AddDevice = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.containerSmall}>
-        <Text style={styles.txtFirst}>Insert Code Manually</Text>
-        <Text style={styles.txtSecond}>Write in the field below</Text>
-        <TextInput
-          style={styles.txtInput}
-          value={userData.combinedSerialNum}
-          onChangeText={(value) => handleChangeText("combinedSerialNum", value)}
-        />
-      </View>
+    <DismissMyKeyboard>
+      <View style={styles.container}>
+        <View style={styles.containerSmall}>
+          <BackButton style={{ position: "absolute", zIndex: 999, top: 5 }} />
+          <Text style={styles.txtFirst}>Insert Code Manually</Text>
+          <Text style={styles.txtSecond}>Write in the field below</Text>
+          <TextInput
+            style={styles.txtInput}
+            value={userData.combinedSerialNum}
+            onChangeText={(value) =>
+              handleChangeText("combinedSerialNum", value)
+            }
+          />
+        </View>
 
-      <View style={styles.btn}>
-        <CarthagosButton
-          title="confirm"
-          width={277}
-          textColor={colors.white}
-          onPress={(setIsLoading) => handleConfirm(setIsLoading)}
-        />
+        <View style={styles.btn}>
+          <CarthagosButton
+            title="confirm"
+            width={277}
+            textColor={colors.white}
+            onPress={(setIsLoading) => handleConfirm(setIsLoading)}
+          />
+        </View>
       </View>
-    </View>
+    </DismissMyKeyboard>
   );
 };
 
@@ -143,6 +151,7 @@ const styles = StyleSheet.create({
   containerSmall: {
     width: "100%",
     marginTop: 76,
+    position: "relative",
   },
   InserCodetxt: {
     color: colors.medium,

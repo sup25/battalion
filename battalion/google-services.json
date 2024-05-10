@@ -35,7 +35,7 @@
               "client_id": "255101624190-3ma5u8hdt5esqsqs8f8l18ds6oicdhvj.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.battalion.app"
+                "bundle_id": "com.example.expo-ble"
               }
             }
           ]
@@ -71,7 +71,7 @@
               "client_id": "255101624190-3ma5u8hdt5esqsqs8f8l18ds6oicdhvj.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.battalion.app"
+                "bundle_id": "com.example.expo-ble"
               }
             }
           ]

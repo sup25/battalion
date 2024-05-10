@@ -1,7 +1,7 @@
 import firestore from "@react-native-firebase/firestore";
 import { db } from "../../config/Firebase/Firebase";
 
-const addUserToDevice = async (deviceId, userId) => {
+const addUserToDevice = async (deviceId, userId, macId) => {
   try {
     // Get a reference to the devices collection
     const devicesRef = firestore().collection("devices");
@@ -225,7 +225,10 @@ export const storeFourDigitsToTheDb = async (
   }
 };
 
-export const checkIfUserHasPermissionToConnect = async (ownerId, deviceSerialNumber) => {
+export const checkIfUserHasPermissionToConnect = async (
+  ownerId,
+  deviceSerialNumber
+) => {
   try {
     // Get a reference to the devices collection
     const devicesRef = firestore().collection("devices");
@@ -243,10 +246,47 @@ export const checkIfUserHasPermissionToConnect = async (ownerId, deviceSerialNum
       devices.push({ id: doc.id, ...doc.data() });
     });
 
-    return devices.length > 0 ? devices[0] : false;
+    return devices?.length > 0 ? devices[0] : false;
   } catch (error) {
     console.error("Error getting devices:", error);
     throw error;
+  }
+};
+
+export const addDeviceToUserIOS = async (deviceId, macId, userId) => {
+  // Get a reference to the users collection
+  const usersRef = firestore().collection("users");
+  // Get a reference to the document using the user ID
+  const userRef = usersRef.doc(userId);
+  // Get the document data
+  const userDoc = await userRef.get();
+
+  if (!userDoc.exists) {
+    throw new Error("User not found");
+  }
+  // User document exists
+  const userData = userDoc.data();
+  const devices = userData.devices || {}; // Get devices array, or create empty array if not exists
+
+  // Check if the device already exists in the array
+  const deviceExists = devices?.deviceId;
+
+  if (!deviceExists) {
+    // Add the device to the array
+    await userRef.update({
+      devices: { ...devices, [deviceId]: [macId] },
+    });
+    console.log("Device added successfully");
+  } else {
+    if (!deviceExists.includes(macId)) {
+      // Add the device to the array
+      await userRef.update({
+        devices: { ...devices, [deviceId]: [...deviceExists, macId] },
+      });
+      console.log("Device added successfully");
+    } else {
+      console.log("Device already exists");
+    }
   }
 };
 
@@ -256,7 +296,7 @@ export const checkIfUserIsOwner = async (ownerId, deviceId) => {
     const devicesRef = firestore().collection("devices");
     // Query devices based on the owner ID
     const query = devicesRef
-      // .where("deviceId", "==", deviceId)
+      .where("combinedSerialNum", "==", deviceId)
       .where("owner.id", "==", ownerId);
 
     // Get the documents that match the query
@@ -277,7 +317,7 @@ export const getDeviceUsers = async (deviceId, isOwner) => {
         // Get a reference to the devices collection
         const devicesRef = firestore().collection("devices");
         // Query devices based on the owner ID
-        const query = devicesRef.where("deviceId", "==", deviceId);
+        const query = devicesRef.where("combinedSerialNum", "==", deviceId);
 
         // Get the documents that match the query
         const querySnapshot = await query.get();
@@ -287,7 +327,7 @@ export const getDeviceUsers = async (deviceId, isOwner) => {
         querySnapshot.forEach((doc) => {
           devices.push({ id: doc.id, ...doc.data() });
         });
-        if (devices.length > 0) {
+        if (devices?.length > 0) {
           return devices[0].users;
         } else {
           throw new Error("Device not found");
@@ -304,7 +344,7 @@ export const aproveUser = async (deviceId, userId) => {
   // Get a reference to the devices collection
   const devicesRef = firestore().collection("devices");
   // Get a reference to the query using the device ID
-  const deviceRef = devicesRef.where("deviceId", "==", deviceId);
+  const deviceRef = devicesRef.where("combinedSerialNum", "==", deviceId);
   // Get the query snapshot using the device ID and limit to one result
   const device = await deviceRef.limit(1).get();
   // Get the first document change in the snapshot
@@ -336,7 +376,7 @@ export const rejectUser = async (deviceId, userId) => {
   // Get a reference to the devices collection
   const devicesRef = firestore().collection("devices");
   // Get a reference to the query using the device ID
-  const deviceRef = devicesRef.where("deviceId", "==", deviceId);
+  const deviceRef = devicesRef.where("combinedSerialNum", "==", deviceId);
   // Get the query snapshot using the device ID and limit to one result
   const device = await deviceRef.limit(1).get();
   // Get the first document change in the snapshot
@@ -368,7 +408,7 @@ export const disconnectUser = async (deviceId, userId) => {
   // Get a reference to the devices collection
   const devicesRef = firestore().collection("devices");
   // Get a reference to the query using the device ID
-  const deviceRef = devicesRef.where("deviceId", "==", deviceId);
+  const deviceRef = devicesRef.where("combinedSerialNum", "==", deviceId);
   // Get the query snapshot using the device ID and limit to one result
   const device = await deviceRef.limit(1).get();
   // Get the first document change in the snapshot
@@ -400,9 +440,7 @@ export const disconnectUser = async (deviceId, userId) => {
 
 export const setNameToDevice = async (name, deviceId) => {
   // Add the 'name' parameter
-  const deviceRef = firestore()
-    .collection("devices")
-    .doc(deviceId)
+  const deviceRef = firestore().collection("devices").doc(deviceId);
   try {
     await deviceRef.get().then((querySnapshot) => {
       // Use 'get' instead of 'update' to fetch the document
@@ -413,6 +451,22 @@ export const setNameToDevice = async (name, deviceId) => {
       });
     });
     return true;
+  } catch (err) {
+    console.log(err);
+    throw new Error(err);
+  }
+};
+
+export const getUserFromDb = async (userId) => {
+  try {
+    const userRef = firestore().collection("users").doc(userId);
+    const doc = await userRef.get();
+
+    if (doc.exists) {
+      return doc.data();
+    } else {
+      console.log("No such document!");
+    }
   } catch (err) {
     console.log(err);
     throw new Error(err);

@@ -8,6 +8,7 @@ import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
 import { addUserToFirestore } from "../../config/UsersCollection/UsersCollection";
 import { FontsLoad } from "../../utils/FontsLoad";
+import DismissMyKeyboard from "../../component/DismissMyKeyboard";
 
 const InsertCode = ({ navigation }) => {
   const toast = useToast();
@@ -150,51 +151,57 @@ const InsertCode = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.containerSmall}>
-        <Text style={styles.txtFirst}>Insert Code</Text>
-        <Text style={styles.txtSecond}>
-          Enter the security code we sent to {phoneNumber}
-        </Text>
-        <View style={styles.txtInputContainer}>
-          {verificationCode.map((digit, index) => (
-            <TextInput
-              key={index}
-              ref={inputRefs[index]} // Set the ref for each text input field
-              style={styles.txtInput}
-              value={digit}
-              onChangeText={(text) => handleChangeVerificationCode(text, index)}
-              maxLength={1}
-              keyboardType="numeric"
-              onSubmitEditing={() => {
-                // Move focus to the next input field when Enter/Return is pressed
-                if (index < 5) {
-                  inputRefs[index + 1].current.focus();
+    <DismissMyKeyboard>
+      <View style={styles.container}>
+        <View style={styles.containerSmall}>
+          <Text style={styles.txtFirst}>Insert Code</Text>
+          <Text style={styles.txtSecond}>
+            Enter the security code we sent to {phoneNumber}
+          </Text>
+          <View style={styles.txtInputContainer}>
+            {verificationCode.map((digit, index) => (
+              <TextInput
+                key={index}
+                ref={inputRefs[index]} // Set the ref for each text input field
+                style={styles.txtInput}
+                value={digit}
+                onChangeText={(text) =>
+                  handleChangeVerificationCode(text, index)
                 }
-              }}
-            />
-          ))}
+                maxLength={1}
+                keyboardType="numeric"
+                onSubmitEditing={() => {
+                  // Move focus to the next input field when Enter/Return is pressed
+                  if (index < 5) {
+                    inputRefs[index + 1].current.focus();
+                  }
+                }}
+              />
+            ))}
+          </View>
         </View>
-      </View>
-      <View style={styles.btn}>
-        <CarthagosButton
-          title="confirm"
-          width={277}
-          textColor={colors.white}
-          onPress={(setIsLoading) => handleVerifyVerificationCode(setIsLoading)}
-        />
-        <View style={{ display: "flex", marginTop: 15 }}>
+        <View style={styles.btn}>
           <CarthagosButton
-            style={{ color: "white" }}
-            textStyle={{ color: "white", textDecoration: "underline" }}
-            title="Didn't receive a code?"
+            title="confirm"
+            width={277}
             textColor={colors.white}
-            color="white"
-            onPress={(setIsLoading) => handleResendCode(setIsLoading)}
+            onPress={(setIsLoading) =>
+              handleVerifyVerificationCode(setIsLoading)
+            }
           />
+          <View style={{ display: "flex", marginTop: 15 }}>
+            <CarthagosButton
+              style={{ color: "white" }}
+              textStyle={{ color: "white", textDecorationStyle: "underline" }}
+              title="Didn't receive a code?"
+              textColor={colors.white}
+              color="white"
+              onPress={(setIsLoading) => handleResendCode(setIsLoading)}
+            />
+          </View>
         </View>
       </View>
-    </View>
+    </DismissMyKeyboard>
   );
 };
 
@@ -217,7 +224,7 @@ const styles = StyleSheet.create({
 
   txtInput: {
     width: 50,
-    textAlign:'center',
+    textAlign: "center",
     backgroundColor: "#1E1E1E",
     color: colors.white,
     borderRadius: 5,
@@ -243,7 +250,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "500",
     textAlign: "center",
-   
+
     alignItems: "center",
     fontFamily: "SF-Pro-Display",
   },
@@ -253,7 +260,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     textAlign: "center",
     marginTop: 8,
-    
+
     fontFamily: "SF-Pro-Display",
   },
 });

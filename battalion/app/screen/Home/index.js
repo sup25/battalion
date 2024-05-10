@@ -21,8 +21,7 @@ const Home = ({ navigation }) => {
   const userData = FetchUserProfile(currentUser);
   const loadFont = async () => {
     try {
-      const font = await FontsLoad();
-      console.log("test///", font);
+      await FontsLoad();
     } catch (e) {
       console.log(e);
     }
@@ -40,7 +39,14 @@ const Home = ({ navigation }) => {
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
-        <View style={{ display: "flex",flexDirection:'row',flex:1, alignItems: "center" }}>
+        <View
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flex: 1,
+            alignItems: "center",
+          }}
+        >
           <View style={{ width: 24 }}>
             <TouchableWithoutFeedback onPress={() => navigation.goBack(null)}>
               <MaterialCommunityIcons

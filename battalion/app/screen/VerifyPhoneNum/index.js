@@ -11,6 +11,7 @@ import auth from "@react-native-firebase/auth";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
 import { FontsLoad } from "../../utils/FontsLoad";
+import DismissMyKeyboard from "../../component/DismissMyKeyboard";
 
 const VerifyPhoneNum = ({ navigation }) => {
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -85,63 +86,65 @@ const VerifyPhoneNum = ({ navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.containerSmall}>
-        <Text style={styles.txtFirst}>Verify your phone with a code</Text>
-        <Text style={styles.txtSecond}>
-          We’ll send you a code to keep your account secure
-        </Text>
-        <View style={styles.txtInputContainer}>
-          <View
-            style={{
-              position: "relative",
-              display: "flex",
-              alignItems: "center",
-              flexDirection: "row",
-              width: 85,
-              backgroundColor: "#1E1E1E",
-              color: colors.white,
-              borderRadius: 5,
-              height: 55,
-              alignSelf: "center",
-              marginTop: 31,
-            }}
-          >
-            <Text
+    <DismissMyKeyboard>
+      <View style={styles.container}>
+        <View style={styles.containerSmall}>
+          <Text style={styles.txtFirst}>Verify your phone with a code</Text>
+          <Text style={styles.txtSecond}>
+            We’ll send you a code to keep your account secure
+          </Text>
+          <View style={styles.txtInputContainer}>
+            <View
               style={{
-                position: "absolute",
-                left: 15,
-                color: "white",
-                zIndex: 999,
-                fontSize: 24,
+                position: "relative",
+                display: "flex",
+                alignItems: "center",
+                flexDirection: "row",
+                width: 85,
+                backgroundColor: "#1E1E1E",
+                color: colors.white,
+                borderRadius: 5,
+                height: 55,
+                alignSelf: "center",
+                marginTop: 31,
               }}
             >
-              +
-            </Text>
+              <Text
+                style={{
+                  position: "absolute",
+                  left: 15,
+                  color: "white",
+                  zIndex: 999,
+                  fontSize: 24,
+                }}
+              >
+                +
+              </Text>
+              <TextInput
+                style={styles.countryCodetxt}
+                defaultValue={countryCode}
+                onChangeText={setCountryCode}
+              />
+            </View>
             <TextInput
-              style={styles.countryCodetxt}
-              defaultValue={countryCode}
-              onChangeText={setCountryCode}
+              style={styles.phoneNumberInput}
+              autoCompleteType="tel"
+              keyboardType="phone-pad"
+              textContentType="telephoneNumber"
+              onChangeText={setPhoneNumber}
             />
           </View>
-          <TextInput
-            style={styles.phoneNumberInput}
-            autoCompleteType="tel"
-            keyboardType="phone-pad"
-            textContentType="telephoneNumber"
-            onChangeText={setPhoneNumber}
+        </View>
+        <View style={styles.btn}>
+          <CarthagosButton
+            title="confirm"
+            width={277}
+            textColor={colors.white}
+            onPress={(setIsLoading) => handleSendVerificationCode(setIsLoading)}
           />
         </View>
       </View>
-      <View style={styles.btn}>
-        <CarthagosButton
-          title="confirm"
-          width={277}
-          textColor={colors.white}
-          onPress={(setIsLoading) => handleSendVerificationCode(setIsLoading)}
-        />
-      </View>
-    </View>
+    </DismissMyKeyboard>
   );
 };
 
@@ -186,7 +189,7 @@ const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "row",
     alignItems: "center",
-    justifyContent:'center',
+    justifyContent: "center",
     paddingHorizontal: 15,
   },
   txtFirst: {

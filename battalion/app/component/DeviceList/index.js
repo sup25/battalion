@@ -21,8 +21,14 @@ import { useToast } from "react-native-toast-notifications";
 import { getUsersDevices } from "../../utils/getUsersDevices";
 
 const DeviceList = ({ ownerId, navigation }) => {
-  const { getTempValueAndUnit, temp, boxBatteryLevel, isLocked, boxLocked } =
-    useAppSettingContext();
+  const {
+    getTempValueAndUnit,
+    temp,
+    boxBatteryLevel,
+    isLocked,
+    boxLocked,
+    devicesIds,
+  } = useAppSettingContext();
 
   const { connectToDevice, connectedDevice, requestPermissions } =
     useBleContext();
@@ -59,7 +65,6 @@ const DeviceList = ({ ownerId, navigation }) => {
           return (
             <TouchableOpacity
               onPress={async () => {
-                
                 if (!user?.approved && item?.owner?.id !== ownerId) {
                   return toast.show("Device not approved by the owner");
                 }
@@ -70,7 +75,41 @@ const DeviceList = ({ ownerId, navigation }) => {
                 if (!connecting.status) {
                   setConnecting({ device: item.deviceId, status: true });
                   try {
-                    await connectToDevice({ id: item.deviceId }, item.combinedSerialNum);
+                    if (devicesIds[item.combinedSerialNum]) {
+                      item.deviceId = devicesIds[item.combinedSerialNum];
+                    }
+                    if (item?.deviceId?.length) {
+                      if (item?.deviceId?.length === 1) {
+                        await connectToDevice(
+                          { id: item.deviceId[0] },
+                          item.combinedSerialNum
+                        );
+                      } else if (item?.deviceId?.length > 1) {
+                        for (let i = 0; i < item.deviceId.length; i++) {
+                          try {
+                            await connectToDevice(
+                              { id: item.deviceId[i] },
+                              item.combinedSerialNum
+                            );
+                            break; // Stop the loop if connection is successful
+                          } catch (err) {
+                            console.log("connecting to the device err:", err);
+                            if (i === item.deviceId.length - 1) {
+                              setConnecting({ device: null, status: false });
+                              toast.show(
+                                "Failed to connect to any device, please check your bluetooth connection and try again."
+                              );
+                            }
+                          }
+                        }
+                      }
+                    } else {
+                      await connectToDevice(
+                        { id: item.deviceId },
+                        item.combinedSerialNum
+                      );
+                    }
+
                     return navigation.navigate("Home");
                   } catch (err) {
                     console.log("connecting to the device err:", err);
@@ -114,7 +153,7 @@ const DeviceList = ({ ownerId, navigation }) => {
                           paddingHorizontal: 7,
                           paddingVertical: 3,
                           borderRadius: 50,
-                          fontSize: 12
+                          fontSize: 12,
                         }}
                       >
                         <Text style={{ fontSize: 14 }}>

@@ -8,6 +8,7 @@ import {
   SafeAreaView,
   TouchableWithoutFeedback,
   BackHandler,
+  Platform,
 } from "react-native";
 import React, { useEffect, useState } from "react";
 import colors from "../../config/Colors/colors";
@@ -20,6 +21,8 @@ import { useToast } from "react-native-toast-notifications";
 import { useRoute } from "@react-navigation/native";
 import { useAppSettingContext } from "../../context/AppSettingContext/AppSettingContext";
 import { FontsLoad } from "../../utils/FontsLoad";
+import { addDeviceToUserIOS } from "../../api/Database/Database";
+import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 
 const SearchScreen = ({ navigation }) => {
   const toast = useToast();
@@ -27,12 +30,15 @@ const SearchScreen = ({ navigation }) => {
   const { isFirstTime = false, serialNum = false, id = false } = route.params;
   const [retry, setRetry] = useState(false);
 
+  const { currentUser } = useAuth();
+
   const [selectedDevice, setSelectedDevice] = useState({
     device: null,
     index: null,
   });
 
-  const { setConnectedDevice } = useAppSettingContext();
+  const { setConnectedDevice, setDevicesIdsBasedOnSerialNum, devicesIds } =
+    useAppSettingContext();
   const {
     setScan,
 
@@ -45,7 +51,7 @@ const SearchScreen = ({ navigation }) => {
     scan,
     connectedDevice,
   } = useBleContext();
-  
+
   let timer = null;
 
   const init = async () => {
@@ -213,6 +219,19 @@ const SearchScreen = ({ navigation }) => {
                 try {
                   await connectToDevice(selectedDevice.device, serialNum);
                   await setConnectedDevice(selectedDevice.device);
+                  if (Platform.OS === "android") {
+                    console.log("current user", currentUser.uid);
+                    //store to db + async storage (for ios)
+                    await setDevicesIdsBasedOnSerialNum(
+                      serialNum,
+                      selectedDevice.device.id
+                    );
+                    await addDeviceToUserIOS(
+                      serialNum,
+                      selectedDevice.device.id,
+                      currentUser.uid
+                    );
+                  }
                   if (!connectedDevice.hasPassword) {
                     navigation.navigate("fourdigitcodeinsertscreen");
                   } else {
@@ -265,12 +284,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
   },
-  logo:{
-    display:'flex',
+  logo: {
+    display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    width: '100%',
-    height:'100%'
+    width: "100%",
+    height: "100%",
   },
   container: {
     flex: 1,

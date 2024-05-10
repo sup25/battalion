@@ -24,6 +24,7 @@ export const AppSettingProvider = ({ children }) => {
   const [isCharging, setIsCharging] = useState(false);
 
   const [connectedDevices, setConnectedDevices] = useState([]);
+  const [devicesIds, setDevicesIds] = useState({});
 
   const resetStat = () => {
     setBoxTemp(-1);
@@ -35,7 +36,6 @@ export const AppSettingProvider = ({ children }) => {
     setIsLightsOn(false);
     setBatteryLevel(false);
     setIsCharging(false);
-    setConnectedDevices([]);
     setBoxName("");
     AsyncStorage.removeItem("appSettings");
   };
@@ -81,6 +81,10 @@ export const AppSettingProvider = ({ children }) => {
     }
     if (parsedSettings?.connectedDevices) {
       setConnectedDevices(parsedSettings.connectedDevices);
+    }
+
+    if (parsedSettings?.devicesIds) {
+      setDevicesIds(parsedSettings.devicesIds);
     }
   };
   useEffect(() => {
@@ -195,6 +199,32 @@ export const AppSettingProvider = ({ children }) => {
     });
   };
 
+  const setDevicesIdsBasedOnSerialNum = async (serialNum, deviceId) => {
+    setDevicesIds((prev) => {
+      if (prev?.[serialNum]) {
+        if (prev[serialNum].includes(deviceId)) return prev;
+        return { ...prev, [serialNum]: [...prev[serialNum], deviceId] };
+      } else {
+        prev[serialNum] = [deviceId];
+        return prev;
+      }
+    });
+    const settings = await getItemFromAsyncStorage("appSettings");
+
+    const devices = settings.devicesIds
+      ? settings.devicesIds
+      : { [serialNum]: [] };
+    await AsyncStorage.mergeItem(
+      "appSettings",
+      JSON.stringify({
+        devicesIds: {
+          ...devices,
+          [serialNum]: [...devices[serialNum], deviceId],
+        },
+      })
+    );
+  };
+
   const contextValue = {
     temp,
     setTemp,
@@ -228,6 +258,9 @@ export const AppSettingProvider = ({ children }) => {
     setBoxNameValue,
 
     resetStat,
+
+    devicesIds,
+    setDevicesIdsBasedOnSerialNum,
   };
 
   return (

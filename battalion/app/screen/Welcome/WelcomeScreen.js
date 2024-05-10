@@ -122,7 +122,7 @@ const WelcomeScreen = ({ navigation }) => {
                   ...styles.textWelcome,
                 }}
               >
-               Welcome, {currentUser.name}
+                Welcome, {currentUser.displayName}
               </Text>
             </View>
           </View>
@@ -195,20 +195,19 @@ const WelcomeScreen = ({ navigation }) => {
                   justifyContent: "space-between",
                 }}
               >
-                
                 <Text style={styles.connDevice}>Devices Connected</Text>
                 <View style={styles.addDeviceTextWrapper}>
-                <Text
-                  style={styles.addDevice}
-                  onPress={() => {
-                    navigation.navigate("home", {
-                      isFirstTime: isFirstTime,
-                    });
-                  }}
-                >
-                  Your devices
-                </Text>
-              </View>
+                  <Text
+                    style={styles.addDevice}
+                    onPress={() => {
+                      navigation.navigate("home", {
+                        isFirstTime: isFirstTime,
+                      });
+                    }}
+                  >
+                    Your devices
+                  </Text>
+                </View>
               </View>
             )}
           </View>
@@ -279,7 +278,6 @@ const WelcomeScreen = ({ navigation }) => {
         <View
           style={{
             flex: 0.8,
-            
           }}
         >
           <ImageAndButton />
@@ -330,19 +328,19 @@ const styles = StyleSheet.create({
     height: 30,
     marginTop: 50,
   },
-  addDeviceTextWrapper:{
+  addDeviceTextWrapper: {
     backgroundColor: colors.primary,
     color: colors.white,
-    borderRadius:20,
+    borderRadius: 20,
     alignItems: "center",
     padding: 5,
   },
   addDevice: {
     backgroundColor: colors.primary,
     color: colors.white,
-   
+
     alignItems: "center",
-    
+
     fontSize: 14,
     lineHeight: 14,
     fontWeight: "500",
@@ -460,7 +458,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   textWelcome: {
-    fontSize: 26,    
+    fontSize: 26,
     textTransform: "uppercase",
     color: colors.white,
     fontWeight: "800",

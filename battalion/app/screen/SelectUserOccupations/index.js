@@ -111,38 +111,43 @@ const SelectUserOccupations = ({ navigation }) => {
           {Categories.map((cat) => {
             return (
               <TouchableWithoutFeedback
-                 key={cat.id}
-                  onPress={() => {
-                    setSelectedCategory((prevSelected) => {
-                      
-                      if (prevSelected?.length) {
-                        if (!prevSelected.includes(cat.id)) {
-                          return [...prevSelected, cat.id];
-                        }
-                        return prevSelected.filter((id) => id !== cat.id);
+                key={cat.id}
+                onPress={() => {
+                  setSelectedCategory((prevSelected) => {
+                    if (prevSelected?.length) {
+                      if (!prevSelected.includes(cat.id)) {
+                        return [...prevSelected, cat.id];
                       }
-                      return [cat.id];
-                    });
-                  }}
+                      return prevSelected.filter((id) => id !== cat.id);
+                    }
+                    return [cat.id];
+                  });
+                }}
+              >
+                <View
+                  style={[
+                    styles.categoryItem,
+                    {
+                      backgroundColor: selectedCategory.includes(cat.id)
+                        ? "white"
+                        : "#2D2D2D",
+                    },
+                  ]}
                 >
-                          <View  style={[styles.categoryItem,  {
-                                    backgroundColor: selectedCategory.includes(cat.id)
-                                      ? "white"
-                                      : "#2D2D2D"
-                                    
-                                  }]}>
                   <Text
                     style={[
                       styles.category,
-                     {color: selectedCategory.includes(cat.id)
+                      {
+                        color: selectedCategory.includes(cat.id)
                           ? "black"
-                          : colors.white,}
+                          : colors.white,
+                      },
                     ]}
                   >
                     {cat.occupation}
                   </Text>
-              </View>
-                </TouchableWithoutFeedback>
+                </View>
+              </TouchableWithoutFeedback>
             );
           })}
         </View>
@@ -152,7 +157,7 @@ const SelectUserOccupations = ({ navigation }) => {
               style={{
                 fontSize: 16,
                 height: "100%",
-                lineHeight:45,
+                lineHeight: 45,
                 color: colors.white,
                 fontFamily: "SF-Pro-Display",
               }}
@@ -161,14 +166,13 @@ const SelectUserOccupations = ({ navigation }) => {
             </Text>
           </View>
           <View style={styles.inputView}>
-          <TextInput
-            style={styles.input}
-            
-            placeholder="Write here"
-            value={otherOccupation}
-            placeholderTextColor="#989898"
-            onChangeText={setOtherOccupation}
-          />
+            <TextInput
+              style={styles.input}
+              placeholder="Write here"
+              value={otherOccupation}
+              placeholderTextColor="#989898"
+              onChangeText={setOtherOccupation}
+            />
           </View>
         </View>
         <View style={styles.btnLink}>
@@ -196,9 +200,9 @@ const styles = StyleSheet.create({
     backgroundColor: colors.black,
   },
   wrapper: {
-    flex:1,
-    display:'flex',
-    justifyContent:'center'
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
   },
 
   logoTextContainer: {
@@ -226,22 +230,22 @@ const styles = StyleSheet.create({
   categoryItem: {
     marginRight: 10,
     marginTop: 10,
-     color: colors.white,
+    color: colors.white,
     backgroundColor: "#2D2D2D",
     height: 44,
     width: "fit-content",
-    
+
     borderRadius: 20,
     paddingLeft: 10,
-    paddingRight:10,  
+    paddingRight: 10,
     display: "flex",
     alignItems: "center",
-    justifyContent:"center"
+    justifyContent: "center",
   },
 
   category: {
     fontSize: 16,
-    lineHeight:16,
+    lineHeight: 16,
     fontWeight: "400",
   },
   btnLink: {
@@ -249,47 +253,45 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
 
-  inputView:{
+  inputView: {
     borderEndEndRadius: 50,
     borderStartEndRadius: 50,
-    
+    borderTopEndRadius: 50,
+    borderBottomEndRadius: 50,
     paddingLeft: 15,
     backgroundColor: colors.white,
     fontSize: 16,
-    flex:1,
-    lineHeight:45,
-    border:0,
-     height: "100%",
-     display:'flex',
-     flexDirection:'row',
-     alignItems:'center'
+    flex: 1,
+    lineHeight: 45,
+    border: 0,
+    height: "100%",
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
   },
   input: {
-    color: '#000',
+    color: "#000",
     fontSize: 16,
-    padding:0,
-    lineHeight:16
-    
+    padding: 0,
+    lineHeight: 16,
   },
 
   InputContainer: {
     flexDirection: "row",
-   
-   borderRadius: 50,
+
+    borderRadius: 50,
     marginTop: 34,
     marginBottom: 20,
-   height: 45,
-    marginHorizontal:15,
+    height: 45,
+    marginHorizontal: 15,
     backgroundColor: "#2D2D2D",
   },
   otherText: {
-   
     color: colors.white,
-   fontSize: 16,
+    fontSize: 16,
     borderRadius: 50,
     fontWeight: "400",
     paddingHorizontal: 15,
-
   },
 
   txtBtnContainer: {

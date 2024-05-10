@@ -1,6 +1,7 @@
 import {
   getOwnerAllDevices,
   getUserAllDevices,
+  getUserFromDb,
 } from "../../api/Database/Database";
 
 function removeDuplicates(array1, array2) {
@@ -39,16 +40,35 @@ export const getUsersDevices = async (
   setIsLoaded,
   isLocked = false,
   temp = false,
-  boxBatteryLevel = false
+  boxBatteryLevel = false,
+  OS = "android",
+  serialNum
 ) => {
   try {
     const ownerArray = await getOwnerAllDevices(ownerId);
     const userArray = await getUserAllDevices(ownerId);
 
     const combinedArr = removeDuplicates(ownerArray, userArray);
-
+    const user = await getUserFromDb(ownerId);
     const newDevices = combinedArr.map((item) => {
-      const isCurrentDevice = item.deviceId === connectedDevice?.device?.id;
+      const isCurrentDevice =
+        item.deviceId === connectedDevice?.device?.id ||
+        user?.devices?.[connectedDevice?.device?.serialNum]?.includes(
+          connectedDevice?.device?.id
+        );
+
+      if (
+        connectedDevice?.device &&
+        user?.devices?.[connectedDevice?.device?.serialNum]?.includes(
+          connectedDevice?.device?.id
+        )
+      ) {
+        item.deviceId = connectedDevice?.device?.id;
+      } else if (OS === "android") {
+        item.deviceId = user?.devices?.[item?.combinedSerialNum] || [];
+      } else if (!item?.deviceId) {
+        item.deviceId = "";
+      }
       return {
         ...item,
         name: item?.name ? item.name : item.deviceId,
