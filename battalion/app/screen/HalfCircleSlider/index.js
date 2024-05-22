@@ -37,70 +37,72 @@ const HalfCircleSlider = ({ navigation }) => {
     halfCircumference - (sliderValue / 40) * halfCircumference;
   return (
     <CarthagosScreen style={styles.container}>
-      <View style={styles.IconAndHeadingTxt}>
-        <TouchableWithoutFeedback onPress={() => navigation.goBack(null)}>
-          <MaterialCommunityIcons
-            style={{ alignSelf: "flex-end", paddingBottom: 5 }}
-            name="arrow-left"
-            size={25}
-            color="#B0B0B0"
-          />
-        </TouchableWithoutFeedback>
-        <Text style={styles.Heading}>Temperature</Text>
-      </View>
-      <TempOuterCircle />
-      <TempInnerCircle />
-      <View style={styles.IconAndTemp}>
-        <Svg width={353} height={375}>
-          <G>
-            <Circle
-              cx={156.5}
-              cy={-14.5}
-              r={radius}
-              fill="transparent"
-              stroke={colors.primary}
-              strokeWidth={30}
-              strokeLinecap="round"
-              strokeDasharray={strokeDasharray}
-              strokeDashoffset={-strokeDashoffset}
-              transform="rotate(270, 171.5, 171.5)"
+      <View style={styles.container}>
+        <View style={styles.IconAndHeadingTxt}>
+          <TouchableWithoutFeedback onPress={() => navigation.goBack(null)}>
+            <MaterialCommunityIcons
+              style={{ alignSelf: "flex-end", paddingBottom: 5 }}
+              name="arrow-left"
+              size={25}
+              color="#B0B0B0"
             />
-          </G>
-          <View style={styles.tempTextWrapper}>
-            <Text style={styles.Temptext}>
-              {getTempValueAndUnit({ value: sliderValue, unit: temp.unit })}
-            </Text>
-          </View>
-        </Svg>
-      </View>
+          </TouchableWithoutFeedback>
+          <Text style={styles.Heading}>Temperature</Text>
+        </View>
+        <TempOuterCircle />
+        <TempInnerCircle />
+        <View style={styles.IconAndTemp}>
+          <Svg width={353} height={375}>
+            <G>
+              <Circle
+                cx={156.5}
+                cy={-14.5}
+                r={radius}
+                fill="transparent"
+                stroke={colors.primary}
+                strokeWidth={30}
+                strokeLinecap="round"
+                strokeDasharray={strokeDasharray}
+                strokeDashoffset={-strokeDashoffset}
+                transform="rotate(270, 171.5, 171.5)"
+              />
+            </G>
+            <View style={styles.tempTextWrapper}>
+              <Text style={styles.Temptext}>
+                {getTempValueAndUnit({ value: sliderValue, unit: temp.unit })}
+              </Text>
+            </View>
+          </Svg>
+        </View>
 
-      <View style={styles.SliderTxtWrapper}>
-        <Slider
-          tapToSeek={false}
-          maximumTrackTintColor="white"
-          style={styles.slider}
-          value={sliderValue}
-          minimumTrackTintColor={colors.primary}
-          thumbTintColor={colors.primary}
-          minimumValue={0}
-          maximumValue={40}
-          step={5}
-          onValueChange={(value) => handleValueChange(value)}
-          onSlidingComplete={async (e) => {
-            try {
-              await writeTempToDevice(
-                { value: e, unit: temp.unit },
-                isLightsOn
-              );
-              setTempValue(e);
-            } catch (error) {
-              console.log(error);
-              tost.show("Error writing temperature to device", {
-                type: "normal",
-              });
-            }
-          }}
-        />
+        <View style={styles.SliderTxtWrapper}>
+          <Slider
+            tapToSeek={false}
+            maximumTrackTintColor="white"
+            style={styles.slider}
+            value={sliderValue}
+            minimumTrackTintColor={colors.primary}
+            thumbTintColor={colors.primary}
+            minimumValue={0}
+            maximumValue={40}
+            step={5}
+            onValueChange={(value) => handleValueChange(value)}
+            onSlidingComplete={async (e) => {
+              try {
+                await writeTempToDevice(
+                  { value: e, unit: temp.unit },
+                  isLightsOn
+                );
+                setTempValue(e);
+              } catch (error) {
+                console.log(error);
+                tost.show("Error writing temperature to device", {
+                  type: "normal",
+                });
+              }
+            }}
+          />
+        </View>
       </View>
     </CarthagosScreen>
   );
@@ -108,7 +110,6 @@ const HalfCircleSlider = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "flex-start",
     justifyContent: "space-between",
     backgroundColor: colors.black,
     flex: 1,
@@ -116,7 +117,7 @@ const styles = StyleSheet.create({
   IconAndHeadingTxt: {
     flexDirection: "row",
     width: "100%",
-    alignItems: "center",
+    alignItems: "flex-start",
     paddingLeft: 17,
   },
 

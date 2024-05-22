@@ -35,51 +35,55 @@ const ForgotPasswordScreen = ({ navigation }) => {
 
   return (
     <CarthagosScreen style={styles.container} behavior="height">
-      {emailSent ? (
-        <>
-          <View style={{ alignItems: "center", marginTop: 200 }}>
-            <Text style={styles.emailSentText}>
-              Password reset email has been sent.
-            </Text>
-            <CarthagosButton
-              title=" Back To home"
-              onPress={() => navigation.navigate("Login")}
-              width={277}
-            />
-          </View>
-        </>
-      ) : (
-        <>
-          <View style={styles.textLogo}>
-            <View style={styles.logoContainer}>
-              <TextLogo />
-              <Text style={styles.title}>Forgot Password?</Text>
+      <View style={styles.container}>
+        {emailSent ? (
+          <>
+            <View style={{ alignItems: "center", marginTop: 200 }}>
+              <Text style={styles.emailSentText}>
+                Password reset email has been sent.
+              </Text>
+              <CarthagosButton
+                title=" Back To home"
+                onPress={() => navigation.navigate("Login")}
+                width={277}
+              />
             </View>
-            <TextInput
-              placeholder="Email"
-              placeholderTextColor="#656565"
-              value={email}
-              onChangeText={(text) => setEmail(text)}
-              style={styles.input}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-            {errormsg ? <Text style={styles.errorText}>{errormsg}</Text> : null}
-          </View>
-          <View style={styles.btnContainer}>
-            <CarthagosLinkButton
-              navigation={navigation}
-              onPress={handleResetPassword}
-              title="Submit"
-              mainDesc="Already have an account? "
-              desc="Login"
-              width={277}
-              loginRoute="Login"
-              textColor="white"
-            />
-          </View>
-        </>
-      )}
+          </>
+        ) : (
+          <>
+            <View style={styles.textLogo}>
+              <View style={styles.logoContainer}>
+                <TextLogo />
+                <Text style={styles.title}>Forgot Password?</Text>
+              </View>
+              <TextInput
+                placeholder="Email"
+                placeholderTextColor="#656565"
+                value={email}
+                onChangeText={(text) => setEmail(text)}
+                style={styles.input}
+                keyboardType="email-address"
+                autoCapitalize="none"
+              />
+              {errormsg ? (
+                <Text style={styles.errorText}>{errormsg}</Text>
+              ) : null}
+            </View>
+            <View style={styles.btnContainer}>
+              <CarthagosLinkButton
+                navigation={navigation}
+                onPress={handleResetPassword}
+                title="Submit"
+                mainDesc="Already have an account? "
+                desc="Login"
+                width={277}
+                loginRoute="Login"
+                textColor="white"
+              />
+            </View>
+          </>
+        )}
+      </View>
     </CarthagosScreen>
   );
 };

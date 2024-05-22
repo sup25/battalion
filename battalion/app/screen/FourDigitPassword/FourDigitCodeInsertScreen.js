@@ -18,28 +18,23 @@ export default function FourDigitCodeInsertScreen({ navigation }) {
   const [show, setShow] = useState(true);
 
   const toast = useToast();
-  
+
   const fetchCombinedSerialNum = async () => {
     try {
       const storedCombinedSerialNum = await AsyncStorage.getItem(
         "combinedSerialNum"
       );
-      if (storedCombinedSerialNum !== null) {
+      if (storedCombinedSerialNum) {
         setCombinedSerialNum(storedCombinedSerialNum);
       }
     } catch (error) {
-      console.log(
-        "Error fetching combinedSerialNum from AsyncStorage:",
-        error
-      );
+      console.log("Error fetching combinedSerialNum from AsyncStorage:", error);
     }
   };
   useEffect(() => {
-
     fetchCombinedSerialNum();
     FontsLoad();
   }, []);
- 
 
   const handleConfirm = async (setIsLoading) => {
     setIsLoading(true);
@@ -85,7 +80,7 @@ export default function FourDigitCodeInsertScreen({ navigation }) {
   return (
     <View style={styles.container}>
       <View style={styles.wrapper}>
-        <Text style={styles.heading}>4 digit password</Text>
+        <Text style={styles.heading}>4 digits password</Text>
         <Text style={styles.paragraph}>
           Input a customizable password to your liking that you will use to
           unlock this box.

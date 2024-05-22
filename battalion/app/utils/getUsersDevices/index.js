@@ -41,7 +41,7 @@ export const getUsersDevices = async (
   isLocked = false,
   temp = false,
   boxBatteryLevel = false,
-  OS = "android",
+  OS,
   serialNum
 ) => {
   try {
@@ -57,16 +57,19 @@ export const getUsersDevices = async (
           connectedDevice?.device?.id
         );
 
-      if (
-        connectedDevice?.device &&
-        user?.devices?.[connectedDevice?.device?.serialNum]?.includes(
-          connectedDevice?.device?.id
-        )
-      ) {
-        item.deviceId = connectedDevice?.device?.id;
-      } else if (OS === "android") {
-        item.deviceId = user?.devices?.[item?.combinedSerialNum] || [];
-      } else if (!item?.deviceId) {
+      if (OS === "ios") {
+        if (
+          connectedDevice?.device &&
+          user?.devices?.[connectedDevice?.device?.serialNum]?.includes(
+            connectedDevice?.device?.id
+          )
+        ) {
+          item.deviceId = connectedDevice?.device?.id;
+        } else {
+          item.deviceId = user?.devices?.[item?.combinedSerialNum] || [];
+        }
+      }
+      if (!item?.deviceId) {
         item.deviceId = "";
       }
       return {

@@ -49,7 +49,7 @@
         "NSPhotoLibraryUsageDescription": "Allow $(PRODUCT_NAME) to access your photos.",
         "NSPhotoLibraryAddUsageDescription": "Allow $(PRODUCT_NAME) to save photos."
       },
-      "buildNumber": "21"
+      "buildNumber": "25"
     },
     "android": {
       "icon": "./app/assets/appIcon.png",

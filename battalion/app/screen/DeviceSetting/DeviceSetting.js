@@ -7,7 +7,7 @@ import {
 } from "react-native";
 
 import React, { useEffect, useState } from "react";
-
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import colors from "../../config/Colors/colors";
 
@@ -16,6 +16,7 @@ import FourDigitsCode from "../../component/FourDigitsCode";
 import { useBleContext } from "../../utils/BLEProvider/BLEProvider";
 import { useToast } from "react-native-toast-notifications";
 import { FontsLoad } from "../../utils/FontsLoad";
+import { storeFourDigitsToTheDb } from "../../api/Database/Database";
 
 const DeviceSetting = ({ navigation }) => {
   const [show, setShow] = useState(false);
@@ -51,6 +52,12 @@ const DeviceSetting = ({ navigation }) => {
       try {
         await writePasswordToDevice(pass);
         setDevicePassword(pass);
+        const storedCombinedSerialNum = await AsyncStorage.getItem(
+          "combinedSerialNum"
+        );
+        if (storedCombinedSerialNum) {
+          await storeFourDigitsToTheDb(storedCombinedSerialNum, pass);
+        }
         setPasswordError();
         tost.show("Password updated successfully", { type: "normal" });
       } catch (error) {
@@ -105,7 +112,7 @@ const DeviceSetting = ({ navigation }) => {
       )}
       <View style={styles.passwordContainer}>
         <View style={styles.passwordIcon}>
-          <Text style={styles.digitTxt}>4 digit password</Text>
+          <Text style={styles.digitTxt}>4 digits password</Text>
           <TouchableWithoutFeedback onPress={handleShowPassword}>
             <MaterialCommunityIcons
               name={show ? "eye" : "eye-off"}
@@ -158,7 +165,6 @@ const styles = StyleSheet.create({
     fontWeight: "500",
     fontSize: 18,
     fontFamily: "SF-Pro-Display",
-    
   },
   flexEnd: {
     justifyContent: "flex-end",
@@ -196,14 +202,14 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginTop: 14,
-    
+
     flexDirection: "column",
   },
   passwordIcon: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    paddingBottom:20
+    paddingBottom: 20,
   },
   switchOnOff: {
     width: 60,
@@ -245,8 +251,7 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     color: colors.white,
     marginLeft: 9,
-    fontFamily:"Alternate-Gothic-bold",
-   
+    fontFamily: "Alternate-Gothic-bold",
   },
   textInput: {
     fontSize: 32,

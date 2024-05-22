@@ -60,7 +60,7 @@ function useBLE() {
   };
 
   const requestPermissions = async () => {
-    if (Platform.OS === "android") {
+    if (Platform.OS === "ios") {
       if ((ExpoDevice.platformApiLevel ?? -1) < 31) {
         const granted = await PermissionsAndroid.request(
           PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,

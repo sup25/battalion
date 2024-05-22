@@ -219,7 +219,7 @@ const SearchScreen = ({ navigation }) => {
                 try {
                   await connectToDevice(selectedDevice.device, serialNum);
                   await setConnectedDevice(selectedDevice.device);
-                  if (Platform.OS === "android") {
+                  if (Platform.OS === "ios") {
                     console.log("current user", currentUser.uid);
                     //store to db + async storage (for ios)
                     await setDevicesIdsBasedOnSerialNum(

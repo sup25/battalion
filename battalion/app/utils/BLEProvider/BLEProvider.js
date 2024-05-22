@@ -23,12 +23,12 @@ import { useNavigation } from "@react-navigation/native";
 const BleContext = createContext();
 
 const BleProvider = ({ children }) => {
-  const SPS_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
-  const SPS_SERVER_TX_UUID = "19B10001-E8F2-537E-4F6C-D104768A1214";
-  const SPS_SERVER_RX_UUID = "19B10002-E8F2-537E-4F6C-D104768A1214";
-  // const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
-  // const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
-  // const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
+  // const SPS_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
+  // const SPS_SERVER_TX_UUID = "19B10001-E8F2-537E-4F6C-D104768A1214";
+  // const SPS_SERVER_RX_UUID = "19B10002-E8F2-537E-4F6C-D104768A1214";
+  const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
+  const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
+  const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
 
   const navigation = useNavigation();
 
@@ -92,7 +92,7 @@ const BleProvider = ({ children }) => {
     const serialNum = await AsyncStorage.getItem("combinedSerialNum");
     if (
       currentUser &&
-      navigation.getState().routes[0].state.routes[0].name === "MainTabs"
+      navigation.getState().routes?.[0]?.state?.routes?.[0]?.name === "MainTabs"
     ) {
       const storedDevices = await getItemFromAsyncStorage(
         "appSettings",
@@ -153,7 +153,8 @@ const BleProvider = ({ children }) => {
   const handleAppStateChange = async (nextAppState) => {
     if (
       currentUser &&
-      navigation.getState().routes[0].state.routes[0].name === "MainTabs"
+      navigation.getState()?.routes?.[0]?.state?.routes?.[0]?.name ===
+        "MainTabs"
     ) {
       const serialNum = await AsyncStorage.getItem("combinedSerialNum");
       setConnectedDevice((prev) => ({
@@ -643,9 +644,10 @@ const BleProvider = ({ children }) => {
     }
   };
 
-  const getStatusFromBase64AndSetToState = (statusData) => {
+  const getStatusFromBase64AndSetToState = async (statusData) => {
     const hexString = getDataFromArray(statusData);
-
+    console.log(hexString, "hexString");
+    Toast.show(JSON.stringify(hexString), { type: "normal" });
     const password = hexString.slice(2, 6);
     const temperature = parseInt(hexString[6]);
     const temperatureMode = parseInt(hexString[7]);
@@ -678,39 +680,64 @@ const BleProvider = ({ children }) => {
   };
 
   const getStatusFromDevice = async () => {
-    try {
-      const characteristic =
-        await connectedDevice?.device.readCharacteristicForService(
-          SPS_SERVICE_UUID,
-          SPS_SERVER_RX_UUID // Use the appropriate UUID for reading
-        );
-      const data = getStatusFromBase64AndSetToState(characteristic.value);
+    const prefix = [85, 5];
+    const prefixAndPass = prefix.concat(password);
+    console.log(
+      prefixAndPass,
+      password,
+      "////////////////////prefixAndPass////////////////////"
+    );
+    const base64String = getBase64Data(prefixAndPass);
 
-      return data;
+    try {
+      let res =
+        await connectedDevice?.device.writeCharacteristicWithResponseForService(
+          SPS_SERVICE_UUID,
+          SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
+          base64String
+        );
+      console.log("res", res);
+      getStatusFromBase64AndSetToState(res.value);
+
+      // Password set successfully
     } catch (error) {
+      console.log("err in write lock toggle", error);
       throw error;
-      // Handle error while getting status
+      // Handle error while setting password
     }
   };
 
-  const startMonitoringDevice = () => {
+  const startMonitoringDevice = async () => {
     connectedDevice?.device?.monitorCharacteristicForService(
       SPS_SERVICE_UUID,
       SPS_SERVER_RX_UUID,
-      (error, characteristic) => {
+      async (error, characteristic) => {
         if (error) {
           console.error("Error reading characteristic:", error.message);
           throw error;
         }
-        getStatusFromBase64AndSetToState(characteristic.value);
+
+        try {
+          await getStatusFromBase64AndSetToState(characteristic.value);
+        } catch (err) {
+          console.log(err);
+        }
       }
     );
   };
 
+  const monitoringDevice = async () => {
+    try {
+      await getStatusFromDevice();
+      await startMonitoringDevice();
+    } catch (e) {
+      console.log("error in monitoring", e);
+    }
+  };
+
   useEffect(() => {
     if (connectedDevice?.device && !connectedDevice?.connecting) {
-      getStatusFromDevice();
-      startMonitoringDevice();
+      monitoringDevice();
       connectedDevice?.device.onDisconnected(
         async (error, disconnectedDevice) => {
           setBoxNameValue("");
