@@ -7,7 +7,8 @@ import TextLogo from "../../assets/TextLogo";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
 import { FontsLoad } from "../../utils/FontsLoad";
-
+import DismissMyKeyboard from "../../component/DismissMyKeyboard";
+import BackButton from "../../component/BackButton";
 const ForgotPasswordPrivate = ({ navigation }) => {
   const { currentUser } = useAuth();
   const [email, setEmail] = useState("");
@@ -46,6 +47,7 @@ const ForgotPasswordPrivate = ({ navigation }) => {
   return (
     <DismissMyKeyboard>
       <View style={styles.container} behavior="height">
+             <BackButton style={{ position: "absolute", zIndex: 999, top: 70, left:20 }} />
         <View style={styles.textLogo}>
           <View style={styles.logoContainer}>
             <TextLogo />

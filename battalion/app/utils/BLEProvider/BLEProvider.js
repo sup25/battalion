@@ -644,6 +644,12 @@ const BleProvider = ({ children }) => {
     }
   };
 
+  const setToState = (value, setState, checkForBoolen)=>{
+    const finalVal = checkForBoolen ? value === 1 ? true : false : value
+    if(value && !Number.isNaN(value)){
+      setState(finalVal)
+    }
+  }
   const getStatusFromBase64AndSetToState = async (statusData) => {
     const hexString = getDataFromArray(statusData);
     console.log(hexString, "hexString");
@@ -656,16 +662,17 @@ const BleProvider = ({ children }) => {
     const chargerStatus = parseInt(hexString[10]);
     const deviceStatus = parseInt(hexString[11]);
     const deviceLidOpen = parseInt(hexString[12]);
-
-    setBoxTemp(temperature);
-    setDevicePassword(password);
-    setDeviceIsLocked(deviceStatus === 1 ? true : false);
-    setDeviceIsLightsOn(lightStatus === 1 ? true : false);
-    setBoxBatteryLevel(batteryLevel);
-    setBoxIsCharging(chargerStatus === 1 ? true : false);
-    if (temp.value < 0) {
-      setTemp((prev) => ({ ...prev, value: temperature }));
+    setToState(temperature, setBoxTemp)
+    setToState(password, setDevicePassword)
+    setToState(deviceStatus, setDeviceIsLocked, true)
+    setToState(lightStatus, setDeviceIsLightsOn, true)
+    setToState(batteryLevel, setBoxBatteryLevel)
+    setToState(chargerStatus, setBoxIsCharging, true)
+    
+    if(temperatureMode && !Number.isNaN(temperatureMode)){
+      setTemp((prev) => ({ ...prev, unit: temperatureMode === 1 ? 'f' : 'c' }));
     }
+    
 
     return {
       password,
@@ -736,6 +743,7 @@ const BleProvider = ({ children }) => {
   };
 
   useEffect(() => {
+   
     if (connectedDevice?.device && !connectedDevice?.connecting) {
       monitoringDevice();
       connectedDevice?.device.onDisconnected(
