@@ -144,12 +144,8 @@ export const AppSettingProvider = ({ children }) => {
   };
 
   const getTempValueAndUnit = (temp) => {
-    const val =
-      temp.value < 0
-        ? "--"
-        : temp.unit === "c"
-        ? temp.value
-        : Math.round((temp.value * 9) / 5 + 32);
+    const val = temp.value < 0 ? "--" : temp.value;
+
     const unit = temp.unit === "c" ? "℃" : "°F";
     return `${val}${unit}`;
   };

@@ -52,6 +52,40 @@ const addUserToDevice = async (deviceId, userId, macId) => {
   }
 };
 
+export const addDevice = async (
+  combinedSerialNum,
+  deviceId = "DA:38:68:87:AB:C4"
+) => {
+  const trimmedSerialNum = combinedSerialNum.toString().trim();
+  const devicesRef = firestore().collection("devices");
+  //check if device is already exist.
+  const deviceDoc = await devicesRef.doc(trimmedSerialNum).get();
+  if (deviceDoc.exists) {
+    throw new Error("Device already exist");
+  }
+  // Determine the team type
+  const isValid = /^(\d{12})?$/.test(trimmedSerialNum);
+
+  // Extract the individual parts from the trimmedSerialNum
+  const modelNum = trimmedSerialNum.substring(0, 4);
+  const prodDate = trimmedSerialNum.substring(4, 8);
+  const serialNum = trimmedSerialNum.substring(8, 12);
+  const remaining = trimmedSerialNum.substring(0, 12);
+
+  const device = {
+    name: `Battalion #${trimmedSerialNum}`,
+    deviceId,
+    modelNum,
+    prodDate,
+    serialNum,
+    combinedSerialNum: remaining,
+    users: [],
+    teamType,
+  };
+
+  await devicesRef.doc(trimmedSerialNum).set(device);
+};
+
 export const AddUserData = async (data) => {
   const { fourDigitCode, combinedSerialNum } = data;
   try {
@@ -439,21 +473,13 @@ export const disconnectUser = async (deviceId, userId) => {
 };
 
 export const setNameToDevice = async (name, deviceId) => {
-  // Add the 'name' parameter
-  const deviceRef = firestore().collection("devices").doc(deviceId);
   try {
-    await deviceRef.get().then((querySnapshot) => {
-      // Use 'get' instead of 'update' to fetch the document
-      querySnapshot.forEach((doc) => {
-        doc.ref.update({
-          name: name, // Update the 'name' field with the provided value
-        });
-      });
+    await firestore().collection("devices").doc(deviceId).update({
+      name,
     });
     return true;
-  } catch (err) {
-    console.log(err);
-    throw new Error(err);
+  } catch (error) {
+    throw new Error(error);
   }
 };
 

@@ -145,8 +145,13 @@ const InsertCode = ({ navigation }) => {
     setVerificationCode(newVerificationCode);
 
     // Move focus to the next input field if the current one is full
-    if (text && index < 5) {
+    if (text && text !== "" && index < verificationCode.length - 1) {
       inputRefs[index + 1].current.focus();
+    }
+
+    if (index === verificationCode.length - 1) {
+      //optional: handle last digit entered (submit)
+      console.log("last digit entered");
     }
   };
 
@@ -168,6 +173,14 @@ const InsertCode = ({ navigation }) => {
                 onChangeText={(text) =>
                   handleChangeVerificationCode(text, index)
                 }
+                onKeyPress={(event) => {
+                  if (index > 0 && event.nativeEvent.key === "Backspace") {
+                    const newVerificationCode = [...verificationCode];
+                    newVerificationCode[index] = "";
+                    setVerificationCode(newVerificationCode);
+                    inputRefs[index - 1].current.focus();
+                  }
+                }}
                 maxLength={1}
                 keyboardType="numeric"
                 onSubmitEditing={() => {

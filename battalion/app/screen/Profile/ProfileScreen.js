@@ -138,7 +138,7 @@ const ProfileScreen = (props) => {
 
   return (
     <DismissMyKeyboard>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <SafeAreaView style={styles.wrapper}>
           <Text style={styles.profileTxt}>My profile</Text>
           <View style={styles.bigRectangle}>
@@ -308,8 +308,8 @@ const ProfileScreen = (props) => {
                                       disabled={refreshing}
                                       style={styles.btn}
                                       onPress={async () => {
-                                        setRefreshing(true);
                                         if (refreshing) return;
+                                        setRefreshing(true);
                                         try {
                                           await aproveUser(
                                             connectedDevice?.device?.serialNum,
@@ -341,7 +341,7 @@ const ProfileScreen = (props) => {
                                           await fetchDeviceUsers();
                                         } catch (err) {
                                           setRefreshing(false);
-                                          //test
+
                                           console.log(err);
                                         }
                                       }}
@@ -420,7 +420,7 @@ const ProfileScreen = (props) => {
           </View>
           <StatusBar backgroundColor={colors.black} barStyle="light-content" />
         </SafeAreaView>
-      </View>
+      </ScrollView>
     </DismissMyKeyboard>
   );
 };

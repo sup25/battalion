@@ -66,7 +66,7 @@ const WelcomeScreen = ({ navigation }) => {
       return toast.show("Please enter a name.");
     }
     try {
-      await setNameToDevice(deviceName, connectedDevice?.device?.id);
+      await setNameToDevice(deviceName, connectedDevice?.device?.serialNum);
       setIsEditing((prevState) => !prevState);
       toast.show("Device name updated successfully.");
       setBoxNameValue(deviceName);
@@ -79,9 +79,7 @@ const WelcomeScreen = ({ navigation }) => {
   };
 
   useEffect(() => {
-    if (boxName) {
-      setDeviceName(boxName);
-    }
+    setDeviceName(boxName);
   }, [boxName]);
 
   return (
@@ -226,7 +224,6 @@ const WelcomeScreen = ({ navigation }) => {
                 value={deviceName}
                 focusable={isFirstTime}
                 onChangeText={(text) => {
-                  console.log(text);
                   setDeviceName(text);
                 }}
               />

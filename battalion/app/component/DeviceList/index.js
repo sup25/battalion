@@ -89,13 +89,15 @@ const DeviceList = ({ ownerId, navigation }) => {
                     ) {
                       if (item?.deviceId?.length === 1) {
                         try {
-                          await setDevicePassword(item.fourDigitCode);
+                          setDevicePassword(item.fourDigitCode);
                           await connectToDevice(
                             { id: item.deviceId[0] },
-                            item.combinedSerialNum
+                            item.combinedSerialNum,
+                            item.fourDigitCode
                           );
                           return navigation.navigate("Home");
                         } catch (err) {
+                          setDevicePassword([]);
                           console.log("connecting to the device err:", err);
                           setConnecting({ device: null, status: false });
                           toast.show(
@@ -105,15 +107,16 @@ const DeviceList = ({ ownerId, navigation }) => {
                       } else if (item?.deviceId?.length > 1) {
                         for (let i = 0; i < item.deviceId.length; i++) {
                           try {
-                            await setDevicePassword(item.fourDigitCode);
+                            setDevicePassword(item.fourDigitCode);
                             await connectToDevice(
                               { id: item.deviceId[i] },
-                              item.combinedSerialNum
+                              item.combinedSerialNum,
+                              item.fourDigitCode
                             );
                             return navigation.navigate("Home");
-                            break; // Stop the loop if connection is successful
                           } catch (err) {
                             console.log("connecting to the device err:", err);
+                            setDevicePassword([]);
                             if (i === item.deviceId.length - 1) {
                               setConnecting({ device: null, status: false });
                               toast.show(
@@ -125,14 +128,16 @@ const DeviceList = ({ ownerId, navigation }) => {
                       }
                     } else {
                       try {
-                        await setDevicePassword(item.fourDigitCode);
+                        setDevicePassword(item.fourDigitCode);
                         await connectToDevice(
                           { id: item.deviceId },
-                          item.combinedSerialNum
+                          item.combinedSerialNum,
+                          item.fourDigitCode
                         );
                         return navigation.navigate("Home");
                       } catch (err) {
                         console.log("connecting to the device err:", err);
+                        setDevicePassword([]);
                         setConnecting({ device: null, status: false });
                         toast.show(
                           "Failed to connect to the device, please check your bluetooth connection and try again."

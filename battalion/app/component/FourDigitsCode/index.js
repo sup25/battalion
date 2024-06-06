@@ -19,7 +19,7 @@ import colors from "../../config/Colors/colors";
 
 const styles = StyleSheet.create({
   root: { flex: 1, padding: 20 },
-  title: { textAlign: "center", fontSize: 30  },
+  title: { textAlign: "center", fontSize: 30 },
 
   cell: {
     width: 60,
@@ -45,6 +45,7 @@ const FourDigitsCode = ({
   submitHandler = false,
   isVisible,
   passwordError = false,
+  editable = true,
 }) => {
   const [value, setValue] = useState(defaultValue.join(""));
   const [isSaved, setIsSaved] = useState(false);
@@ -54,9 +55,16 @@ const FourDigitsCode = ({
     setValue,
   });
 
+  useEffect(() => {
+    if (editable) {
+      ref.current.focus();
+    }
+  }, [editable]);
+
   return (
     <SafeAreaView style={styles.root}>
       <CodeField
+        editable={editable}
         ref={ref}
         {...props}
         // Use `caretHidden={false}` when users can't paste a text value, because context menu doesn't appear

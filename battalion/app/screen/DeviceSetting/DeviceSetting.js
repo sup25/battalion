@@ -21,6 +21,7 @@ import { storeFourDigitsToTheDb } from "../../api/Database/Database";
 const DeviceSetting = ({ navigation }) => {
   const [show, setShow] = useState(false);
   const [passwordError, setPasswordError] = useState();
+  const [editable, setEditable] = useState(false);
   const { temp, setTempUnit, password, setDevicePassword, isLightsOn } =
     useAppSettingContext();
   const { connectedDevice, writePasswordToDevice, writeTempUnitToDevice } =
@@ -120,9 +121,16 @@ const DeviceSetting = ({ navigation }) => {
               color={colors.white}
             />
           </TouchableWithoutFeedback>
+          <MaterialCommunityIcons
+            name="pencil"
+            color={colors.white}
+            size={25}
+            onPress={() => setEditable(true)}
+          />
         </View>
         <View style={styles.boxContainer}>
           <FourDigitsCode
+            editable={connectedDevice?.isOwner ? editable : false}
             submitHandler={
               connectedDevice.isOwner ? submitPassword : () => false
             }
