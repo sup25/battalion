@@ -121,12 +121,17 @@ const DeviceSetting = ({ navigation }) => {
               color={colors.white}
             />
           </TouchableWithoutFeedback>
-          <MaterialCommunityIcons
-            name="pencil"
-            color={colors.white}
-            size={25}
-            onPress={() => setEditable(true)}
-          />
+          {connectedDevice?.isOwner && (
+            <MaterialCommunityIcons
+              name="pencil"
+              color={colors.white}
+              size={25}
+              onPress={() => {
+                setEditable(true);
+                setShow(true);
+              }}
+            />
+          )}
         </View>
         <View style={styles.boxContainer}>
           <FourDigitsCode

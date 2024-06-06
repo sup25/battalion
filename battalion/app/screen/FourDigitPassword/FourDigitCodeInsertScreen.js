@@ -134,9 +134,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.black,
-    paddingHorizontal: 15,
     alignItems: "center",
-    paddingTop: 75,
+    paddingTop: 50,
   },
   heading: {
     fontSize: 24,
@@ -163,28 +162,10 @@ const styles = StyleSheet.create({
     paddingTop: 33,
     paddingRight: 25,
   },
-  textInput: {
-    height: 65,
-    borderColor: colors.secondary,
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 5,
-    width: 61,
-    borderRadius: 5,
-    color: colors.white,
-    fontSize: 24,
-    display: "flex",
-    textAlign: "center",
-  },
-  textInputContainer: {
-    display: "flex",
-    flexDirection: "row",
-    justifyContent: "space-between",
-    paddingHorizontal: 15,
-    marginTop: 33,
-  },
+
   wrapper: {
+    display: "flex",
     justifyContent: "center",
-    marginTop: 115,
+    flex: 1,
   },
 });

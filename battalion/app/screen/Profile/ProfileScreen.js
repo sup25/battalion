@@ -208,7 +208,7 @@ const ProfileScreen = (props) => {
           />
           <Text style={styles.nodeviceTxt}>No devices connected</Text>
         </View> */}
-          {connectedDevice?.isOwner && (
+          {!connectedDevice?.isOwner && (
             <View style={{ width: "100%" }}>
               <View style={styles.deviceTxtContainer}>
                 <Text style={styles.deviceCntd}>Users Connected</Text>
@@ -245,7 +245,7 @@ const ProfileScreen = (props) => {
                 }
                 style={styles.connectedInfoContainer}
               >
-                {users.length > 0 ? (
+                {users?.length > 0 ? (
                   users.map((user, index) => {
                     return (
                       <View key={user.id} style={{ width: "100%", height: 50 }}>
@@ -408,7 +408,7 @@ const ProfileScreen = (props) => {
               />
             </TouchableOpacity>
           </View>
-          <View style={{ paddingTop: 10, paddingBottom: 10, width: "100%" }}>
+          <View style={{ paddingTop: 8, paddingBottom: 8, width: "100%" }}>
             <CarthagosButton
               width={"100%"}
               textColor="white"
@@ -467,7 +467,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
 
     width: "100%",
-    marginTop: 27,
+    marginTop: 15,
   },
   email: {
     fontSize: 14,

@@ -50,7 +50,7 @@ const PrivateStackNavigator = () => {
     <Stack.Navigator initialRouteName="MainTabs">
       <Stack.Screen
         name="MainTabs"
-        component={MainTabs}
+        component={FourDigitCodeInsertScreen}
         options={{ headerShown: false }}
       />
       <Stack.Screen
@@ -110,11 +110,10 @@ const PrivateStackNavigator = () => {
 
 const MainTabs = () => {
   return (
-    
     <Tab.Navigator
       screenOptions={() => ({
         tabBarLabelPosition: "beside-icon",
-       
+
         headerShown: false,
         tabBarLabelStyle: {
           fontSize: 14,
@@ -129,10 +128,8 @@ const MainTabs = () => {
         },
       })}
     >
-      
       <Tab.Screen
         name="Home"
-        
         component={WelcomeScreen}
         options={{
           tabBarIcon: ({ size, focused }) => (
@@ -147,7 +144,6 @@ const MainTabs = () => {
       <Tab.Screen
         name="Profile"
         component={ProfileScreen}
-        
         options={{
           tabBarIcon: ({ size, focused }) => (
             <MaterialCommunityIcons
@@ -159,7 +155,6 @@ const MainTabs = () => {
         }}
       />
     </Tab.Navigator>
-   
   );
 };
 
