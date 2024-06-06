@@ -50,7 +50,7 @@ const PrivateStackNavigator = () => {
     <Stack.Navigator initialRouteName="MainTabs">
       <Stack.Screen
         name="MainTabs"
-        component={FourDigitCodeInsertScreen}
+        component={MainTabs}
         options={{ headerShown: false }}
       />
       <Stack.Screen

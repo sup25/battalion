@@ -10,6 +10,7 @@ import {
   SafeAreaView,
   RefreshControl,
   ActivityIndicator,
+  FlatList,
 } from "react-native";
 import DismissMyKeyboard from "../../component/DismissMyKeyboard";
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
@@ -41,12 +42,25 @@ const ProfileScreen = (props) => {
   const [userEmail, setUserEmail] = useState();
 
   const [userProfileData, setUserProfileData] = useState();
-  const [users, setUsers] = useState([]);
+  const [usersw, setUsers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     FontsLoad();
   }, []);
+
+  const users = [
+    { id: 1, name: "test", approved: true },
+    { id: 2, name: "test", approved: true },
+    { id: 3, name: "test", approved: true },
+    { id: 4, name: "test", approved: true },
+    { id: 5, name: "test", approved: true },
+    { id: 6, name: "test", approved: true },
+    { id: 7, name: "test", approved: true },
+    { id: 8, name: "test", approved: true },
+    { id: 9, name: "test", approved: true },
+    { id: 10, name: "test", approved: true },
+  ];
 
   const fetchDeviceUsers = async () => {
     setRefreshing(true);
@@ -138,7 +152,7 @@ const ProfileScreen = (props) => {
 
   return (
     <DismissMyKeyboard>
-      <ScrollView style={styles.container}>
+      <View style={styles.container}>
         <SafeAreaView style={styles.wrapper}>
           <Text style={styles.profileTxt}>My profile</Text>
           <View style={styles.bigRectangle}>
@@ -233,149 +247,142 @@ const ProfileScreen = (props) => {
                   )}
                 </View>
               </View>
-              <ScrollView
-                indicatorStyle="white"
-                fadingEdgeLength={100}
-                showsVerticalScrollIndicator={true}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={fetchDeviceUsers}
-                  />
-                }
-                style={styles.connectedInfoContainer}
-              >
+              <View style={styles.connectedInfoContainer}>
                 {users?.length > 0 ? (
-                  users.map((user, index) => {
-                    return (
-                      <View key={user.id} style={{ width: "100%", height: 50 }}>
+                  <FlatList
+                    data={users}
+                    renderItem={(user) => {
+                      return (
                         <View
-                          key={user.id}
                           style={{
-                            justifyContent: "space-between",
-                            alignItems: "center",
                             width: "100%",
-                            display: "flex",
-                            flexDirection: "row",
+                            backgroundColor: "green",
+                            padding: 20,
+                            marginVertical: 8,
                           }}
                         >
-                          <Text
-                            key={user.id}
-                            style={{
-                              ...styles.listText,
-                            }}
-                          >
-                            {user.name}
-                          </Text>
-                          <View>
-                            {user.approved ? (
-                              <TouchableOpacity
-                                style={styles.btn}
-                                disabled={refreshing}
-                                onPress={async () => {
-                                  setRefreshing(true);
-                                  if (refreshing) return;
-                                  try {
-                                    await disconnectUser(
-                                      connectedDevice?.device?.serialNum,
-                                      user.id
-                                    );
-                                    await fetchDeviceUsers();
-                                  } catch (err) {
-                                    setRefreshing(false);
-                                    console.log(err);
-                                  }
-                                }}
-                              >
-                                <Text style={styles.listText}>
-                                  Revoke access
-                                </Text>
-                              </TouchableOpacity>
-                            ) : (
-                              <View>
-                                {user?.status === "rejected" ? (
-                                  <Text style={styles.listText}>Rejected</Text>
-                                ) : (
-                                  <View
-                                    style={{
-                                      justifyContent: "space-between",
-                                      display: "flex",
-                                      flexDirection: "row",
-                                      gap: 15,
-                                    }}
-                                  >
-                                    <TouchableOpacity
-                                      disabled={refreshing}
-                                      style={styles.btn}
-                                      onPress={async () => {
-                                        if (refreshing) return;
-                                        setRefreshing(true);
-                                        try {
-                                          await aproveUser(
-                                            connectedDevice?.device?.serialNum,
-                                            user.id
-                                          );
-                                          await fetchDeviceUsers();
-                                        } catch (err) {
-                                          //test
-                                          setRefreshing(false);
-                                          console.log(err);
-                                        }
-                                      }}
-                                    >
-                                      <Text style={styles.listText}>
-                                        Accept
-                                      </Text>
-                                    </TouchableOpacity>
-                                    <TouchableOpacity
-                                      disabled={refreshing}
-                                      style={styles.btn}
-                                      onPress={async () => {
-                                        setRefreshing(true);
-                                        if (refreshing) return;
-                                        try {
-                                          await rejectUser(
-                                            connectedDevice?.device?.serialNum,
-                                            user.id
-                                          );
-                                          await fetchDeviceUsers();
-                                        } catch (err) {
-                                          setRefreshing(false);
-
-                                          console.log(err);
-                                        }
-                                      }}
-                                    >
-                                      <Text style={styles.listText}>
-                                        Ignore
-                                      </Text>
-                                    </TouchableOpacity>
-                                  </View>
-                                )}
-                              </View>
-                            )}
-                          </View>
-                        </View>
-                        {(index < users?.length - 1 || index === 0) && (
                           <View
                             style={{
+                              justifyContent: "space-between",
+                              alignItems: "center",
                               width: "100%",
-                              height: 1,
-                              marginTop: 10,
-                              marginBottom: 10,
-                              backgroundColor: "rgba(255,255,255,0.3)",
+                              display: "flex",
+                              flexDirection: "row",
                             }}
-                          />
-                        )}
-                      </View>
-                    );
-                  })
+                          >
+                            <Text
+                              style={{
+                                ...styles.listText,
+                              }}
+                            >
+                              {user.name}
+                            </Text>
+                            <View>
+                              {user.approved ? (
+                                <TouchableOpacity
+                                  style={styles.btn}
+                                  disabled={refreshing}
+                                  onPress={async () => {
+                                    setRefreshing(true);
+                                    if (refreshing) return;
+                                    try {
+                                      await disconnectUser(
+                                        connectedDevice?.device?.serialNum,
+                                        user.id
+                                      );
+                                      await fetchDeviceUsers();
+                                    } catch (err) {
+                                      setRefreshing(false);
+                                      console.log(err);
+                                    }
+                                  }}
+                                >
+                                  <Text style={styles.listText}>
+                                    Revoke access
+                                  </Text>
+                                </TouchableOpacity>
+                              ) : (
+                                <View>
+                                  {user?.status === "rejected" ? (
+                                    <Text style={styles.listText}>
+                                      Rejected
+                                    </Text>
+                                  ) : (
+                                    <View
+                                      style={{
+                                        justifyContent: "space-between",
+                                        display: "flex",
+                                        flexDirection: "row",
+                                        gap: 15,
+                                      }}
+                                    >
+                                      <TouchableOpacity
+                                        disabled={refreshing}
+                                        style={styles.btn}
+                                        onPress={async () => {
+                                          if (refreshing) return;
+                                          setRefreshing(true);
+                                          try {
+                                            await aproveUser(
+                                              connectedDevice?.device
+                                                ?.serialNum,
+                                              user.id
+                                            );
+                                            await fetchDeviceUsers();
+                                          } catch (err) {
+                                            //test
+                                            setRefreshing(false);
+                                            console.log(err);
+                                          }
+                                        }}
+                                      >
+                                        <Text style={styles.listText}>
+                                          Accept
+                                        </Text>
+                                      </TouchableOpacity>
+                                      <TouchableOpacity
+                                        disabled={refreshing}
+                                        style={styles.btn}
+                                        onPress={async () => {
+                                          setRefreshing(true);
+                                          if (refreshing) return;
+                                          try {
+                                            await rejectUser(
+                                              connectedDevice?.device
+                                                ?.serialNum,
+                                              user.id
+                                            );
+                                            await fetchDeviceUsers();
+                                          } catch (err) {
+                                            setRefreshing(false);
+
+                                            console.log(err);
+                                          }
+                                        }}
+                                      >
+                                        <Text style={styles.listText}>
+                                          Ignore
+                                        </Text>
+                                      </TouchableOpacity>
+                                    </View>
+                                  )}
+                                </View>
+                              )}
+                            </View>
+                          </View>
+                        </View>
+                      );
+                    }}
+                    keyExtractor={(item) => item.id}
+                    scrollEnabled={true} // Disable FlatList's own scrolling
+                  />
                 ) : (
                   <View
                     style={{
                       display: "flex",
                       justifyContent: "center",
                       alignItems: "center",
+                      height: 150,
                     }}
                   >
                     <MaterialCommunityIcons
@@ -387,12 +394,12 @@ const ProfileScreen = (props) => {
                     <Text style={styles.nodeviceTxt}>No users connected</Text>
                   </View>
                 )}
-              </ScrollView>
+              </View>
             </View>
           )}
 
           <View style={styles.ForgetPasswordBox}>
-            <Text style={styles.forgetPasswordTxt}>FORGOT PASSWORD?</Text>
+            <Text style={styles.forgetPasswordTxt}>FORGOT {"\n"}PASSWORD?</Text>
 
             <TouchableOpacity
               onPress={() => {
@@ -420,7 +427,7 @@ const ProfileScreen = (props) => {
           </View>
           <StatusBar backgroundColor={colors.black} barStyle="light-content" />
         </SafeAreaView>
-      </ScrollView>
+      </View>
     </DismissMyKeyboard>
   );
 };
@@ -491,7 +498,7 @@ const styles = StyleSheet.create({
     width: "100%",
     height: 90,
     justifyContent: "space-between",
-    padding: 18,
+    padding: 15,
   },
   resetText: {
     color: colors.white,
@@ -564,7 +571,6 @@ const styles = StyleSheet.create({
     textTransform: "uppercase",
     fontWeight: "800",
     color: colors.white,
-    width: 135,
     fontFamily: "Alternate-Gothic-bold",
   },
 
