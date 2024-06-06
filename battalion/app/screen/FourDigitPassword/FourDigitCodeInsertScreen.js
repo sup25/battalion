@@ -93,6 +93,7 @@ export default function FourDigitCodeInsertScreen({ navigation }) {
             backgroundColor: "#131313",
             borderRadius: 5,
             height: 167,
+           
             marginTop: 20,
           }}
         >
@@ -135,7 +136,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: colors.black,
     alignItems: "center",
-    paddingTop: 50,
+    paddingTop: 0,
   },
   heading: {
     fontSize: 24,
@@ -151,7 +152,7 @@ const styles = StyleSheet.create({
     fontWeight: "400",
     lineHeight: 19,
     color: "#8F8F8F",
-    width: 300,
+    width: 320,
     textAlign: "center",
     marginTop: 8,
     alignSelf: "center",
@@ -159,13 +160,13 @@ const styles = StyleSheet.create({
   },
   icon: {
     alignSelf: "flex-end",
-    paddingTop: 33,
+    paddingTop: 25,
     paddingRight: 25,
+    marginBottom: 15,
   },
 
   wrapper: {
     display: "flex",
-    justifyContent: "center",
-    flex: 1,
+    marginTop: 150
   },
 });

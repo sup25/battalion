@@ -18,7 +18,7 @@ import {
 import colors from "../../config/Colors/colors";
 
 const styles = StyleSheet.create({
-  root: { flex: 1, padding: 15 },
+  root: { flex: 1, paddingHorizontal: 15 },
   title: { textAlign: "center", fontSize: 30 },
 
   cell: {
@@ -57,6 +57,7 @@ const FourDigitsCode = ({
 
   useEffect(() => {
     if (editable) {
+      setValue("")
       ref.current.focus();
     }
   }, [editable]);

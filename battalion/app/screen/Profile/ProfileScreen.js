@@ -42,25 +42,13 @@ const ProfileScreen = (props) => {
   const [userEmail, setUserEmail] = useState();
 
   const [userProfileData, setUserProfileData] = useState();
-  const [usersw, setUsers] = useState([]);
+  const [users, setUsers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
   useEffect(() => {
     FontsLoad();
   }, []);
 
-  const users = [
-    { id: 1, name: "test", approved: true },
-    { id: 2, name: "test", approved: true },
-    { id: 3, name: "test", approved: true },
-    { id: 4, name: "test", approved: true },
-    { id: 5, name: "test", approved: true },
-    { id: 6, name: "test", approved: true },
-    { id: 7, name: "test", approved: true },
-    { id: 8, name: "test", approved: true },
-    { id: 9, name: "test", approved: true },
-    { id: 10, name: "test", approved: true },
-  ];
 
   const fetchDeviceUsers = async () => {
     setRefreshing(true);
@@ -152,7 +140,7 @@ const ProfileScreen = (props) => {
 
   return (
     <DismissMyKeyboard>
-      <View style={styles.container}>
+      <ScrollView style={styles.container}>
         <SafeAreaView style={styles.wrapper}>
           <Text style={styles.profileTxt}>My profile</Text>
           <View style={styles.bigRectangle}>
@@ -222,7 +210,7 @@ const ProfileScreen = (props) => {
           />
           <Text style={styles.nodeviceTxt}>No devices connected</Text>
         </View> */}
-          {!connectedDevice?.isOwner && (
+          {connectedDevice?.isOwner && (
             <View style={{ width: "100%" }}>
               <View style={styles.deviceTxtContainer}>
                 <Text style={styles.deviceCntd}>Users Connected</Text>
@@ -251,14 +239,14 @@ const ProfileScreen = (props) => {
                 {users?.length > 0 ? (
                   <FlatList
                     data={users}
-                    renderItem={(user) => {
+                    renderItem={({item}) => {
+                     const user = item
+                      // const user = user.user
                       return (
                         <View
                           style={{
-                            width: "100%",
-                            backgroundColor: "green",
-                            padding: 20,
-                            marginVertical: 8,
+                            padding: 9,
+                            height: 45
                           }}
                         >
                           <View
@@ -374,7 +362,6 @@ const ProfileScreen = (props) => {
                       );
                     }}
                     keyExtractor={(item) => item.id}
-                    scrollEnabled={true} // Disable FlatList's own scrolling
                   />
                 ) : (
                   <View
@@ -427,7 +414,7 @@ const ProfileScreen = (props) => {
           </View>
           <StatusBar backgroundColor={colors.black} barStyle="light-content" />
         </SafeAreaView>
-      </View>
+      </ScrollView>
     </DismissMyKeyboard>
   );
 };
@@ -455,6 +442,8 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.black,
+   
+    paddingTop: 20
   },
   connectedInfoContainer: {
     width: "100%",

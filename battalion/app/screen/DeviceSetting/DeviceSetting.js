@@ -114,6 +114,8 @@ const DeviceSetting = ({ navigation }) => {
       <View style={styles.passwordContainer}>
         <View style={styles.passwordIcon}>
           <Text style={styles.digitTxt}>4 digits password</Text>
+          <View style={{display:'flex', flexDirection:'row', gap:20}}>
+           
           <TouchableWithoutFeedback onPress={handleShowPassword}>
             <MaterialCommunityIcons
               name={show ? "eye" : "eye-off"}
@@ -121,7 +123,7 @@ const DeviceSetting = ({ navigation }) => {
               color={colors.white}
             />
           </TouchableWithoutFeedback>
-          {connectedDevice?.isOwner && (
+           {connectedDevice?.isOwner && (
             <MaterialCommunityIcons
               name="pencil"
               color={colors.white}
@@ -132,6 +134,7 @@ const DeviceSetting = ({ navigation }) => {
               }}
             />
           )}
+          </View>
         </View>
         <View style={styles.boxContainer}>
           <FourDigitsCode
@@ -172,6 +175,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.black,
+    paddingTop: 30
   },
   digitTxt: {
     color: colors.white,
@@ -214,8 +218,7 @@ const styles = StyleSheet.create({
     alignSelf: "center",
     padding: 10,
     borderRadius: 5,
-    marginTop: 14,
-
+    marginTop: 20,
     flexDirection: "column",
   },
   passwordIcon: {
