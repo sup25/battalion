@@ -1,4 +1,4 @@
-package com.battalion.app
+package com.battaliontool
 
 import android.app.Application
 import android.content.res.Configuration

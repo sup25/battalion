@@ -23,12 +23,12 @@ import { useNavigation } from "@react-navigation/native";
 const BleContext = createContext();
 
 const BleProvider = ({ children }) => {
-  const SPS_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
-  const SPS_SERVER_TX_UUID = "19B10001-E8F2-537E-4F6C-D104768A1214";
-  const SPS_SERVER_RX_UUID = "19B10002-E8F2-537E-4F6C-D104768A1214";
-  // const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
-  // const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
-  // const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
+  // const SPS_SERVICE_UUID = "19b10000-e8f2-537e-4f6c-d104768a1214";
+  // const SPS_SERVER_TX_UUID = "19B10001-E8F2-537E-4F6C-D104768A1214";
+  // const SPS_SERVER_RX_UUID = "19B10002-E8F2-537E-4F6C-D104768A1214";
+  const SPS_SERVICE_UUID = "6e410001-b5a3-f393-e0a9-e50e54dccaa0";
+  const SPS_SERVER_TX_UUID = "6e410002-b5a3-f393-e0a9-e50e54dccaa0";
+  const SPS_SERVER_RX_UUID = "6e410003-b5a3-f393-e0a9-e50e54dccaa0";
 
   const navigation = useNavigation();
 

@@ -1,4 +1,4 @@
-rootProject.name = 'Battalion tool'
+rootProject.name = 'Battaliontool'
 
 dependencyResolutionManagement {
   versionCatalogs {

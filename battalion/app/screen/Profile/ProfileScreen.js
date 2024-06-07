@@ -49,7 +49,6 @@ const ProfileScreen = (props) => {
     FontsLoad();
   }, []);
 
-
   const fetchDeviceUsers = async () => {
     setRefreshing(true);
     try {
@@ -140,7 +139,7 @@ const ProfileScreen = (props) => {
 
   return (
     <DismissMyKeyboard>
-      <ScrollView style={styles.container}>
+      <ScrollView nestedScrollEnabled={true} style={styles.container}>
         <SafeAreaView style={styles.wrapper}>
           <Text style={styles.profileTxt}>My profile</Text>
           <View style={styles.bigRectangle}>
@@ -238,15 +237,25 @@ const ProfileScreen = (props) => {
               <View style={styles.connectedInfoContainer}>
                 {users?.length > 0 ? (
                   <FlatList
+                    nestedScrollEnabled={true}
+                    ItemSeparatorComponent={
+                      <View
+                        style={{
+                          height: 1,
+                          backgroundColor: "white",
+                          opacity: 0.1,
+                        }}
+                      />
+                    }
                     data={users}
-                    renderItem={({item}) => {
-                     const user = item
-                      // const user = user.user
+                    renderItem={({ item }) => {
+                      const user = item;
+
                       return (
                         <View
                           style={{
-                            padding: 9,
-                            height: 45
+                            padding: 10,
+                            height: 50,
                           }}
                         >
                           <View
@@ -442,16 +451,15 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.black,
-   
-    paddingTop: 20
+
+    paddingTop: 20,
   },
   connectedInfoContainer: {
-    width: "100%",
     height: 180,
     backgroundColor: colors.soft,
     marginTop: 5,
     marginBottom: 15,
-    padding: 10,
+    paddingHorizontal: 5,
   },
   deviceCntd: {
     fontSize: 15,
@@ -574,5 +582,6 @@ const styles = StyleSheet.create({
     marginTop: 55,
     alignItems: "center",
     paddingHorizontal: 15,
+    paddingBottom: 20,
   },
 });
