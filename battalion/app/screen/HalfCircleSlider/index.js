@@ -69,7 +69,10 @@ const HalfCircleSlider = ({ navigation }) => {
             </G>
             <View style={styles.tempTextWrapper}>
               <Text style={styles.Temptext}>
-                {getTempValueAndUnit({ value: sliderValue, unit: temp.unit })}
+                {getTempValueAndUnit(
+                  { value: sliderValue, unit: temp.unit },
+                  false
+                )}
               </Text>
             </View>
           </Svg>

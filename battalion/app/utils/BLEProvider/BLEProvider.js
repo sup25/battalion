@@ -408,7 +408,7 @@ const BleProvider = ({ children }) => {
         isOwner: isOwner,
         connecting: false,
       });
-      await monitoringDevice(deviceFromDb?.fourDigitCode);
+      await monitoringDevice(deviceFromDb?.fourDigitCode, deviceConnection);
       await setDevicesIdsBasedOnSerialNum(deviceSerialNumber, device.id);
 
       deviceConnection.onDisconnected(async (error, disconnectedDevice) => {
@@ -496,7 +496,7 @@ const BleProvider = ({ children }) => {
     const base64String = getBase64Data(prefix.concat(data));
     try {
       let res =
-        await connectedDevice?.device?.writeCharacteristicWithResponseForService(
+        await connectedDevice?.device?.writeCharacteristicWithoutResponseForService(
           SPS_SERVICE_UUID,
           SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
           base64String
@@ -529,7 +529,7 @@ const BleProvider = ({ children }) => {
 
     try {
       let res =
-        await connectedDevice?.device?.writeCharacteristicWithResponseForService(
+        await connectedDevice?.device?.writeCharacteristicWithoutResponseForService(
           SPS_SERVICE_UUID,
           SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
           base64String
@@ -557,7 +557,7 @@ const BleProvider = ({ children }) => {
 
     try {
       let res =
-        await connectedDevice?.device?.writeCharacteristicWithResponseForService(
+        await connectedDevice?.device?.writeCharacteristicWithoutResponseForService(
           SPS_SERVICE_UUID,
           SPS_SERVER_TX_UUID,
           base64String
@@ -588,7 +588,7 @@ const BleProvider = ({ children }) => {
 
     try {
       let res =
-        await connectedDevice?.device?.writeCharacteristicWithResponseForService(
+        await connectedDevice?.device?.writeCharacteristicWithoutResponseForService(
           SPS_SERVICE_UUID,
           SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
           base64String
@@ -611,7 +611,7 @@ const BleProvider = ({ children }) => {
 
     try {
       let res =
-        await connectedDevice?.device?.writeCharacteristicWithResponseForService(
+        await connectedDevice?.device?.writeCharacteristicWithoutResponseForService(
           SPS_SERVICE_UUID,
           SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
           base64String
@@ -637,19 +637,18 @@ const BleProvider = ({ children }) => {
 
     return [hoursH, hoursL, minutesH, minutesL];
   };
-  const writeTimeToDevice = async (data = false) => {
+  const writeTimeToDevice = async (device) => {
     const prefix = [85, 2];
     const prefixAndPass = prefix.concat(password, updateCurrentTime());
 
     const base64String = getBase64Data(prefixAndPass);
 
     try {
-      let res =
-        await connectedDevice?.device?.writeCharacteristicWithResponseForService(
-          SPS_SERVICE_UUID,
-          SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
-          base64String
-        );
+      let res = await device?.writeCharacteristicWithoutResponseForService(
+        SPS_SERVICE_UUID,
+        SPS_SERVER_TX_UUID, // Use the appropriate UUID for writing
+        base64String
+      );
 
       return res;
       // Password set successfully
@@ -660,7 +659,7 @@ const BleProvider = ({ children }) => {
     }
   };
 
-  const setToState = (value, setState, checkForBoolen) => {
+  const setToState = (value, setState, checkForBoolen, status) => {
     const finalVal = checkForBoolen ? (value === 1 ? true : false) : value;
     if (value && !Number.isNaN(value)) {
       setState(finalVal);
@@ -668,8 +667,10 @@ const BleProvider = ({ children }) => {
   };
   const getStatusFromBase64AndSetToState = async (statusData) => {
     const hexString = getDataFromArray(statusData);
+    if (hexString.length < 16) {
+      return false;
+    }
     console.log(hexString, "hexString");
-    Toast.show(JSON.stringify(hexString), { type: "normal" });
     const password = hexString.slice(2, 6);
     const temperature = parseInt(hexString[6]);
     const temperatureMode = parseInt(hexString[7]);
@@ -678,12 +679,12 @@ const BleProvider = ({ children }) => {
     const chargerStatus = parseInt(hexString[10]);
     const deviceStatus = parseInt(hexString[11]);
     const deviceLidOpen = parseInt(hexString[12]);
-    setToState(temperature, setBoxTemp);
+    setToState(temperature, setBoxTemp, false);
     setToState(password, setDevicePassword);
     setToState(deviceStatus, setDeviceIsLocked, true);
     setToState(lightStatus, setDeviceIsLightsOn, true);
     setToState(batteryLevel, setBoxBatteryLevel);
-    setToState(chargerStatus, setBoxIsCharging, true);
+    setToState(chargerStatus, setBoxIsCharging, true, "chargerStatus");
 
     if (temperatureMode && !Number.isNaN(temperatureMode)) {
       setTemp((prev) => ({ ...prev, unit: temperatureMode === 1 ? "f" : "c" }));
@@ -704,7 +705,6 @@ const BleProvider = ({ children }) => {
   };
 
   const getStatusFromDevice = async (pass = false, device = false) => {
-    console.log("password!//1/", pass, password);
     let currentDevice = device || connectedDevice?.device;
     const prefix = [85, 5];
     const prefixAndPass = prefix.concat(
@@ -719,7 +719,7 @@ const BleProvider = ({ children }) => {
         base64String
       );
 
-      await getStatusFromBase64AndSetToState(res.value);
+      // await getStatusFromBase64AndSetToState(res.value);
 
       // Password set successfully
     } catch (error) {
@@ -749,10 +749,12 @@ const BleProvider = ({ children }) => {
     );
   };
 
-  const monitoringDevice = async (pass) => {
+  const monitoringDevice = async (pass, device) => {
+    console.log("monitoring");
     try {
-      await getStatusFromDevice(pass);
-      await startMonitoringDevice();
+      await startMonitoringDevice(device);
+      await getStatusFromDevice(pass, device);
+      await writeTimeToDevice(device);
     } catch (e) {
       console.log("error in monitoring", e);
     }

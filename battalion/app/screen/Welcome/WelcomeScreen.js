@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
   TouchableWithoutFeedback,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 
 import { useAuth } from "../../utils/AuthProvider/AuthProvider";
@@ -83,7 +84,7 @@ const WelcomeScreen = ({ navigation }) => {
   }, [boxName]);
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <StatusBar translucent backgroundColor="transparent" />
 
       <ImageBackground
@@ -281,7 +282,7 @@ const WelcomeScreen = ({ navigation }) => {
         </View>
       )}
       {isLoaded && <ActivityIndicator size="small" color="#ffffff" />}
-    </View>
+    </ScrollView>
   );
 };
 

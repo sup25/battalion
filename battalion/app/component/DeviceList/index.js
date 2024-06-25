@@ -229,10 +229,13 @@ const DeviceList = ({ ownerId, navigation }) => {
                     />
                     <Text style={styles.Degree}>
                       {item.temp
-                        ? getTempValueAndUnit({
-                            value: item.temp.value,
-                            unit: item.temp.unit,
-                          })
+                        ? getTempValueAndUnit(
+                            {
+                              value: item.temp.value,
+                              unit: item.temp.unit,
+                            },
+                            true
+                          )
                         : `--${temp.unit === "c" ? "℃" : "°F"}`}
                     </Text>
                   </View>
@@ -267,7 +270,7 @@ const DeviceList = ({ ownerId, navigation }) => {
                       }}
                     >
                       {item?.deviceId === connectedDevice?.device?.id
-                        ? `Device ${item?.isLocked ? "Locked" : "Unlocked"}`
+                        ? `Device \n${item?.isLocked ? "Locked" : "Unlocked"}`
                         : "--"}
                     </Text>
                     <View style={styles.IconWrapper}>

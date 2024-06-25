@@ -36,7 +36,7 @@ const SetBoxTemp = () => {
             { color: connectedDevice?.device ? "white" : "grey" },
           ]}
         >
-          {getTempValueAndUnit(temp)}
+          {getTempValueAndUnit(temp, true)}
         </Text>
         <MaterialCommunityIcons
           name="thermometer"

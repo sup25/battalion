@@ -24,7 +24,7 @@ const BoxTemp = () => {
           >
             {boxTemp < 0
               ? "--"
-              : getTempValueAndUnit({ value: boxTemp, unit: temp.unit })}
+              : getTempValueAndUnit({ value: boxTemp, unit: temp.unit }, false)}
           </Text>
           <MaterialCommunityIcons
             name="thermometer"

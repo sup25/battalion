@@ -143,9 +143,9 @@ export const AppSettingProvider = ({ children }) => {
     );
   };
 
-  const getTempValueAndUnit = (temp) => {
-    const val = temp.value < 0 ? "--" : temp.value;
-
+  const getTempValueAndUnit = (temp, toConvert) => {
+    let val = temp.value < 0 ? "--" : temp.value;
+    if (temp.unit === "f" && toConvert) val = Math.round((val * 9) / 5 + 32);
     const unit = temp.unit === "c" ? "℃" : "°F";
     return `${val}${unit}`;
   };

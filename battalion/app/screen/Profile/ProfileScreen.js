@@ -518,6 +518,7 @@ const styles = StyleSheet.create({
     height: 37,
     borderRadius: 5,
     fontSize: 16,
+    lineHeight: 18,
     padding: 10,
     marginTop: 5,
     color: colors.white,
@@ -573,6 +574,7 @@ const styles = StyleSheet.create({
 
   userName: {
     fontSize: 14,
+    lineHeight: 16,
     fontWeight: "500",
     color: colors.white,
     fontFamily: "SF-Pro-Display",
