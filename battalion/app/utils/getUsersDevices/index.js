@@ -1,5 +1,5 @@
 import { getOwnerAllDevices, getUserAllDevices } from "../../api/devices";
-import { getUserFromDb } from "../../api/users";
+import { getUserById } from "../../api/users";
 
 function removeDuplicates(array1, array2) {
   const uniqueObjects = [];
@@ -46,7 +46,7 @@ export const getUsersDevices = async (
     const userArray = await getUserAllDevices(ownerId);
 
     const combinedArr = removeDuplicates(ownerArray, userArray);
-    const user = await getUserFromDb(ownerId);
+    const user = await getUserById(ownerId);
     const newDevices = combinedArr.map((item) => {
       const isCurrentDevice =
         item.deviceId === connectedDevice?.device?.id ||

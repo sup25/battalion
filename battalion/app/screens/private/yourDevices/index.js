@@ -1,40 +1,17 @@
-import {
-  SafeAreaView,
-  StyleSheet,
-  Text,
-  View,
-  TouchableWithoutFeedback,
-} from "react-native";
-import React, { useState, useEffect } from "react";
+import { StyleSheet, Text, View, TouchableWithoutFeedback } from "react-native";
+import React, { useEffect } from "react";
 import colors from "../../../config/Colors";
-import { useBleContext } from "../../../context/BLEProvider";
 import { useAuth } from "../../../context/AuthProvider";
-import FetchUserProfile from "../../../Hooks/UserProfile";
 import DeviceList from "../../../components/DeviceList";
 import { FontsLoad } from "../../../utils/FontsLoad";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 
 const YourDevices = ({ navigation }) => {
   const { currentUser } = useAuth();
-  const { connectedDevice } = useBleContext();
-  const [userName, setUserName] = useState();
-  const userData = FetchUserProfile(currentUser);
-  const loadFont = async () => {
-    try {
-      await FontsLoad();
-    } catch (e) {
-      console.log(e);
-    }
-  };
-  useEffect(() => {
-    loadFont();
-  }, []);
 
   useEffect(() => {
-    if (userData) {
-      setUserName(userData?.name || "");
-    }
-  }, [userData]);
+    FontsLoad();
+  }, []);
 
   return (
     <View style={styles.container}>

@@ -109,7 +109,7 @@ export const addDeviceToUserIOS = async (deviceId, macId, userId) => {
     }
   }
 };
-export const getUserFromDb = async (userId) => {
+export const getUserById = async (userId) => {
   try {
     const userRef = firestore().collection("users").doc(userId);
     const doc = await userRef.get();
@@ -118,6 +118,7 @@ export const getUserFromDb = async (userId) => {
       return doc.data();
     } else {
       console.log("No such document!");
+      return null;
     }
   } catch (err) {
     console.log(err);

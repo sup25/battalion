@@ -1,6 +1,6 @@
 import * as LocalAuthentication from "expo-local-authentication";
 
-export const UseBioMetric = async () => {
+export const useBioMetric = async () => {
   try {
     const hasBiometricHardware = await LocalAuthentication.hasHardwareAsync();
 

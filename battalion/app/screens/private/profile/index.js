@@ -18,7 +18,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import colors from "../../../config/Colors";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import firestore from "@react-native-firebase/firestore";
-import FetchUserProfile from "../../../Hooks/UserProfile";
 import CarthagosButton from "../../../components/CarthagosButton";
 import {
   aproveUser,
@@ -30,25 +29,29 @@ import { useBleContext } from "../../../context/BLEProvider";
 import { Toast } from "react-native-toast-notifications";
 import { FontsLoad } from "../../../utils/FontsLoad";
 import { useAuth } from "../../../context/AuthProvider";
+import { getUserById } from "../../../api/users";
 
 const ProfileScreen = (props) => {
   const { currentUser, logout } = useAuth();
-  const userData = FetchUserProfile(currentUser);
-  const [phoneNumber, setPhoneNumber] = useState();
-  const [isEditingUsername, setIsEditingUsername] = useState(false);
   const { connectedDevice } = useBleContext();
 
+  const [userProfileData, setUserProfileData] = useState();
   const [updatedUserName, setUpdatedUserName] = useState();
-
+  const [phoneNumber, setPhoneNumber] = useState();
   const [userEmail, setUserEmail] = useState();
 
-  const [userProfileData, setUserProfileData] = useState();
+  const [isEditingUsername, setIsEditingUsername] = useState(false);
+
   const [users, setUsers] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
 
-  useEffect(() => {
-    FontsLoad();
-  }, []);
+  const getAndSetUserProfileData = async () => {
+    const userData = await getUserById(currentUser.uid);
+    setUserProfileData(userData);
+    setUpdatedUserName(userData?.name || "");
+    setUserEmail(userData?.email);
+    setPhoneNumber(userData?.phoneNumber);
+  };
 
   const fetchDeviceUsers = async () => {
     setRefreshing(true);
@@ -79,17 +82,14 @@ const ProfileScreen = (props) => {
   }, [props.navigation.isFocused()]);
 
   useEffect(() => {
-    if (userData) {
-      setUserProfileData(userData);
-      setUpdatedUserName(userData?.name || "");
-      setUserEmail(userData?.email);
-      setPhoneNumber(userData?.phoneNumber);
-    }
-  }, [userData]);
+    FontsLoad();
+    getAndSetUserProfileData();
+  }, []);
 
   const handleUsernameEdit = () => {
     setIsEditingUsername(!isEditingUsername);
   };
+
   if (userData === null) {
     return <Text>Loading...</Text>;
   }

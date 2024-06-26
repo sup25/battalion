@@ -12,7 +12,7 @@ import auth from "@react-native-firebase/auth";
 
 import { useRoute } from "@react-navigation/native";
 
-import { UseBioMetric } from "../../../../Hooks/UseBioMetric";
+import { useBioMetric } from "../../../../hooks/useBioMetric";
 
 import { useToast } from "react-native-toast-notifications";
 
@@ -41,7 +41,7 @@ const Login = ({ navigation }) => {
 
   const handleLogin = async () => {
     try {
-      const biometricResult = await UseBioMetric();
+      const biometricResult = await useBioMetric();
 
       if (biometricResult) {
         const res = await auth().signInWithEmailAndPassword(email, password);
