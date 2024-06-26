@@ -14,8 +14,7 @@ const ForgotPasswordPrivate = ({ navigation }) => {
   const { currentUser } = useAuth();
   const [email, setEmail] = useState("");
   const toast = useToast();
-  const [errormsg, setErrorMsg] = useState("");
-  const [successMessage, setSuccessMessage] = useState("");
+
   useEffect(() => {
     FontsLoad();
   }, []);
@@ -24,7 +23,6 @@ const ForgotPasswordPrivate = ({ navigation }) => {
     setIsLoading(true);
     if (currentUser && currentUser.email && currentUser.email === email) {
       try {
-        console.log("Sending reset email to:", email);
         await auth().sendPasswordResetEmail(email);
         toast.show("sent successfully", {
           type: "normal",
