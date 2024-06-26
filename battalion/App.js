@@ -1,5 +1,5 @@
 import { NavigationContainer } from "@react-navigation/native";
-import { AuthProvider } from "./app/utils/AuthProvider/AuthProvider";
+import { AuthProvider } from "./app/context/AuthProvider";
 import { RoutesNavigator } from "./app/navigation/RoutesNavigator";
 import { ToastProvider } from "react-native-toast-notifications";
 
