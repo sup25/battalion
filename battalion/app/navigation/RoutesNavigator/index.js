@@ -1,6 +1,6 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import PrivateRoute from "../PrivateRoute/PrivateRoute";
-import PublicRoute from "../PublicRoute/PublicRoute";
+import PrivateRoute from "../PrivateRoute";
+import PublicRoute from "../PublicRoute";
 import { FontsLoad } from "../../utils/FontsLoad";
 import { useEffect } from "react";
 const Stack = createNativeStackNavigator();

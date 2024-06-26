@@ -1,8 +1,5 @@
-import {
-  getOwnerAllDevices,
-  getUserAllDevices,
-  getUserFromDb,
-} from "../../api/Database/Database";
+import { getOwnerAllDevices, getUserAllDevices } from "../../api/devices";
+import { getUserFromDb } from "../../api/users";
 
 function removeDuplicates(array1, array2) {
   const uniqueObjects = [];

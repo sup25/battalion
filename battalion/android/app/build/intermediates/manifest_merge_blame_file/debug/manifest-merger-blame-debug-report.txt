@@ -1,0 +1,534 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.suparna.expoble"
+4    android:versionCode="1"
+5    android:versionName="1.0.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="21"
+9        android:targetSdkVersion="31" />
+10
+11    <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
+11-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:12:3-75
+11-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:12:20-73
+12
+13    <uses-permission-sdk-23 android:name="android.permission.ACCESS_COARSE_LOCATION" />
+13-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:2:3-85
+13-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:2:27-83
+14    <uses-permission-sdk-23 android:name="android.permission.ACCESS_FINE_LOCATION" />
+14-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:3:3-83
+14-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:3:27-81
+15
+16    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+16-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:4:3-78
+16-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:4:20-76
+17    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+17-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:5:3-76
+17-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:5:20-74
+18    <uses-permission android:name="android.permission.BLUETOOTH" />
+18-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:6:3-65
+18-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:6:20-63
+19    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
+19-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:7:3-71
+19-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:7:20-69
+20    <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
+20-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:8:3-73
+20-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:8:20-71
+21    <uses-permission android:name="android.permission.BLUETOOTH_SCAN" />
+21-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:9:3-91
+21-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:9:20-68
+22    <uses-permission android:name="android.permission.INTERNET" />
+22-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:10:3-64
+22-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:10:20-62
+23    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+23-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:11:3-77
+23-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:11:20-75
+24    <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+24-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:13:3-69
+24-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:13:20-67
+25    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+25-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:14:3-71
+25-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:14:20-69
+26    <uses-permission android:name="android.permission.VIBRATE" />
+26-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:15:3-63
+26-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:15:20-61
+27    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+27-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:16:3-78
+27-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:16:20-76
+28
+29    <uses-feature
+29-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:17:3-87
+30        android:name="android.hardware.bluetooth_le"
+30-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:17:17-61
+31        android:required="true" />
+31-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:17:62-85
+32
+33    <queries>
+33-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:18:3-24:13
+34        <intent>
+34-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:19:5-23:14
+35            <action android:name="android.intent.action.VIEW" />
+35-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:20:7-58
+35-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:20:15-56
+36
+37            <category android:name="android.intent.category.BROWSABLE" />
+37-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:21:7-67
+37-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:21:17-65
+38
+39            <data android:scheme="https" />
+39-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:22:7-37
+39-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:22:13-35
+40        </intent>
+41
+42        <package android:name="host.exp.exponent" /> <!-- Query open documents -->
+42-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:10:9-53
+42-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:10:18-50
+43        <intent>
+43-->[:expo-file-system] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-file-system\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:17:9-19:18
+44            <action android:name="android.intent.action.OPEN_DOCUMENT_TREE" />
+44-->[:expo-file-system] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-file-system\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:18:13-79
+44-->[:expo-file-system] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-file-system\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:18:21-76
+45        </intent>
+46    </queries>
+47
+48    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+48-->[com.facebook.flipper:flipper:0.125.0] C:\Users\ASUS\.gradle\caches\transforms-3\03f04a3f11198ce3b7c6cedb9b41266b\transformed\jetified-flipper-0.125.0\AndroidManifest.xml:16:5-76
+48-->[com.facebook.flipper:flipper:0.125.0] C:\Users\ASUS\.gradle\caches\transforms-3\03f04a3f11198ce3b7c6cedb9b41266b\transformed\jetified-flipper-0.125.0\AndroidManifest.xml:16:22-73
+49    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+49-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:23:5-79
+49-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:23:22-76
+50    <uses-permission android:name="android.permission.WAKE_LOCK" />
+50-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:24:5-68
+50-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:24:22-65
+51    <uses-permission android:name="com.google.android.gms.permission.AD_ID" />
+51-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:25:5-79
+51-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:25:22-76
+52    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_ATTRIBUTION" />
+52-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:26:5-88
+52-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:26:22-85
+53    <uses-permission android:name="android.permission.ACCESS_ADSERVICES_AD_ID" />
+53-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:27:5-82
+53-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:27:22-79
+54    <uses-permission android:name="com.google.android.finsky.permission.BIND_GET_INSTALL_REFERRER_SERVICE" />
+54-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:26:5-110
+54-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:26:22-107
+55
+56    <permission
+56-->[androidx.core:core:1.9.0] C:\Users\ASUS\.gradle\caches\transforms-3\0442dcddf7c8962f91c947e4fa892631\transformed\core-1.9.0\AndroidManifest.xml:22:5-24:47
+57        android:name="com.suparna.expoble.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+57-->[androidx.core:core:1.9.0] C:\Users\ASUS\.gradle\caches\transforms-3\0442dcddf7c8962f91c947e4fa892631\transformed\core-1.9.0\AndroidManifest.xml:23:9-81
+58        android:protectionLevel="signature" />
+58-->[androidx.core:core:1.9.0] C:\Users\ASUS\.gradle\caches\transforms-3\0442dcddf7c8962f91c947e4fa892631\transformed\core-1.9.0\AndroidManifest.xml:24:9-44
+59
+60    <uses-permission android:name="com.suparna.expoble.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+60-->[androidx.core:core:1.9.0] C:\Users\ASUS\.gradle\caches\transforms-3\0442dcddf7c8962f91c947e4fa892631\transformed\core-1.9.0\AndroidManifest.xml:26:5-97
+60-->[androidx.core:core:1.9.0] C:\Users\ASUS\.gradle\caches\transforms-3\0442dcddf7c8962f91c947e4fa892631\transformed\core-1.9.0\AndroidManifest.xml:26:22-94
+61
+62    <application
+62-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:25:3-46:17
+63        android:name="com.suparna.expoble.MainApplication"
+63-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:25:16-47
+64        android:allowBackup="true"
+64-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:25:162-188
+65        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+65-->[androidx.core:core:1.9.0] C:\Users\ASUS\.gradle\caches\transforms-3\0442dcddf7c8962f91c947e4fa892631\transformed\core-1.9.0\AndroidManifest.xml:28:18-86
+66        android:debuggable="true"
+67        android:icon="@mipmap/ic_launcher"
+67-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:25:81-115
+68        android:label="@string/app_name"
+68-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:25:48-80
+69        android:roundIcon="@mipmap/ic_launcher_round"
+69-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:25:116-161
+70        android:theme="@style/AppTheme"
+70-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:25:189-220
+71        android:usesCleartextTraffic="true" >
+71-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:25:221-256
+72        <meta-data
+72-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:26:5-82
+73            android:name="expo.modules.updates.ENABLED"
+73-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:26:16-59
+74            android:value="true" />
+74-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:26:60-80
+75        <meta-data
+75-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:27:5-93
+76            android:name="expo.modules.updates.EXPO_SDK_VERSION"
+76-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:27:16-68
+77            android:value="47.0.0" />
+77-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:27:69-91
+78        <meta-data
+78-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:28:5-105
+79            android:name="expo.modules.updates.EXPO_UPDATES_CHECK_ON_LAUNCH"
+79-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:28:16-80
+80            android:value="ALWAYS" />
+80-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:28:81-103
+81        <meta-data
+81-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:29:5-99
+82            android:name="expo.modules.updates.EXPO_UPDATES_LAUNCH_WAIT_MS"
+82-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:29:16-79
+83            android:value="0" />
+83-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:29:80-97
+84        <meta-data
+84-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:30:5-120
+85            android:name="expo.modules.updates.EXPO_UPDATE_URL"
+85-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:30:16-67
+86            android:value="https://exp.host/@elnatan/expo-ble" />
+86-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:30:68-118
+87
+88        <activity
+88-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:31:5-44:16
+89            android:name="com.suparna.expoble.MainActivity"
+89-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:31:15-43
+90            android:configChanges="keyboard|keyboardHidden|orientation|screenSize|uiMode"
+90-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:31:77-154
+91            android:exported="true"
+91-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:31:276-299
+92            android:label="@string/app_name"
+92-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:31:44-76
+93            android:launchMode="singleTask"
+93-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:31:155-186
+94            android:screenOrientation="portrait"
+94-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:31:300-336
+95            android:theme="@style/Theme.App.SplashScreen"
+95-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:31:230-275
+96            android:windowSoftInputMode="adjustResize" >
+96-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:31:187-229
+97            <intent-filter>
+97-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:32:7-35:23
+98                <action android:name="android.intent.action.MAIN" />
+98-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:33:9-60
+98-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:33:17-58
+99
+100                <category android:name="android.intent.category.LAUNCHER" />
+100-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:34:9-68
+100-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:34:19-66
+101            </intent-filter>
+102            <intent-filter>
+102-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:36:7-43:23
+103                <action android:name="android.intent.action.VIEW" />
+103-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:20:7-58
+103-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:20:15-56
+104
+105                <category android:name="android.intent.category.DEFAULT" />
+105-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:38:9-67
+105-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:38:19-65
+106                <category android:name="android.intent.category.BROWSABLE" />
+106-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:21:7-67
+106-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:21:17-65
+107
+108                <data android:scheme="com.example.expo-ble" />
+108-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:22:7-37
+108-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:22:13-35
+109                <data android:scheme="com.suparna.expoble" />
+109-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:22:7-37
+109-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:22:13-35
+110                <data android:scheme="exp+expo-ble" />
+110-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:22:7-37
+110-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:22:13-35
+111            </intent-filter>
+112        </activity>
+113        <activity
+113-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:45:5-106
+114            android:name="com.facebook.react.devsupport.DevSettingsActivity"
+114-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:45:15-79
+115            android:exported="false" />
+115-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:45:80-104
+116
+117        <meta-data
+117-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:11:9-13:36
+118            android:name="app_data_collection_default_enabled"
+118-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-63
+119            android:value="true" />
+119-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:13:13-33
+120
+121        <service
+121-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:15:9-23:19
+122            android:name="com.google.firebase.components.ComponentDiscoveryService"
+122-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:16:13-84
+123            android:directBootAware="true"
+123-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:17:13-43
+124            android:exported="false" >
+124-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:18:13-37
+125            <meta-data
+125-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:20:13-22:85
+126                android:name="com.google.firebase.components:io.invertase.firebase.app.ReactNativeFirebaseAppRegistrar"
+126-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:21:17-120
+127                android:value="com.google.firebase.components.ComponentRegistrar" />
+127-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:22:17-82
+128            <meta-data
+128-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:37:13-39:85
+129                android:name="com.google.firebase.components:com.google.firebase.analytics.connector.internal.AnalyticsConnectorRegistrar"
+129-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:38:17-139
+130                android:value="com.google.firebase.components.ComponentRegistrar" />
+130-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:39:17-82
+131            <meta-data
+131-->[com.google.firebase:firebase-installations:17.2.0] C:\Users\ASUS\.gradle\caches\transforms-3\36aa285b5efad4042fe5ea86cfbe9b90\transformed\jetified-firebase-installations-17.2.0\AndroidManifest.xml:15:13-17:85
+132                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsKtxRegistrar"
+132-->[com.google.firebase:firebase-installations:17.2.0] C:\Users\ASUS\.gradle\caches\transforms-3\36aa285b5efad4042fe5ea86cfbe9b90\transformed\jetified-firebase-installations-17.2.0\AndroidManifest.xml:16:17-130
+133                android:value="com.google.firebase.components.ComponentRegistrar" />
+133-->[com.google.firebase:firebase-installations:17.2.0] C:\Users\ASUS\.gradle\caches\transforms-3\36aa285b5efad4042fe5ea86cfbe9b90\transformed\jetified-firebase-installations-17.2.0\AndroidManifest.xml:17:17-82
+134            <meta-data
+134-->[com.google.firebase:firebase-installations:17.2.0] C:\Users\ASUS\.gradle\caches\transforms-3\36aa285b5efad4042fe5ea86cfbe9b90\transformed\jetified-firebase-installations-17.2.0\AndroidManifest.xml:18:13-20:85
+135                android:name="com.google.firebase.components:com.google.firebase.installations.FirebaseInstallationsRegistrar"
+135-->[com.google.firebase:firebase-installations:17.2.0] C:\Users\ASUS\.gradle\caches\transforms-3\36aa285b5efad4042fe5ea86cfbe9b90\transformed\jetified-firebase-installations-17.2.0\AndroidManifest.xml:19:17-127
+136                android:value="com.google.firebase.components.ComponentRegistrar" />
+136-->[com.google.firebase:firebase-installations:17.2.0] C:\Users\ASUS\.gradle\caches\transforms-3\36aa285b5efad4042fe5ea86cfbe9b90\transformed\jetified-firebase-installations-17.2.0\AndroidManifest.xml:20:17-82
+137            <meta-data
+137-->[com.google.firebase:firebase-common-ktx:20.4.2] C:\Users\ASUS\.gradle\caches\transforms-3\31e7fd4519aba6f20e18bdc64190871c\transformed\jetified-firebase-common-ktx-20.4.2\AndroidManifest.xml:12:13-14:85
+138                android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonLegacyRegistrar"
+138-->[com.google.firebase:firebase-common-ktx:20.4.2] C:\Users\ASUS\.gradle\caches\transforms-3\31e7fd4519aba6f20e18bdc64190871c\transformed\jetified-firebase-common-ktx-20.4.2\AndroidManifest.xml:13:17-116
+139                android:value="com.google.firebase.components.ComponentRegistrar" />
+139-->[com.google.firebase:firebase-common-ktx:20.4.2] C:\Users\ASUS\.gradle\caches\transforms-3\31e7fd4519aba6f20e18bdc64190871c\transformed\jetified-firebase-common-ktx-20.4.2\AndroidManifest.xml:14:17-82
+140            <meta-data
+140-->[com.google.firebase:firebase-common:20.4.2] C:\Users\ASUS\.gradle\caches\transforms-3\ea691847417038f3a748bbe01e091452\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:35:13-37:85
+141                android:name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar"
+141-->[com.google.firebase:firebase-common:20.4.2] C:\Users\ASUS\.gradle\caches\transforms-3\ea691847417038f3a748bbe01e091452\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:36:17-109
+142                android:value="com.google.firebase.components.ComponentRegistrar" />
+142-->[com.google.firebase:firebase-common:20.4.2] C:\Users\ASUS\.gradle\caches\transforms-3\ea691847417038f3a748bbe01e091452\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:37:17-82
+143        </service>
+144
+145        <provider
+145-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:25:9-29:38
+146            android:name="io.invertase.firebase.app.ReactNativeFirebaseAppInitProvider"
+146-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:26:13-88
+147            android:authorities="com.suparna.expoble.reactnativefirebaseappinitprovider"
+147-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:27:13-86
+148            android:exported="false"
+148-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:28:13-37
+149            android:initOrder="99" />
+149-->[:react-native-firebase_app] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\@react-native-firebase\app\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:29:13-35
+150        <provider
+150-->[:react-native-webview] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\react-native-webview\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:10:9-18:20
+151            android:name="com.reactnativecommunity.webview.RNCWebViewFileProvider"
+151-->[:react-native-webview] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\react-native-webview\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-83
+152            android:authorities="com.suparna.expoble.fileprovider"
+152-->[:react-native-webview] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\react-native-webview\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-64
+153            android:exported="false"
+153-->[:react-native-webview] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\react-native-webview\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:13:13-37
+154            android:grantUriPermissions="true" >
+154-->[:react-native-webview] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\react-native-webview\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:14:13-47
+155            <meta-data
+155-->[:react-native-webview] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\react-native-webview\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:15:13-17:63
+156                android:name="android.support.FILE_PROVIDER_PATHS"
+156-->[:react-native-webview] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\react-native-webview\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:16:17-67
+157                android:resource="@xml/file_provider_paths" />
+157-->[:react-native-webview] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\react-native-webview\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:17:17-60
+158        </provider>
+159
+160        <meta-data
+160-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:14:9-16:37
+161            android:name="expo.modules.updates.AUTO_SETUP"
+161-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:15:13-59
+162            android:value="false" />
+162-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:16:13-34
+163
+164        <activity
+164-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:18:9-31:20
+165            android:name="expo.modules.devlauncher.launcher.DevLauncherActivity"
+165-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:19:13-81
+166            android:exported="true"
+166-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:20:13-36
+167            android:launchMode="singleTask"
+167-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:21:13-44
+168            android:theme="@style/Theme.DevLauncher.LauncherActivity" >
+168-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:22:13-70
+169            <intent-filter>
+169-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:23:13-30:29
+170                <action android:name="android.intent.action.VIEW" />
+170-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:20:7-58
+170-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:20:15-56
+171
+172                <category android:name="android.intent.category.DEFAULT" />
+172-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:38:9-67
+172-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:38:19-65
+173                <category android:name="android.intent.category.BROWSABLE" />
+173-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:21:7-67
+173-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:21:17-65
+174
+175                <data android:scheme="expo-dev-launcher" />
+175-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:22:7-37
+175-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:22:13-35
+176            </intent-filter>
+177        </activity>
+178        <activity
+178-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:32:9-35:70
+179            android:name="expo.modules.devlauncher.launcher.errors.DevLauncherErrorActivity"
+179-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:33:13-93
+180            android:screenOrientation="portrait"
+180-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:34:13-49
+181            android:theme="@style/Theme.DevLauncher.ErrorActivity" />
+181-->[:expo-dev-launcher] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-launcher\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:35:13-67
+182        <activity
+182-->[:expo-dev-menu] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-menu\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:10:9-23:20
+183            android:name="expo.modules.devmenu.DevMenuActivity"
+183-->[:expo-dev-menu] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-menu\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-64
+184            android:exported="true"
+184-->[:expo-dev-menu] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-menu\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-36
+185            android:launchMode="singleTask"
+185-->[:expo-dev-menu] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-menu\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:13:13-44
+186            android:theme="@style/Theme.AppCompat.Transparent.NoActionBar" >
+186-->[:expo-dev-menu] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-menu\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:14:13-75
+187            <intent-filter>
+187-->[:expo-dev-menu] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-dev-menu\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:15:13-22:29
+188                <action android:name="android.intent.action.VIEW" />
+188-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:20:7-58
+188-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:20:15-56
+189
+190                <category android:name="android.intent.category.DEFAULT" />
+190-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:38:9-67
+190-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:38:19-65
+191                <category android:name="android.intent.category.BROWSABLE" />
+191-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:21:7-67
+191-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:21:17-65
+192
+193                <data android:scheme="expo-dev-menu" />
+193-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:22:7-37
+193-->C:\Users\ASUS\Desktop\CODE\battalion\battalion\android\app\src\main\AndroidManifest.xml:22:13-35
+194            </intent-filter>
+195        </activity>
+196
+197        <provider
+197-->[:expo-file-system] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-file-system\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:23:9-32:20
+198            android:name="expo.modules.filesystem.FileSystemFileProvider"
+198-->[:expo-file-system] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-file-system\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:24:13-74
+199            android:authorities="com.suparna.expoble.FileSystemFileProvider"
+199-->[:expo-file-system] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-file-system\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:25:13-74
+200            android:exported="false"
+200-->[:expo-file-system] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-file-system\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:26:13-37
+201            android:grantUriPermissions="true" >
+201-->[:expo-file-system] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-file-system\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:27:13-47
+202            <meta-data
+202-->[:react-native-webview] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\react-native-webview\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:15:13-17:63
+203                android:name="android.support.FILE_PROVIDER_PATHS"
+203-->[:react-native-webview] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\react-native-webview\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:16:17-67
+204                android:resource="@xml/file_system_provider_paths" />
+204-->[:react-native-webview] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\react-native-webview\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:17:17-60
+205        </provider>
+206
+207        <meta-data
+207-->[:expo-modules-core] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-modules-core\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:10:9-12:89
+208            android:name="org.unimodules.core.AppLoader#react-native-headless"
+208-->[:expo-modules-core] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-modules-core\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:11:13-79
+209            android:value="expo.modules.adapters.react.apploader.RNHeadlessAppLoader" />
+209-->[:expo-modules-core] C:\Users\ASUS\Desktop\CODE\battalion\battalion\node_modules\expo-modules-core\android\build\intermediates\merged_manifest\debug\AndroidManifest.xml:12:13-86
+210
+211        <property
+211-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:30:9-32:61
+212            android:name="android.adservices.AD_SERVICES_CONFIG"
+212-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:31:13-65
+213            android:resource="@xml/ga_ad_services_config" />
+213-->[com.google.android.gms:play-services-measurement-api:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\d979c6b35573f996ee4a2fc3633f66a2\transformed\jetified-play-services-measurement-api-21.5.0\AndroidManifest.xml:32:13-58
+214
+215        <receiver
+215-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:29:9-33:20
+216            android:name="com.google.android.gms.measurement.AppMeasurementReceiver"
+216-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:30:13-85
+217            android:enabled="true"
+217-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:31:13-35
+218            android:exported="false" >
+218-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:32:13-37
+219        </receiver>
+220
+221        <service
+221-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:35:9-38:40
+222            android:name="com.google.android.gms.measurement.AppMeasurementService"
+222-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:36:13-84
+223            android:enabled="true"
+223-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:37:13-35
+224            android:exported="false" />
+224-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:38:13-37
+225        <service
+225-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:39:9-43:72
+226            android:name="com.google.android.gms.measurement.AppMeasurementJobService"
+226-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:40:13-87
+227            android:enabled="true"
+227-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:41:13-35
+228            android:exported="false"
+228-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:42:13-37
+229            android:permission="android.permission.BIND_JOB_SERVICE" />
+229-->[com.google.android.gms:play-services-measurement:21.5.0] C:\Users\ASUS\.gradle\caches\transforms-3\62bf78fe397d076f7cae31923480336f\transformed\jetified-play-services-measurement-21.5.0\AndroidManifest.xml:43:13-69
+230
+231        <uses-library
+231-->[androidx.privacysandbox.ads:ads-adservices:1.0.0-beta05] C:\Users\ASUS\.gradle\caches\transforms-3\ea5b9320286c01a6de7d5c1725fb1aa3\transformed\jetified-ads-adservices-1.0.0-beta05\AndroidManifest.xml:23:9-25:40
+232            android:name="android.ext.adservices"
+232-->[androidx.privacysandbox.ads:ads-adservices:1.0.0-beta05] C:\Users\ASUS\.gradle\caches\transforms-3\ea5b9320286c01a6de7d5c1725fb1aa3\transformed\jetified-ads-adservices-1.0.0-beta05\AndroidManifest.xml:24:13-50
+233            android:required="false" />
+233-->[androidx.privacysandbox.ads:ads-adservices:1.0.0-beta05] C:\Users\ASUS\.gradle\caches\transforms-3\ea5b9320286c01a6de7d5c1725fb1aa3\transformed\jetified-ads-adservices-1.0.0-beta05\AndroidManifest.xml:25:13-37
+234
+235        <provider
+235-->[com.google.firebase:firebase-common:20.4.2] C:\Users\ASUS\.gradle\caches\transforms-3\ea691847417038f3a748bbe01e091452\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:23:9-28:39
+236            android:name="com.google.firebase.provider.FirebaseInitProvider"
+236-->[com.google.firebase:firebase-common:20.4.2] C:\Users\ASUS\.gradle\caches\transforms-3\ea691847417038f3a748bbe01e091452\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:24:13-77
+237            android:authorities="com.suparna.expoble.firebaseinitprovider"
+237-->[com.google.firebase:firebase-common:20.4.2] C:\Users\ASUS\.gradle\caches\transforms-3\ea691847417038f3a748bbe01e091452\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:25:13-72
+238            android:directBootAware="true"
+238-->[com.google.firebase:firebase-common:20.4.2] C:\Users\ASUS\.gradle\caches\transforms-3\ea691847417038f3a748bbe01e091452\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:26:13-43
+239            android:exported="false"
+239-->[com.google.firebase:firebase-common:20.4.2] C:\Users\ASUS\.gradle\caches\transforms-3\ea691847417038f3a748bbe01e091452\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:27:13-37
+240            android:initOrder="100" />
+240-->[com.google.firebase:firebase-common:20.4.2] C:\Users\ASUS\.gradle\caches\transforms-3\ea691847417038f3a748bbe01e091452\transformed\jetified-firebase-common-20.4.2\AndroidManifest.xml:28:13-36
+241
+242        <activity
+242-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\ASUS\.gradle\caches\transforms-3\5988c70657f5d0cf458cf19184bf1a69\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:23:9-27:75
+243            android:name="com.google.android.gms.auth.api.signin.internal.SignInHubActivity"
+243-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\ASUS\.gradle\caches\transforms-3\5988c70657f5d0cf458cf19184bf1a69\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:24:13-93
+244            android:excludeFromRecents="true"
+244-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\ASUS\.gradle\caches\transforms-3\5988c70657f5d0cf458cf19184bf1a69\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:25:13-46
+245            android:exported="false"
+245-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\ASUS\.gradle\caches\transforms-3\5988c70657f5d0cf458cf19184bf1a69\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:26:13-37
+246            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+246-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\ASUS\.gradle\caches\transforms-3\5988c70657f5d0cf458cf19184bf1a69\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:27:13-72
+247        <!--
+248            Service handling Google Sign-In user revocation. For apps that do not integrate with
+249            Google Sign-In, this service will never be started.
+250        -->
+251        <service
+251-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\ASUS\.gradle\caches\transforms-3\5988c70657f5d0cf458cf19184bf1a69\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:33:9-37:51
+252            android:name="com.google.android.gms.auth.api.signin.RevocationBoundService"
+252-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\ASUS\.gradle\caches\transforms-3\5988c70657f5d0cf458cf19184bf1a69\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:34:13-89
+253            android:exported="true"
+253-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\ASUS\.gradle\caches\transforms-3\5988c70657f5d0cf458cf19184bf1a69\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:35:13-36
+254            android:permission="com.google.android.gms.auth.api.signin.permission.REVOCATION_NOTIFICATION"
+254-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\ASUS\.gradle\caches\transforms-3\5988c70657f5d0cf458cf19184bf1a69\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:36:13-107
+255            android:visibleToInstantApps="true" />
+255-->[com.google.android.gms:play-services-auth:20.7.0] C:\Users\ASUS\.gradle\caches\transforms-3\5988c70657f5d0cf458cf19184bf1a69\transformed\jetified-play-services-auth-20.7.0\AndroidManifest.xml:37:13-48
+256
+257        <activity
+257-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\ASUS\.gradle\caches\transforms-3\f88b5a2c0b62a187e4b15b1bc1640873\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:20:9-22:45
+258            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+258-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\ASUS\.gradle\caches\transforms-3\f88b5a2c0b62a187e4b15b1bc1640873\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:20:19-85
+259            android:exported="false"
+259-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\ASUS\.gradle\caches\transforms-3\f88b5a2c0b62a187e4b15b1bc1640873\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:22:19-43
+260            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
+260-->[com.google.android.gms:play-services-base:18.0.1] C:\Users\ASUS\.gradle\caches\transforms-3\f88b5a2c0b62a187e4b15b1bc1640873\transformed\jetified-play-services-base-18.0.1\AndroidManifest.xml:21:19-78
+261
+262        <meta-data
+262-->[com.google.android.gms:play-services-basement:18.2.0] C:\Users\ASUS\.gradle\caches\transforms-3\848222d3c17729ae4f1be3102d767c6b\transformed\jetified-play-services-basement-18.2.0\AndroidManifest.xml:21:9-23:69
+263            android:name="com.google.android.gms.version"
+263-->[com.google.android.gms:play-services-basement:18.2.0] C:\Users\ASUS\.gradle\caches\transforms-3\848222d3c17729ae4f1be3102d767c6b\transformed\jetified-play-services-basement-18.2.0\AndroidManifest.xml:22:13-58
+264            android:value="@integer/google_play_services_version" />
+264-->[com.google.android.gms:play-services-basement:18.2.0] C:\Users\ASUS\.gradle\caches\transforms-3\848222d3c17729ae4f1be3102d767c6b\transformed\jetified-play-services-basement-18.2.0\AndroidManifest.xml:23:13-66
+265
+266        <provider
+266-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ASUS\.gradle\caches\transforms-3\b6fe4da57007a43d86a66ba4c66459bd\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:26:9-34:20
+267            android:name="androidx.startup.InitializationProvider"
+267-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ASUS\.gradle\caches\transforms-3\b6fe4da57007a43d86a66ba4c66459bd\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:27:13-67
+268            android:authorities="com.suparna.expoble.androidx-startup"
+268-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ASUS\.gradle\caches\transforms-3\b6fe4da57007a43d86a66ba4c66459bd\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:28:13-68
+269            android:exported="false" >
+269-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ASUS\.gradle\caches\transforms-3\b6fe4da57007a43d86a66ba4c66459bd\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:29:13-37
+270            <meta-data
+270-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ASUS\.gradle\caches\transforms-3\b6fe4da57007a43d86a66ba4c66459bd\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:31:13-33:52
+271                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+271-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ASUS\.gradle\caches\transforms-3\b6fe4da57007a43d86a66ba4c66459bd\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:32:17-75
+272                android:value="androidx.startup" />
+272-->[androidx.emoji2:emoji2:1.0.0] C:\Users\ASUS\.gradle\caches\transforms-3\b6fe4da57007a43d86a66ba4c66459bd\transformed\jetified-emoji2-1.0.0\AndroidManifest.xml:33:17-49
+273            <meta-data
+273-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\ASUS\.gradle\caches\transforms-3\bc74a39e1ea23fea00bfcf2682a93948\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:31:13-33:52
+274                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+274-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\ASUS\.gradle\caches\transforms-3\bc74a39e1ea23fea00bfcf2682a93948\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:32:17-78
+275                android:value="androidx.startup" />
+275-->[androidx.lifecycle:lifecycle-process:2.4.0] C:\Users\ASUS\.gradle\caches\transforms-3\bc74a39e1ea23fea00bfcf2682a93948\transformed\jetified-lifecycle-process-2.4.0\AndroidManifest.xml:33:17-49
+276        </provider>
+277    </application>
+278
+279</manifest>
