@@ -50,6 +50,64 @@ const DeviceList = ({ ownerId, navigation }) => {
     requestPermissions();
   }, []);
 
+  const tryToConnectToDevice = async (item) => {
+    try {
+      setDevicePassword(item.fourDigitCode);
+      await connectToDevice(
+        { id: item.deviceId[0] },
+        item.combinedSerialNum,
+        item.fourDigitCode
+      );
+      return navigation.navigate("mainDeviceDetails");
+    } catch (err) {
+      setDevicePassword([]);
+      console.log("connecting to the device err:", err);
+      setConnecting({ device: null, status: false });
+      toast.show(
+        "Failed to connect to the device, please check your bluetooth connection and try again."
+      );
+    }
+  };
+
+  const connectToDeviceHandler = async (item, user) => {
+    //if the user is not approved by the owner - show a message
+    if (!user?.approved && item?.owner?.id !== ownerId) {
+      return toast.show("Device not approved by the owner");
+    }
+    // if device is already connected - just redirect
+    if (item.deviceId === connectedDevice?.device?.id) {
+      return navigation.navigate("mainDeviceDetails");
+    }
+
+    //connecting to the device
+    if (!connecting.status) {
+      setConnecting({ device: item.deviceId, status: true });
+      try {
+        if (devicesIds[item.combinedSerialNum]) {
+          item.deviceId = devicesIds[item.combinedSerialNum];
+        }
+        // for ios, looping through the devices' ids (if only one connect to it) and connecting to the right one.
+        if (item?.deviceId?.length && typeof item?.deviceId !== "string") {
+          if (item?.deviceId?.length === 1) {
+            await tryToConnectToDevice(item);
+          } else if (item?.deviceId?.length > 1) {
+            for (let i = 0; i < item.deviceId.length; i++) {
+              await tryToConnectToDevice(item);
+            }
+          }
+        } else {
+          await tryToConnectToDevice(item);
+        }
+      } catch (err) {
+        console.log("connecting to the device err:", err);
+        setConnecting({ device: null, status: false });
+        toast.show(
+          "Failed to connect to the device, please check your bluetooth connection and try again."
+        );
+      }
+    }
+  };
+
   return (
     <View style={styles.Container}>
       {isLoaded && (
@@ -63,97 +121,7 @@ const DeviceList = ({ ownerId, navigation }) => {
           const user = item.users.find((user) => user.id === ownerId);
           return (
             <TouchableOpacity
-              onPress={async () => {
-                console.log("item", item);
-                if (!user?.approved && item?.owner?.id !== ownerId) {
-                  return toast.show("Device not approved by the owner");
-                }
-
-                if (item.deviceId === connectedDevice?.device?.id) {
-                  return navigation.navigate("mainDeviceDetails");
-                }
-                if (!connecting.status) {
-                  setConnecting({ device: item.deviceId, status: true });
-                  try {
-                    if (devicesIds[item.combinedSerialNum]) {
-                      item.deviceId = devicesIds[item.combinedSerialNum];
-                    }
-
-                    if (
-                      item?.deviceId?.length &&
-                      typeof item?.deviceId !== "string"
-                    ) {
-                      if (item?.deviceId?.length === 1) {
-                        try {
-                          setDevicePassword(item.fourDigitCode);
-                          await connectToDevice(
-                            { id: item.deviceId[0] },
-                            item.combinedSerialNum,
-                            item.fourDigitCode
-                          );
-                          return navigation.navigate("mainDeviceDetails");
-                        } catch (err) {
-                          setDevicePassword([]);
-                          console.log("connecting to the device err:", err);
-                          setConnecting({ device: null, status: false });
-                          toast.show(
-                            "Failed to connect to the device, please check your bluetooth connection and try again."
-                          );
-                        }
-                      } else if (item?.deviceId?.length > 1) {
-                        for (let i = 0; i < item.deviceId.length; i++) {
-                          try {
-                            setDevicePassword(item.fourDigitCode);
-                            await connectToDevice(
-                              { id: item.deviceId[i] },
-                              item.combinedSerialNum,
-                              item.fourDigitCode
-                            );
-                            return navigation.navigate("mainDeviceDetails");
-                          } catch (err) {
-                            console.log("connecting to the device err:", err);
-                            setDevicePassword([]);
-                            if (i === item.deviceId.length - 1) {
-                              setConnecting({ device: null, status: false });
-                              toast.show(
-                                "Failed to connect to any device, please check your bluetooth connection and try again."
-                              );
-                            }
-                          }
-                        }
-                      }
-                    } else {
-                      try {
-                        setDevicePassword(item.fourDigitCode);
-                        await connectToDevice(
-                          { id: item.deviceId },
-                          item.combinedSerialNum,
-                          item.fourDigitCode
-                        );
-                        return navigation.navigate("mainDeviceDetails");
-                      } catch (err) {
-                        console.log("connecting to the device err:", err);
-                        setDevicePassword([]);
-                        setConnecting({ device: null, status: false });
-                        toast.show(
-                          "Failed to connect to the device, please check your bluetooth connection and try again."
-                        );
-                      }
-                    }
-                  } catch (err) {
-                    console.log("connecting to the device err:", err);
-                    setConnecting({ device: null, status: false });
-                    toast.show(
-                      "Failed to connect to the device, please check your bluetooth connection and try again."
-                    );
-                    // return navigation.navigate("searchscreen", {
-                    //   isFirstTime: false,
-                    //   serialNum: false,
-                    //   id: item.deviceId,
-                    // });
-                  }
-                }
-              }}
+              onPress={() => connectToDeviceHandler(item, user)}
               style={[
                 styles.DeviceInfoWrapper,
                 {

@@ -233,7 +233,7 @@ const BLEDeviceSearch = ({ navigation }) => {
                     );
                   }
                   if (!connectedDevice.hasPassword) {
-                    navigation.navigate("fourdigitcodeinsertscreen");
+                    navigation.navigate("fourdigitcodeinsert");
                   } else {
                     navigation.navigate("mainDeviceDetails");
                   }

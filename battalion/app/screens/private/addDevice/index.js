@@ -2,7 +2,7 @@ import { StyleSheet, Text, TextInput, View } from "react-native";
 import React, { useState, useRef, useEffect } from "react";
 import colors from "../../../config/Colors";
 import CarthagosButton from "../../../components/CarthagosButton";
-import { AddUserData } from "../../../api/users";
+import { addUserData } from "../../../api/users";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAuth } from "../../../context/AuthProvider";
 import { useToast } from "react-native-toast-notifications";
@@ -49,10 +49,10 @@ const AddDevice = ({ navigation }) => {
         teamType: isLetters ? "Team A" : isNumbers ? "Team B" : "Uncategorized",
       };
 
-      // Call AddUserData to send combinedSerialNum
+      // Call addUserData to send combinedSerialNum
       try {
-        console.log("Updated user data:", currentUser);
-        const isOwner = await AddUserData(updatedUserData);
+        console.log("Updated user data:", updatedUserData);
+        const isOwner = await addUserData(updatedUserData);
 
         toast.show("Data saved successfully!", {
           type: "normal",

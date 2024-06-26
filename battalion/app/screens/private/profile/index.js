@@ -90,10 +90,6 @@ const ProfileScreen = (props) => {
     setIsEditingUsername(!isEditingUsername);
   };
 
-  if (userData === null) {
-    return <Text>Loading...</Text>;
-  }
-
   //update the displayName
   const handleUpdateUserName = () => {
     if (currentUser && userProfileData) {

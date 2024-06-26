@@ -39,36 +39,84 @@ export const addUserToDevice = async (deviceId, userId, macId) => {
   }
 };
 
-export const AddUserData = async (data) => {
+export const addUserData = async (data) => {
   const { fourDigitCode, combinedSerialNum } = data;
   try {
+    // Validate the owner field
     if (!data.owner) {
       throw new Error("Owner field is required.");
     }
+    // Determine the team type
+    const isLetters = /^[A-Za-z]+$/.test(combinedSerialNum);
+    const isNumbers = /^[0-9]+$/.test(combinedSerialNum);
+    const teamType = isLetters
+      ? "Team A"
+      : isNumbers
+      ? "Team B"
+      : "Uncategorized";
+
+    // Extract the individual parts from the combinedSerialNum
+    const modelNum = data.combinedSerialNum.substring(0, 4);
+    const prodDate = data.combinedSerialNum.substring(4, 8);
+    const serialNum = data.combinedSerialNum.substring(8, 12);
+    const remaining = data.combinedSerialNum.substring(0, 12);
+
+    // Get a reference to the devices collection
     const devicesRef = firestore().collection("devices");
-    const devicesSnapshot = await devicesRef
-      .where("fourDigitCode", "==", fourDigitCode)
-      .get();
-    const devices = devicesSnapshot.docs.map((doc) => doc.data());
-    const deviceFound = devices.some(
-      (device) => device.combinedSerialNum === combinedSerialNum
-    );
-    if (deviceFound) {
-      throw new Error("Device already exists.");
+    // Get a reference to the document using combinedSerialNum
+    const deviceRef = devicesRef.doc(data.combinedSerialNum);
+    // Get the document data
+    const deviceDoc = await deviceRef.get();
+
+    if (!deviceDoc.data()) {
+      throw new Error("Device not found");
+    }
+    if (
+      deviceDoc.data().usersIds &&
+      deviceDoc.data()?.usersIds?.includes(data.owner)
+    ) {
+      throw new Error("This user is already added to the device.");
+    }
+    if (deviceDoc.data()) {
+      if (deviceDoc.data()?.owner && deviceDoc.data()?.owner?.id !== null) {
+        addUserToDevice(data.combinedSerialNum, data.owner);
+      } else {
+        // Get a reference to the users collection
+        const usersRef = firestore().collection("users");
+        // Get a reference to the document using owner id
+        const ownerRef = usersRef.doc(data.owner);
+        // Get the document data
+        const ownerDoc = await ownerRef.get();
+
+        if (!ownerDoc.exists) {
+          throw new Error("Owner user not found.");
+        }
+
+        const ownerData = ownerDoc.data();
+        // Set the document data using setDoc
+        await deviceRef.update({
+          modelNum,
+          prodDate,
+          serialNum,
+          combinedSerialNum: remaining,
+          fourDigitCode,
+          owner: {
+            id: data.owner,
+            ...ownerData,
+          },
+          users: [],
+          teamType,
+        });
+
+        // Add the user to the device's users array
+        await deviceRef.update({
+          usersIds: firestore.FieldValue.arrayUnion(data.owner),
+        });
+      }
     }
 
-    const usersRef = firestore().collection("users");
-    const newUser = {
-      id: data.id,
-      name: data.name,
-      email: data.email,
-      phone: data.phone,
-      createdAt: new Date().toISOString(),
-    };
-    await usersRef.doc(data.id).set(newUser);
-    return newUser;
+    return deviceDoc.data()?.owner ? false : true;
   } catch (error) {
-    console.error("Error adding user data:", error);
     throw error;
   }
 };
